@@ -134,6 +134,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
 .fq-dict-table tr.alt td{ background:var(--card-alt); }
 .fq-dict-star-col{ width:34px; text-align:center; padding:9px 4px !important; }
 .fq-dict-star-col .fq-star{ font-size:16px; }
+.fq-core-badge{ margin-right:5px; font-size:11px; }
 .fq-history-note{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:13px; color:var(--muted); margin:14px 0 0; }
 .fq-progress-subtitle{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:15px; font-weight:600; color:var(--navy); margin:34px 0 12px; }
 .fq-stat-chips{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
@@ -545,6 +546,52 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   Object.keys(DATA).forEach(key=>{
     DATA[key].items.forEach((it,idx)=>{ it._catKey = key; it._idx = idx; });
   });
+
+  // ---------- priority words: a hand-picked "learn these first" core per category ----------
+  // Some categories (especially nouns) have grown into long, comprehensive lists where
+  // truly common everyday words sit next to rare or specialized ones. Marking a curated
+  // core lets practice put foundational vocabulary first instead of a pure random draw.
+  const PRIORITY_WORDS = {
+    verbs: ["être","avoir","faire","dire","aller","voir","savoir","pouvoir","vouloir","venir","devoir",
+      "prendre","donner","parler","aimer","penser","arriver","demander","rester","appeler","commencer",
+      "connaître","attendre","sortir","lire","écrire","finir","travailler","acheter","jouer","manger","boire","chercher"],
+    nouns: ["le temps","la journée","l'année","la semaine","le moment","la maison","la ville","le pays","le monde",
+      "la famille","l'ami","l'amie","l'homme","la femme","l'enfant","le travail","l'école","l'argent","le prix",
+      "la question","le nom","la vie","l'eau","le jour","la nuit","le matin","le soir","la porte","la fenêtre",
+      "la table","la chaise","le lit","la chambre","la cuisine","le salon","la rue","la voiture","le train",
+      "l'avion","le bus","la route","le magasin","le marché","le restaurant","le café","le pain","le fromage",
+      "la viande","le poisson","le fruit","le légume","le lait","le corps","la tête","le visage","la main",
+      "le cœur","la santé","le médecin","le sport","le jeu","le film","le livre","le journal","la lettre",
+      "le téléphone","l'ordinateur","la télévision","la photo","la couleur","le feu","l'air","le ciel","le soleil",
+      "la lune","la pluie","la neige","le vent","l'hiver","l'été","l'arbre","la fleur","la forêt","la mer",
+      "la montagne","l'animal","le chien","le chat","l'oiseau","le professeur","l'étudiant","l'université",
+      "la langue","le mot","la phrase","le bureau","le client","le projet"],
+    adjectives: ["grand(e)","petit(e)","bon(ne)","mauvais(e)","nouveau / nouvelle","vieux / vieille","jeune",
+      "beau / belle","joli(e)","long(ue)","court(e)","haut(e)","bas(se)","chaud(e)","froid(e)","propre","sale",
+      "rapide","lent(e)","fort(e)","faible","riche","pauvre","facile","difficile","vrai(e)","libre","occupé(e)",
+      "plein(e)","vide","heureux / heureuse","triste","content(e)","fatigué(e)","calme","important(e)",
+      "nécessaire","utile","possible","impossible","moderne","dangereux / dangereuse","sûr(e)","certain(e)"],
+    adverbs: ["aujourd'hui","hier","demain","maintenant","toujours","jamais","souvent","parfois","déjà","encore",
+      "beaucoup","un peu","trop","très","bien","mal","vite","ici","là","aussi"],
+    prepositions: ["à","de","avec","sans","pour","dans","sur","sous","chez","entre","avant","après","pendant","depuis"],
+    quantity: ["peu","plusieurs","quelques","chaque","tout / toute","rien","personne","plus","moins","assez"],
+    numbers: ["zéro","un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix","onze","douze",
+      "treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf","vingt","trente","quarante","cinquante"]
+  };
+  Object.keys(PRIORITY_WORDS).forEach(key=>{
+    if(!DATA[key]) return;
+    const wanted = new Set(PRIORITY_WORDS[key]);
+    DATA[key].items.forEach(it=>{ if(wanted.has(it[0])) it.priority = true; });
+  });
+  // Builds a shuffled order where priority words come first (still shuffled among
+  // themselves, so it's not the exact same order every time), then everything else.
+  function priorityOrder(key){
+    const items = DATA[key].items;
+    const idxs = items.map((_,i)=>i);
+    const core = idxs.filter(i=>items[i].priority);
+    const rest = idxs.filter(i=>!items[i].priority);
+    return [...shuffle(core), ...shuffle(rest)];
+  }
   const CAT_ORDER = ["nouns","verbs","adjectives","adverbs","prepositions","quantity","numbers"];
   const BATCH_SIZE = 25;
   // ---------- Themed vocabulary sets ----------
@@ -2218,7 +2265,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   function startCategory(key){
     state.catKey = key;
     if(!orderStore[key]){
-      orderStore[key] = shuffle(DATA[key].items.map((_,i)=>i));
+      orderStore[key] = priorityOrder(key);
       persistProgress();
     }
     state.order = orderStore[key];
@@ -2234,13 +2281,13 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   // Called when the user picks a category tile from the main menu — always
   // reshuffles so the words (and which one comes first) are different every time.
   function startCategoryFresh(key){
-    orderStore[key] = shuffle(DATA[key].items.map((_,i)=>i));
+    orderStore[key] = priorityOrder(key);
     progressStore[key] = 0;
     persistProgress();
     startCategory(key);
   }
   function restartCategory(key){
-    orderStore[key] = shuffle(DATA[key].items.map((_,i)=>i));
+    orderStore[key] = priorityOrder(key);
     progressStore[key] = 0;
     persistProgress();
     startCategory(key);
@@ -2516,7 +2563,12 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
           starBtn.onclick = ()=>{ toggleFavorite(r.item); renderDictListBody(); };
           c0.appendChild(starBtn);
         }
-        const c1 = document.createElement("td"); c1.className="fq-dict-fr"; c1.textContent = r.item[0];
+        const c1 = document.createElement("td"); c1.className="fq-dict-fr";
+        if(r.item.priority){
+          const badge = document.createElement("span"); badge.className="fq-core-badge"; badge.title="Базове слово — рекомендовано вивчити першим"; badge.textContent="🔑";
+          c1.appendChild(badge);
+        }
+        c1.appendChild(document.createTextNode(r.item[0]));
         const c2 = document.createElement("td"); c2.className="fq-dict-pron"; c2.textContent = r.item[1];
         const c3 = document.createElement("td"); c3.textContent = r.item[2];
         const c4 = document.createElement("td"); c4.textContent = r.cat.label;
@@ -2546,6 +2598,11 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     search.value = state.dictFilter || "";
     search.oninput = (e)=>{ state.dictFilter = e.target.value; renderDictTableBody(cat); };
     root.appendChild(search);
+    if(!cat.pcMode){
+      const legend = document.createElement("p"); legend.className="fq-history-note";
+      legend.textContent = "🔑 — базові слова, з яких варто починати вивчення цього розділу.";
+      root.appendChild(legend);
+    }
     const bodyWrap = document.createElement("div"); bodyWrap.id="fqDictBody";
     root.appendChild(bodyWrap);
     renderDictTableBody(cat);
@@ -2584,7 +2641,12 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
           c0.appendChild(starBtn);
           tr.appendChild(c0);
         }
-        const c1 = document.createElement("td"); c1.className="fq-dict-fr"; c1.textContent = it[0];
+        const c1 = document.createElement("td"); c1.className="fq-dict-fr";
+        if(it.priority){
+          const badge = document.createElement("span"); badge.className="fq-core-badge"; badge.title="Базове слово — рекомендовано вивчити першим"; badge.textContent="🔑";
+          c1.appendChild(badge);
+        }
+        c1.appendChild(document.createTextNode(it[0]));
         const c2 = document.createElement("td"); c2.className="fq-dict-pron"; c2.textContent = isPC ? it[1] : it[1];
         const c3 = document.createElement("td"); c3.textContent = it[2];
         tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3);
