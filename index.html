@@ -75,6 +75,25 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
 .fq-opt:hover{ border-color:var(--navy); }
 .fq-opt.correct{ border-color:var(--good); background:var(--good-bg); color:var(--good); font-weight:600;}
 .fq-opt.wrong{ border-color:var(--bad); background:var(--bad-bg); color:var(--bad); font-weight:600;}
+
+/* ---- sentence builder ---- */
+.fq-sb-answer{
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  min-height:52px; padding:10px; margin-bottom:16px;
+  border:1px dashed var(--line); background:var(--card);
+}
+.fq-sb-answer.correct{ border:1px solid var(--good); border-style:solid; background:var(--good-bg); }
+.fq-sb-answer.wrong{ border:1px solid var(--bad); border-style:solid; background:var(--bad-bg); }
+.fq-sb-placeholder{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:13.5px; color:var(--muted); }
+.fq-sb-bank{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+.fq-sb-chip{
+  font-family:"Helvetica Neue",Arial,sans-serif; font-size:15px;
+  background:var(--card-alt); border:1px solid var(--line); color:var(--ink);
+  padding:9px 14px; cursor:pointer; border-radius:2px;
+}
+.fq-sb-chip:hover:not(:disabled){ border-color:var(--gold); }
+.fq-sb-chip.placed{ background:var(--navy-solid); border-color:var(--navy-solid); color:#fff; }
+.fq-sb-chip:disabled{ cursor:default; opacity:.85; }
 .fq-opt:disabled{ cursor:default; }
 .fq-hint{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:13px; color:var(--muted); min-height:20px; }
 .fq-hint p{ margin:0 0 4px; }
@@ -309,7 +328,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       ["le danses","ле данс","танці"],["le date","ле дат","дата"],["le debarcadere","ле дебаркадер","причал"],["le debris","ле дебрі","уламки"],
       ["le début","ле дебю","початок"],["le déc","ле дек","дека"],["le déchet","ле деше","відходи"],["le décision","ле десісьйон","рішення"],
       ["le décor","ле декор","декор"],["le défaut","ле дефо","недолік"],["le défense","ле дефанс","захист"],["le degré","ле дегре","ступінь / градус"],
-      ["le délai","ле деле","термін"],["le délicat","ле деліка","делікатність"],["le demande","ле деманд","запит / прохання"],["le dent","ле дан","зуб"],
+      ["le délai","ле деле","термін"],["le délicat","ле деліка","делікатність"],["le demande","ле деманд","запит / прохання"],["la dent","ля дан","зуб"],
       ["le départ","ле депар","від'їзд"],["le département","ле департеман","департамент"],["le dépense","ле депанс","витрата"],["le dépôt","ле допо","склад / депозит"],
       ["le déprime","ле деприм","депресія"],["le déserteur","ле дезертер","дезертир"],["le désert","ле дезерр","пустеля"],["le désespoir","ле дезеспуар","відчай"],
       ["le dessin","ле десен","малюнок"],["le dessous","ле десу","низ"],["le dessus","ле десю","верх"],["le destin","ле дестен","доля"],
@@ -324,62 +343,62 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       ["le doute","ле дут","сумнів"],["le doyen","ле доян","декан"],["le drapeau","ле драпо","прапор"],["le droit","ле друа","право"],
       ["le drame","ле драм","драма"],["le drogue","ле дрог","наркотик"],["le du","ле дю","частка"],["le duel","ле дюель","дуель"],
       ["le dune","ле дюн","дюна"],["le dur","ле дюр","твердість"],["le dynamisme","ле динамізм","динамізм"],["le dynamite","ле динаміт","динаміт"],
-      ["le eau","ле о","вода"],["le ebe","ле еб","відплив"],["le eboulis","ле ебулі","осип"],["le ecart","ле екар","відстань / розрив"],
-      ["le echeance","ле ешеанс","термін платежу"],["le echelle","ле ешель","драбина / шкала"],["le echec","ле ешек","невдача / шах"],["le eclair","ле еклер","блискавка / еклери"],
-      ["le eclat","ле екля","блиск / спалах"],["le ecole","ле еколь","школа"],["le economie","ле екодомі","економіка"],["le ecran","ле екран","екран"],
-      ["le ecrivain","ле екрівен","письменник"],["le ecrou","ле екру","гайка"],["le ecu","ле екю","екю"],["le effet","ле ефе","ефект"],
-      ["le egard","ле егар","повага / увага"],["le eglise","ле егліз","церква"],["le elan","ле елан","порив"],["le electeur","ле електер","виборець"],
-      ["le electricite","ле електрісіте","електрика"],["le element","ле елеман","елемент"],["le éléphant","ле елефан","слон"],["le élève","ле елев","учень"],
-      ["le élite","ле еліт","еліта"],["le eloge","ле елож","похвала"],["le elu","ле елю","обранець"],["le embase","ле ембаз","основа"],
-      ["le embauche","ле ембош","найм на роботу"],["le emblème","ле емблем","емблема"],["le embouteillage","ле ембутейаж","корк на дорозі"],["le embuche","ле ембюш","перешкода"],
-      ["le émetteur","ле еметер","передавач"],["le émigration","ле еміграсьйон","еміграція"],["le émission","ле емісьйон","передача / ефір"],["le emotion","ле емосьйон","емоція"],
-      ["le empereur","ле емперер","імператор"],["le empire","ле емпір","імперія"],["le emplacement","ле емпласьєман","розташування"],["le empoisonnement","ле емпуазонман","отруєння"],
-      ["le empreinte","ле емпрент","відбиток"],["le emprise","ле емприз","вплив / контроль"],["le enceinte","ле ансант","огорожа / стіни"],["le enchere","ле аншер","аукцион"],
-      ["le enclos","ле анкло","огороджена ділянка"],["le encore","ле анкор","ще"],["le encrier","ле анкріє","чорнильниця"],["le encyclopédie","ле енсіклопеді","енциклопедія"],
-      ["le endettement","ле ендетман","заборгованість"],["le endive","ле ендів","ендивій"],["le endroit","ле андруа","місце"],["le énergie","ле енержі","енергія"],
-      ["le enfance","ле анфанс","дитинство"],["le enfant","ле анфан","дитина"],["le enfer","ле анфер","пекло"],["le enflement","ле анфлеман","набряк"],
-      ["le engager","ле ангаже","зобов'язання"],["le engin","ле анжен","машина / пристрій"],["le enjeu","ле анже","ставка"],["le enlèvement","ле анлевман","викрадення"],
-      ["le ennemi","ле енемі","ворог"],["le ennui","ле аннюі","нудьга / неприємність"],["le enquête","ле анкет","розслідування / опитування"],["le enseignement","ле ансењман","навчання / освіта"],
-      ["le ensemble","ле ансамбль","ансамбль / ціле"],["le entente","ле антант","угода / порозуміння"],["le enterrement","ле антерман","похорон"],["le entêtement","ле антетман","впертість"],
-      ["le entracte","ле антракт","антракт"],["le entrain","ле антрен","запал"],["le entrainement","ле антренман","тренування"],["le entrailles","ле антрай","нутрощі"],
-      ["le entre","ле антр","вхід"],["le entrée","ле антре","вхід / закуска"],["le entreprise","ле ентрепріз","підприємство"],["le entretien","ле антретен","бесіда / співбесіда"],
-      ["le entresol","ле антресоль","антресоль"],["le éonis","ле еоніс","епоха"],["le epaisseur","ле епессер","товщина"],["le épaule","ле еполь","плече"],
-      ["le epicerie","ле епсері","бакалія"],["le epidemie","ле епедемі","епідемія"],["le epilogue","ле епілог","епілог"],["le épine","ле епін","шип / колючка"],
-      ["le epoque","ле епок","епоха"],["le épreuve","ле епрус","випробування"],["le eprouvette","ле епровет","пробірка"],["le epuration","le епюрасьйон","очищення"],
-      ["le équipe","ле екіп","команда"],["le equipement","le екіпман","обладнання"],["le erable","le ерабль","клен"],["le ere","ле ер","ера"],
-      ["le ermitage","le ермітаж","скит"],["le erreur","le еррер","помилка"],["le eruption","le ерупсьйон","виверження"],["le escalier","le ескальє","сходи"],
-      ["le escargot","le ескарго","равлик"],["le esclave","le есклав","раб"],["le escorte","le ескорт","ескорт"],["le espace","le еспас","простір / космос"],
-      ["le espce","le еспсе","вид"],["le espérance","le есперанс","надія"],["le espion","le еспіон","шпигун"],["le espoir","le еспуар","надія"],
-      ["le esprit","le еспрі","дух / розум"],["le esquisse","le ескіс","ескіз"],["le essai","le есе","есе / спроба"],["le essence","le есанс","бензин / сутність"],
-      ["le essieu","le есьє","вісь"],["le essor","le ессор","зліт / піднесення"],["le essuie","le есюі","рушник"],["le etabli","le етаблі","верстак"],
-      ["le etablissement","le етаблісман","заклад / установа"],["le etage","le етаж","поверх"],["le etain","le етен","олово"],["le etang","le етан","ставок"],
-      ["le etape","le етап","етап"],["le etat","le ета","стан / держава"],["le ete","le ете","літо"],["le eteint","le етен","вогнегасник"],
-      ["le etendard","le етендар","прапор"],["le etendue","le етендю","протяжність"],["le eternel","le етернель","вічність"],["le eteter","le ететер","обрізання"],
-      ["le ethe","le ете","ефір"],["le ethnie","le етні","етнос"],["le etincelle","le етінсель","іскра"],["le etoffe","le етоф","тея / матерія"],
-      ["le etoile","le етуаль","зірка"],["le etonnant","le етонан","диво"],["le etouffement","le етюфман","задуха"],["le etranger","le етранже","іноземець"],
-      ["le etre","le етр","істота / буття"],["le etrennes","le етрен","подарунки на Новий рік"],["le etude","le етюд","етюд / навчання"],["le etudiant","le етюдьян","студент"],
-      ["le eucharistie","le єхарісті","євхаристія"],["le euil","le ой","поріг"],["le eun","le ень","онук"],["le eure","le ер","година"],
-      ["le euro","le єро","євро"],["le evadé","le еваде","втікач"],["le evacuation","le евакуасьйон","евакуація"],["le evangile","le еванжіль","євангеліє"],
-      ["le evasion","le евасьйон","втеча"],["le evenement","le евенеман","подія"],["le evidence","le евіденс","очевидність"],["le evêque","le евек","єпископ"],
-      ["le eviction","le евіксьйон","виселення"],["le evier","le евіє","мийка"],["le evolution","le еволюсьйон","еволюція"],["le exagération","le езажерасьйон","перебільшення"],
-      ["le examen","le екзамен","іспит / огляд"],["le excavation","le екскавасьйон","розкопки"],["le excellence","le екселянс","досконалість"],["le excedent","le екседан","надлишок"],
-      ["le exception","le ексепсьйон","виняток"],["le exces","le ексе","надлишок"],["le excursion","le екскюсьйон","екскурсія"],["le exemple","le екзампль","приклад"],
-      ["le exerçant","le егзерсан","практикуючий"],["le exercice","le егзерсіс","вправа"],["le exhalaison","le егзалезон","випаровування"],["le exhibition","le езбісьйон","виставка"],
-      ["le exil","le езіль","вигнання"],["le existence","le егзистанс","існування"],["le exode","le екзод","вихід / переселення"],["le expansion","le експансьйон","експансія"],
-      ["le expediteur","le експедітер","відправник"],["le expedition","le експедісьйон","експедиція"],["le expérience","le експерианс","досвід"],["le expert","le експер","експерт"],
-      ["le expiration","le експірасьйон","закінчення терміну"],["le explication","le експлікасьйон","пояснення"],["le exploit","le експлоа","подвиг / досягнення"],["le exploration","le експлорасьйон","розвідка"],
-      ["le explosion","le експлозьйон","вибух"],["le export","le експорт","експорт"],["le exposition","le експосьйон","виставка"],["le exprès","le екпре","кур'єрська пошта"],
-      ["le expulsion","le експульсьйон","видворення"],["le extension","le екстенсьйон","розширення"],["le exterieur","le екстерьєр","зовнішній вигляд"],["le extinction","le екстінсьйон","згасання"],
-      ["le extraction","le екстраксьйон","видобуток"],["le extrémiste","le екстреміст","екстреміст"],["le exutoire","le екзютуару","віддушина"],["le fab","le фаб","фабрика"],
-      ["le fabrique","le фабрік","фабрика"],["le façade","le фасад","фасад"],["le face","le фас","обличчя / сторона"],["le facette","le фасет","грань"],
-      ["le fâcherie","le фашері","сварка"],["le facile","le фасіль","легкість"],["le façon","le фасон","спосіб / фасон"],["le facteur","le фактер","листоноша / фактор"],
-      ["le faculte","le факульте","факультет / здатність"],["le fada","le фада","дурник"],["le fad","le фад","бездарність"],["le faim","le фен","голод"],
-      ["le faiseur","le фезер","махінатор"],["le fait","le фе","факт"],["le fal","le фаль","скеля"],["le falle","le фаль","пастка"],
-      ["le fange","le фанж","бруд"],["le fantaisie","le фантезі","фантазія"],["le fantôme","le фантом","привид"],["le faon","le фон","оленя"],
-      ["le farce","le фарс","фарс"],["le fard","le фар","макіяж / рум'яна"],["le fardeau","le фардо","тягар"],["le farin","le фарен","борошно"],
-      ["le fasce","le фас","перев'язь"],["le fascisme","le фашізм","фашизм"],["le faste","le фаст","розкіш"],["le fatigue","le фатіг","втома"],
-      ["le faucon","le фокон","сокіл"],["le fausse","le фос","фальш"],["le faute","le фот","провина / помилка"],["le fauteuil","le фотей","крісло"],
-      ["le fauteur","le фотер","підбурювач"],["le faux","le фо","коса"],["le favori","le фаворі","фаворит"],["le fe","le фе","вогонь"]
+      ["l'eau","ло","вода"],["l'éboulis","лебулі","осип"],["l'écart","лекар","відстань / розрив"],
+      ["l'échéance","лешеанс","термін платежу"],["l'échelle","лешель","драбина / шкала"],["l'échec","лешек","невдача / шах"],["l'éclair","леклер","блискавка / еклери"],
+      ["l'éclat","лекля","блиск / спалах"],["l'école","леколь","школа"],["l'économie","лекодомі","економіка"],["l'écran","лекран","екран"],
+      ["l'écrivain","лекрівен","письменник"],["l'écrou","лекру","гайка"],["l'écu","лекю","екю"],["l'effet","лефе","ефект"],
+      ["l'égard","легар","повага / увага"],["l'église","легліз","церква"],["l'élan","лелан","порив"],["l'électeur","лелектер","виборець"],
+      ["l'électricité","лелектрісіте","електрика"],["l'élément","лелеман","елемент"],["l'éléphant","лелефан","слон"],["l'élève","лелев","учень"],
+      ["l'élite","леліт","еліта"],["l'éloge","лелож","похвала"],["l'élu","лелю","обранець"],["l'embase","лембаз","основа"],
+      ["l'embauche","лембош","найм на роботу"],["l'emblème","лемблем","емблема"],["l'embouteillage","лембутейаж","корк на дорозі"],["l'embûche","лембюш","перешкода"],
+      ["l'émetteur","леметер","передавач"],["l'émigration","леміграсьйон","еміграція"],["l'émission","лемісьйон","передача / ефір"],["l'émotion","лемосьйон","емоція"],
+      ["l'empereur","лемперер","імператор"],["l'empire","лемпір","імперія"],["l'emplacement","лемпласьєман","розташування"],["l'empoisonnement","лемпуазонман","отруєння"],
+      ["l'empreinte","лемпрент","відбиток"],["l'emprise","лемприз","вплив / контроль"],["l'enceinte","лянсант","огорожа / стіни"],["l'enchère","ляншер","аукцион"],
+      ["l'enclos","лянкло","огороджена ділянка"],["l'encrier","лянкріє","чорнильниця"],["l'encyclopédie","ленсіклопеді","енциклопедія"],
+      ["l'endettement","лендетман","заборгованість"],["l'endive","лендів","ендивій"],["l'endroit","ляндруа","місце"],["l'énergie","ленержі","енергія"],
+      ["l'enfance","лянфанс","дитинство"],["l'enfer","лянфер","пекло"],["l'enflement","лянфлеман","набряк"],
+      ["l'engagement","лянгажман","зобов'язання"],["l'engin","лянжен","машина / пристрій"],["l'enjeu","лянже","ставка"],["l'enlèvement","лянлевман","викрадення"],
+      ["l'ennemi","ленемі","ворог"],["l'ennui","ляннюі","нудьга / неприємність"],["l'enquête","лянкет","розслідування / опитування"],["l'enseignement","лянсењман","навчання / освіта"],
+      ["l'ensemble","лянсамбль","ансамбль / ціле"],["l'entente","лянтант","угода / порозуміння"],["l'enterrement","лянтерман","похорон"],["l'entêtement","лянтетман","впертість"],
+      ["l'entracte","лянтракт","антракт"],["l'entrain","лянтрен","запал"],["l'entraînement","лянтренман","тренування"],["les entrailles","лезантрай","нутрощі"],
+      ["l'entrée","лянтре","вхід / закуска"],["l'entreprise","лентрепріз","підприємство"],["l'entretien","лянтретен","бесіда / співбесіда"],
+      ["l'entresol","лянтресоль","антресоль"],["l'épaisseur","лепессер","товщина"],["l'épaule","леполь","плече"],
+      ["l'épicerie","лепсері","бакалія"],["l'épidémie","лепедемі","епідемія"],["l'épilogue","лепілог","епілог"],["l'épine","лепін","шип / колючка"],
+      ["l'époque","лепок","епоха"],["l'épreuve","лепрус","випробування"],["l'éprouvette","лепровет","пробірка"],["l'épuration","лепюрасьйон","очищення"],
+      ["l'équipe","лекіп","команда"],["l'équipement","лекіпман","обладнання"],["l'érable","лерабль","клен"],["l'ère","лер","ера"],
+      ["l'ermitage","лермітаж","скит"],["l'erreur","леррер","помилка"],["l'éruption","лерупсьйон","виверження"],["l'escalier","лескальє","сходи"],
+      ["l'escargot","лескарго","равлик"],["l'esclave","лесклав","раб"],["l'escorte","лескорт","ескорт"],["l'espace","леспас","простір / космос"],
+      ["l'espèce","леспсе","вид"],["l'espérance","лесперанс","надія"],["l'espion","леспіон","шпигун"],["l'espoir","леспуар","надія"],
+      ["l'esprit","леспрі","дух / розум"],["l'esquisse","лескіс","ескіз"],["l'essai","лесе","есе / спроба"],["l'essence","лесанс","бензин / сутність"],
+      ["l'essieu","лесьє","вісь"],["l'essor","лессор","зліт / піднесення"],["l'essuie","лесюі","рушник"],["l'établi","летаблі","верстак"],
+      ["l'établissement","летаблісман","заклад / установа"],["l'étage","летаж","поверх"],["l'étain","летен","олово"],["l'étang","летан","ставок"],
+      ["l'étape","летап","етап"],["l'état","лета","стан / держава"],["l'été","лете","літо"],["l'extincteur","лекстенктер","вогнегасник"],
+      ["l'étendard","летендар","прапор"],["l'étendue","летендю","протяжність"],["l'éternité","летерніте","вічність"],
+      ["l'éther","лете","ефір"],["l'ethnie","летні","етнос"],["l'étincelle","летінсель","іскра"],["l'étoffe","летоф","тканина / матерія"],
+      ["l'étoile","летуаль","зірка"],["l'étouffement","летюфман","задуха"],["l'étranger","летранже","іноземець"],
+      ["l'être","летр","істота / буття"],["les étrennes","лезетрен","подарунки на Новий рік"],["l'étude","летюд","етюд / навчання"],["l'étudiant","летюдьян","студент"],
+      ["l'eucharistie","лєхарісті","євхаристія"],["le seuil","ле сьой","поріг"],["l'heure","лер","година"],
+      ["l'euro","лєро","євро"],["l'évadé","леваде","втікач"],["l'évacuation","левакуасьйон","евакуація"],["l'évangile","леванжіль","євангеліє"],
+      ["l'évasion","левасьйон","втеча"],["l'événement","левенеман","подія"],["l'évidence","левіденс","очевидність"],["l'évêque","левек","єпископ"],
+      ["l'éviction","левіксьйон","виселення"],["l'évier","левіє","мийка"],["l'évolution","леволюсьйон","еволюція"],["l'exagération","лезажерасьйон","перебільшення"],
+      ["l'examen","лекзамен","іспит / огляд"],["l'excavation","лекскавасьйон","розкопки"],["l'excellence","лекселянс","досконалість"],["l'excédent","лекседан","надлишок"],
+      ["l'exception","лексепсьйон","виняток"],["l'excès","лексе","надлишок"],["l'excursion","лекскюсьйон","екскурсія"],["l'exemple","лекзампль","приклад"],
+      ["l'exercice","легзерсіс","вправа"],["l'exhalaison","легзалезон","випаровування"],["l'exhibition","лезбісьйон","виставка"],
+      ["l'exil","лезіль","вигнання"],["l'existence","легзистанс","існування"],["l'exode","лекзод","вихід / переселення"],["l'expansion","лекспансьйон","експансія"],
+      ["l'expéditeur","лекспедітер","відправник"],["l'expédition","лекспедісьйон","експедиція"],["l'expérience","лексперианс","досвід"],["l'expert","лекспер","експерт"],
+      ["l'expiration","лекспірасьйон","закінчення терміну"],["l'explication","лексплікасьйон","пояснення"],["l'exploit","лексплоа","подвиг / досягнення"],["l'exploration","лексплорасьйон","розвідка"],
+      ["l'explosion","лексплозьйон","вибух"],["l'export","лекспорт","експорт"],["l'exposition","лекспосьйон","виставка"],["l'exprès","лекпре","кур'єрська пошта"],
+      ["l'expulsion","лекспульсьйон","видворення"],["l'extension","лекстенсьйон","розширення"],["l'extérieur","лекстерьєр","зовнішній вигляд"],["l'extinction","лекстінсьйон","згасання"],
+      ["l'extraction","лекстраксьйон","видобуток"],["l'extrémiste","лекстреміст","екстреміст"],["l'exutoire","лекзютуару","віддушина"],
+      ["le fabrique","ле фабрік","фабрика"],["le façade","ле фасад","фасад"],["le face","ле фас","обличчя / сторона"],["le facette","ле фасет","грань"],
+      ["le fâcherie","ле фашері","сварка"],["la facilité","ля фасіліте","легкість"],["le façon","ле фасон","спосіб / фасон"],["le facteur","ле фактер","листоноша / фактор"],
+      ["la faculté","ля факюльте","факультет / здатність"],["le fada","ле фада","дурник"],["la faim","ля фен","голод"],
+      ["le faiseur","ле фезер","махінатор"],["le fait","ле фе","факт"],["la falaise","ля фалез","скеля"],
+      ["la fange","ля фанж","бруд"],["la fantaisie","ля фантезі","фантазія"],["le fantôme","ле фантом","привид"],["le faon","ле фон","оленя"],
+      ["la farce","ля фарс","фарс / начинка"],["le fard","ле фар","макіяж / рум'яна"],["le fardeau","ле фардо","тягар"],["la farine","ля фарін","борошно"],
+      ["la fasce","ля фас","перев'язь"],["le fascisme","ле фашізм","фашизм"],["le faste","ле фаст","розкіш"],["la fatigue","ля фатіг","втома"],
+      ["le faucon","ле фокон","сокіл"],["la faute","ля фот","провина / помилка"],["le fauteuil","ле фотей","крісло"],
+      ["le fauteur","ле фотер","підбурювач"],["le faux","ле фо","коса"],["le favori","ле фаворі","фаворит"],["le feu","ле фьо","вогонь"]
     ]},
     adjectives: {label:"Прикметники", items:[
 ["grand(e)","гран(д)","великий"],["petit(e)","пті(т)","малий"],["bon(ne)","бон(н)","добрий"],["mauvais(e)","мове(з)","поганий"],
@@ -644,7 +663,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     health: {
       label: "Тіло та здоров'я",
       words: {
-        nouns: ["le corps","la tête","le visage","l'œil","les yeux","la main","le bras","la jambe","le pied","le cœur","la santé","la maladie","le médecin","l'hôpital","la douleur","le cou","le dent","le docteur","le crâne"],
+        nouns: ["le corps","la tête","le visage","l'œil","les yeux","la main","le bras","la jambe","le pied","le cœur","la santé","la maladie","le médecin","l'hôpital","la douleur","le cou","la dent","le docteur","le crâne"],
         verbs: ["souffrir","sentir"],
         adjectives: ["fatigué(e)","malade","sain(e)","mort(e)","vivant(e)","fort(e)","faible"]
       }
@@ -668,7 +687,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     emotions: {
       label: "Почуття та характер",
       words: {
-        nouns: ["l'amour","le bonheur","le courage","le désespoir","le doute","le emotion","le espérance","le espoir"],
+        nouns: ["l'amour","le bonheur","le courage","le désespoir","le doute","l'émotion","l'espérance","l'espoir"],
         adjectives: ["heureux / heureuse","triste","content(e)","fâché(e)","fatigué(e)","calme","nerveux / nerveuse","inquiet / inquiète","fier / fière","timide","sympathique","gentil / gentille","méchant(e)","sérieux / sérieuse","intelligent(e)","stupide","courageux / courageuse","honnête","sincère","jaloux / jalouse","généreux / généreuse","égoïste"]
       }
     },
@@ -681,7 +700,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     society: {
       label: "Суспільство, право і політика",
       words: {
-        nouns: ["le gouvernement","la loi","la guerre","la paix","l'armée","le soldat","le citoyen","le droit","l'agent","l'autorité","la liberté","le crime","le débat","le drapeau","le etendard"],
+        nouns: ["le gouvernement","la loi","la guerre","la paix","l'armée","le soldat","le citoyen","le droit","l'agent","l'autorité","la liberté","le crime","le débat","le drapeau","l'étendard"],
         verbs: ["défendre","interdire"],
         adjectives: ["légal(e)","illégal(e)","criminel / criminelle","dangereux / dangereuse","national(e)","international(e)","politique","économique","social(e)"]
       }
@@ -689,14 +708,14 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     tech: {
       label: "Технології та медіа",
       words: {
-        nouns: ["le téléphone","l'ordinateur","l'internet","la télévision","la photo","l'image","le message","le disque","le ecran","l'appareil","le journal","le livre","la lettre"],
+        nouns: ["le téléphone","l'ordinateur","l'internet","la télévision","la photo","l'image","le message","le disque","l'écran","l'appareil","le journal","le livre","la lettre"],
         adjectives: ["numérique","électrique","technique","moderne"]
       }
     },
     leisure: {
       label: "Мистецтво, спорт і дозвілля",
       words: {
-        nouns: ["le sport","le jeu","le film","le livre","le concert","le cirque","le disque","le danses","le château","le ecrivain","le exhibition","le exposition"],
+        nouns: ["le sport","le jeu","le film","le livre","le concert","le cirque","le disque","le danses","le château","l'écrivain","l'exhibition","l'exposition"],
         verbs: ["jouer"],
         adjectives: ["fantastique","magnifique","superbe","merveilleux / merveilleuse"]
       }
@@ -843,6 +862,42 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     return shuffle(pool);
   }
   const CONJ_BATCH_SIZE = 20;
+
+  // ---------- sentence builder: arrange scrambled chunks into the right order ----------
+  const SENTENCE_BANK = [
+    { level:"A1", ua:"Я їм яблуко.", chunks:["Je","mange","une pomme."] },
+    { level:"A1", ua:"Ти студент.", chunks:["Tu","es","étudiant."] },
+    { level:"A1", ua:"У нас є кіт.", chunks:["Nous","avons","un chat."] },
+    { level:"A1", ua:"Вона живе в Парижі.", chunks:["Elle","habite","à Paris."] },
+    { level:"A1", ua:"Ми йдемо на ринок.", chunks:["Nous","allons","au marché."] },
+    { level:"A1", ua:"Сьогодні гарна погода.", chunks:["Il","fait","beau","aujourd'hui."] },
+    { level:"A1", ua:"Ми втомлені.", chunks:["Nous","sommes","fatigués."] },
+    { level:"A1", ua:"Я не їм хліб.", chunks:["Je","ne","mange","pas","de pain."] },
+    { level:"A1", ua:"Він не любить каву.", chunks:["Il","n'aime","pas","le café."] },
+    { level:"A1", ua:"Ти любиш каву?", chunks:["Est-ce que","tu","aimes","le café","?"] },
+    { level:"A1", ua:"Де ти живеш?", chunks:["Où","habites-tu","?"] },
+    { level:"A1", ua:"Він лікар.", chunks:["Il","est","médecin."] },
+    { level:"A2", ua:"Це дуже хороший ресторан.", chunks:["C'est","un très bon","restaurant."] },
+    { level:"A2", ua:"Вона пішла в кіно.", chunks:["Elle","est","allée","au cinéma."] },
+    { level:"A2", ua:"Ми з'їли піцу.", chunks:["Nous","avons","mangé","une pizza."] },
+    { level:"A2", ua:"Я не бачив цей фільм.", chunks:["Je","n'ai","pas","vu","ce film."] },
+    { level:"A2", ua:"Я встаю о сьомій годині.", chunks:["Je","me","lève","à sept heures."] },
+    { level:"A2", ua:"Вона не поспішає.", chunks:["Elle","ne","se dépêche","pas."] },
+    { level:"A2", ua:"Треба вчитися, щоб досягти успіху.", chunks:["Il","faut","étudier","pour réussir."] },
+    { level:"A2", ua:"Навпроти вокзалу є кафе.", chunks:["Il","y","a","un café","en face de la gare."] },
+    { level:"A2", ua:"Хліба більше немає.", chunks:["Il","n'y","a","plus","de pain."] },
+    { level:"A2", ua:"Я ніколи не їв равликів.", chunks:["Je","n'ai","jamais","mangé","d'escargots."] },
+    { level:"A2", ua:"Що ти робиш сьогодні ввечері?", chunks:["Qu'est-ce que","tu","fais","ce soir","?"] },
+    { level:"A2", ua:"Яку (з них) ти віддаєш перевагу?", chunks:["Laquelle","tu","préfères","?"] },
+    { level:"B1", ua:"Марі вища за Поля.", chunks:["Marie","est","plus grande","que Paul."] },
+    { level:"B1", ua:"Цей торт кращий за інший.", chunks:["Ce gâteau","est","meilleur","que l'autre."] },
+    { level:"B1", ua:"Завтра я піду їсти в ресторан.", chunks:["Demain,","je","vais manger","au restaurant."] },
+    { level:"B1", ua:"Наступного року я говоритиму французькою вільно.", chunks:["L'année prochaine,","je","parlerai","français","couramment."] },
+    { level:"B1", ua:"Коли я був малим, я жив у Ліоні.", chunks:["Quand","j'étais","petit,","j'habitais","à Lyon."] },
+    { level:"B1", ua:"Йшов дощ, коли я вийшов.", chunks:["Il","pleuvait","quand","je suis sorti."] }
+  ];
+  const SB_BATCH_SIZE = 10;
+
   const THEORY_ORDER = [
     // A1 — фундамент
     "pronounsEtreAvoir","regularVerbsPresent","articles","nounsPlural","adjectivesAgreement","wordOrder","cestIlEst","pronunciation",
@@ -1910,7 +1965,124 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       { text:"Je ________ (ne...que) deux euros.", options:["n'ai que","n'ai pas","n'ai jamais","n'ai rien"], answer:"n'ai que", note:"Ne...que виражає обмеження («лише»), а не заперечення сенсу." }
     ]
   };
-  // ---------- persistence helpers ----------
+
+  // ---------- reading comprehension: short original texts + questions ----------
+  const READING_LEVELS = [
+    { key:"all", label:"Усі рівні" },
+    { key:"A1", label:"A1" },
+    { key:"A2", label:"A2" },
+    { key:"B1", label:"B1" }
+  ];
+  const READING_ORDER = [
+    "maJournee","maFamille","leWeekend",
+    "voyageParis","fairesCourses","quatreSaisons",
+    "teletravail","decouverteScientifique","souvenirEnfance"
+  ];
+  const READING = {
+    maJournee: {
+      title: "Ma journée",
+      level: "A1",
+      text: "Je m'appelle Claire et j'ai vingt-cinq ans. Je me lève à sept heures du matin. Je bois du café et je mange du pain. Ensuite, je vais au travail en bus. Je travaille dans un bureau jusqu'à dix-huit heures. Le soir, je rentre à la maison et je prépare le dîner. Je me couche à onze heures.",
+      questions: [
+        { text:"Скільки років Клер?", options:["20","25","30","18"], answer:"25" },
+        { text:"О котрій годині вона встає?", options:["о 6 ранку","о 7 ранку","о 8 ранку","о 9 ранку"], answer:"о 7 ранку" },
+        { text:"Як вона добирається на роботу?", options:["пішки","на машині","автобусом","на велосипеді"], answer:"автобусом" },
+        { text:"Що вона робить увечері?", options:["дивиться телевізор","готує вечерю","читає книгу","одразу лягає спати"], answer:"готує вечерю" }
+      ]
+    },
+    maFamille: {
+      title: "Ma famille",
+      level: "A1",
+      text: "Voici ma famille. J'ai un frère et une sœur. Mon frère s'appelle Marc, il a trente ans. Ma sœur s'appelle Julie, elle est étudiante. Mes parents habitent à Lyon. Mon père est professeur et ma mère est médecin. Nous nous voyons tous les dimanches.",
+      questions: [
+        { text:"Скільки братів і сестер у автора?", options:["один брат і одна сестра","два брати","одна сестра","немає"], answer:"один брат і одна сестра" },
+        { text:"Ким працює мати?", options:["вчителька","лікарка","студентка","продавчиня"], answer:"лікарка" },
+        { text:"Де живуть батьки?", options:["у Парижі","у Ліоні","у Марселі","у Ніцці"], answer:"у Ліоні" },
+        { text:"Коли сім'я бачиться?", options:["щосуботи","щонеділі","щоп'ятниці","раз на місяць"], answer:"щонеділі" }
+      ]
+    },
+    leWeekend: {
+      title: "Le week-end",
+      level: "A1",
+      text: "Le samedi matin, je fais du sport. Ensuite, je vais au marché avec ma mère. L'après-midi, je regarde un film avec mes amis. Le dimanche, je reste à la maison. Je lis un livre et j'écoute de la musique. Le soir, toute la famille mange ensemble.",
+      questions: [
+        { text:"Що робить автор у суботу вранці?", options:["спить","займається спортом","працює","готує"], answer:"займається спортом" },
+        { text:"З ким автор ходить на ринок?", options:["з батьком","з другом","з мамою","сам"], answer:"з мамою" },
+        { text:"Що автор робить у неділю вдень?", options:["дивиться фільм","читає книгу і слухає музику","ходить у гості","займається спортом"], answer:"читає книгу і слухає музику" },
+        { text:"Що відбувається у неділю ввечері?", options:["вся сім'я вечеряє разом","автор іде в кіно","автор лягає спати рано","нічого особливого"], answer:"вся сім'я вечеряє разом" }
+      ]
+    },
+    voyageParis: {
+      title: "Un voyage à Paris",
+      level: "A2",
+      text: "L'été dernier, je suis allé à Paris avec mon amie Sophie. Nous avons visité la tour Eiffel et le musée du Louvre. Il a fait très beau pendant tout le voyage. Nous avons mangé dans un petit restaurant près de la Seine. Sophie a acheté des souvenirs pour sa famille. Le dernier jour, nous avons pris beaucoup de photos. C'était un voyage inoubliable.",
+      questions: [
+        { text:"З ким автор їздив до Парижа?", options:["сам","з подругою Софі","з батьками","з колегами"], answer:"з подругою Софі" },
+        { text:"Яка була погода?", options:["дощова","дуже гарна","холодна","мінлива"], answer:"дуже гарна", note:"Il a fait très beau — Passé Composé від il fait beau." },
+        { text:"Де вони обідали?", options:["у готелі","у маленькому ресторані біля Сени","вдома","у музеї"], answer:"у маленькому ресторані біля Сени" },
+        { text:"Що купила Софі?", options:["книги","сувеніри для родини","одяг","квитки на потяг"], answer:"сувеніри для родини" }
+      ]
+    },
+    fairesCourses: {
+      title: "Faire les courses",
+      level: "A2",
+      text: "Aujourd'hui, je dois faire les courses pour le dîner. Je vais au marché pour acheter des légumes frais. J'achète aussi du pain et du fromage à l'épicerie. Il n'y a pas de viande, alors je vais chez le boucher. Le boucher est très gentil et il me conseille un bon poulet. Enfin, je rentre chez moi pour préparer le repas.",
+      questions: [
+        { text:"Навіщо автор іде за покупками?", options:["щоб приготувати вечерю","щоб зустрітися з другом","щоб купити подарунок","просто прогулятися"], answer:"щоб приготувати вечерю" },
+        { text:"Де автор купує овочі?", options:["в супермаркеті","на ринку","в інтернеті","у сусіда"], answer:"на ринку" },
+        { text:"Чому автор іде до м'ясника?", options:["бо там дешевше","бо немає м'яса в магазині","за порадою","випадково"], answer:"бо немає м'яса в магазині" },
+        { text:"Що радить м'ясник?", options:["хорошу яловичину","хорошу курку","рибу","ковбасу"], answer:"хорошу курку" }
+      ]
+    },
+    quatreSaisons: {
+      title: "Les quatre saisons",
+      level: "A2",
+      text: "En France, il y a quatre saisons différentes. Au printemps, il fait doux et les fleurs poussent partout. En été, il fait chaud et beaucoup de gens vont à la plage. En automne, les feuilles tombent des arbres et le temps devient frais. En hiver, il fait froid et il neige parfois dans le nord. Ma saison préférée est l'automne parce que j'aime les couleurs des arbres.",
+      questions: [
+        { text:"Скільки пір року у Франції?", options:["дві","три","чотири","п'ять"], answer:"чотири" },
+        { text:"Що відбувається навесні?", options:["падає сніг","цвітуть квіти","всі йдуть на пляж","опадає листя"], answer:"цвітуть квіти" },
+        { text:"Куди їдуть люди влітку?", options:["в гори","на пляж","до лісу","нікуди"], answer:"на пляж" },
+        { text:"Яка улюблена пора року автора і чому?", options:["літо, через спеку","зима, через сніг","осінь, через кольори дерев","весна, через квіти"], answer:"осінь, через кольори дерев" }
+      ]
+    },
+    teletravail: {
+      title: "Le télétravail",
+      level: "B1",
+      text: "Depuis quelques années, de plus en plus de personnes travaillent à domicile. Le télétravail offre plusieurs avantages : on économise du temps de transport et on peut mieux organiser sa journée. Cependant, certains employés se sentent isolés parce qu'ils voient moins leurs collègues. D'autres trouvent qu'il est difficile de séparer la vie professionnelle et la vie privée. Malgré ces inconvénients, la majorité des salariés préfèrent garder au moins deux jours de télétravail par semaine. Les entreprises doivent donc trouver un bon équilibre entre le bureau et la maison.",
+      questions: [
+        { text:"Яка перевага віддаленої роботи згадана в тексті?", options:["вища зарплата","економія часу на дорогу","менше роботи","безкоштовне харчування"], answer:"економія часу на дорогу" },
+        { text:"Яку проблему відчувають деякі співробітники?", options:["брак грошей","ізоляцію / складно розділити роботу й особисте життя","втому від подорожей","нудьгу"], answer:"ізоляцію / складно розділити роботу й особисте життя" },
+        { text:"Скільки днів віддаленої роботи на тиждень хоче більшість?", options:["жодного","принаймні два","п'ять","весь час"], answer:"принаймні два" },
+        { text:"Що мають зробити компанії?", options:["скасувати офіси","знайти баланс між офісом і домом","підвищити зарплати","найняти більше людей"], answer:"знайти баланс між офісом і домом" }
+      ]
+    },
+    decouverteScientifique: {
+      title: "Une découverte scientifique",
+      level: "B1",
+      text: "Des chercheurs français ont récemment découvert une nouvelle espèce de poisson dans l'océan Pacifique. Cette découverte a surpris toute la communauté scientifique. Les chercheurs affirment que ce poisson vit à plus de mille mètres de profondeur. Ils ont utilisé un sous-marin spécial pour l'observer pendant plusieurs semaines. Cette espèce pourrait nous aider à mieux comprendre la vie dans les grandes profondeurs. Les résultats de cette étude seront publiés dans une revue scientifique le mois prochain.",
+      questions: [
+        { text:"Що відкрили французькі дослідники?", options:["новий острів","новий вид риби","нову рослину","нову печеру"], answer:"новий вид риби" },
+        { text:"На якій глибині живе ця риба?", options:["понад 100 метрів","понад 500 метрів","понад тисячу метрів","на поверхні"], answer:"понад тисячу метрів" },
+        { text:"Що використовували дослідники для спостереження?", options:["дрон","спеціальну підводну лодку","супутник","звичайний човен"], answer:"спеціальну підводну лодку" },
+        { text:"Коли будуть опубліковані результати?", options:["уже опубліковані","наступного місяця","через рік","невідомо"], answer:"наступного місяця" }
+      ]
+    },
+    souvenirEnfance: {
+      title: "Un souvenir d'enfance",
+      level: "B1",
+      text: "Quand j'avais dix ans, mes parents m'avaient promis un chien pour mon anniversaire. Ce jour-là, j'étais tellement excité que je n'avais pas pu dormir de la nuit. Le matin, j'ai couru dans le salon et j'ai vu une petite boîte avec des trous. Mon père avait déjà préparé tout ce qu'il fallait pour le chien : un panier, de la nourriture et des jouets. Depuis ce jour, ce chien, que nous avions appelé Rex, est devenu mon meilleur ami. Aujourd'hui encore, je me souviens de ce moment avec beaucoup de tendresse.",
+      questions: [
+        { text:"Що пообіцяли батьки на день народження?", options:["велосипед","собаку","подорож","телефон"], answer:"собаку" },
+        { text:"Чому автор не міг заснути?", options:["було дуже спекотно","був дуже схвильований","хворів","мусив вчитися"], answer:"був дуже схвильований" },
+        { text:"Що вже підготував батько?", options:["лише корм","кошик, їжу та іграшки","нашийник і повідець","нічого"], answer:"кошик, їжу та іграшки" },
+        { text:"Як звали собаку?", options:["Макс","Рекс","Тото","Фідель"], answer:"Рекс" }
+      ]
+    }
+  };
+  function loadReadingProgress(){
+    try{ return JSON.parse(safeGet("fq_reading_progress","{}")); } catch(e){ return {}; }
+  }
+
   function safeGet(key, fallback){
     try{ const v = localStorage.getItem(key); return v === null ? fallback : v; }
     catch(e){ return fallback; }
@@ -1945,7 +2117,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     safeSet("fq_order", JSON.stringify(orderStore));
   }
   // ---------- backup: export/import everything stored locally ----------
-  const BACKUP_KEYS = ["fq_history","fq_theme","fq_favorites","fq_mistakes","fq_theory_progress","fq_progress","fq_order"];
+  const BACKUP_KEYS = ["fq_history","fq_theme","fq_favorites","fq_mistakes","fq_theory_progress","fq_reading_progress","fq_progress","fq_order"];
   function exportProgress(){
     const data = {};
     BACKUP_KEYS.forEach(k=>{
@@ -1983,12 +2155,27 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   }
   // ---------- state ----------
   let state = { view:"picker", mode:"practice", direction:"ua_fr", catKey:null, batchStart:0, qIndex:0, score:0, missed:[], answered:false, options:[], correctIdx:-1, theme:loadTheme(), history:loadHistory(), taskType:"normal", drawerOpen:false, themeKey:null, theoryKey:null, practiceIndex:0, practiceAnswered:false, practiceSelected:null, practiceScore:0, theoryLevelFilter:"all",
-    conjPool:null, conjIndex:0, conjBatchStart:0, conjScore:0, conjMissed:[], conjAnswered:false, conjSelected:null, conjOptions:[], conjCorrectText:null, conjCurrent:null };
+    conjPool:null, conjIndex:0, conjBatchStart:0, conjScore:0, conjMissed:[], conjAnswered:false, conjSelected:null, conjOptions:[], conjCorrectText:null, conjCurrent:null,
+    sbPool:null, sbIndex:0, sbBatchStart:0, sbScore:0, sbMissed:[], sbCurrent:null, sbAvailable:[], sbPlaced:[], sbAnswered:false, sbCorrect:null,
+    readingKey:null, readingLevelFilter:"all", readingQIndex:0, readingAnswered:false, readingSelected:null, readingScore:0 };
   const progressStore = loadProgressStore(); // catKey -> how many items completed, persisted across sessions/reloads
   const orderStore = loadOrderStore(); // catKey -> shuffled array of item indices, persisted across sessions/reloads
   let favorites = loadFavorites();     // Set of "catKey::idx" — words the user starred
   let mistakes = loadMistakes();       // Set of "catKey::idx" — words recently answered wrong
   let theoryProgress = loadTheoryProgress(); // topicKey -> {best, last, attempts, total}
+  let readingProgress = loadReadingProgress(); // textKey -> {best, last, attempts, total}
+  function recordReadingResult(textKey, score, total){
+    if(total <= 0) return;
+    const percent = Math.round(score/total*100);
+    const prev = readingProgress[textKey];
+    readingProgress[textKey] = {
+      best: prev ? Math.max(prev.best, percent) : percent,
+      last: percent,
+      attempts: prev ? prev.attempts + 1 : 1,
+      total: total
+    };
+    safeSet("fq_reading_progress", JSON.stringify(readingProgress));
+  }
   // pcMode categories (Passé Composé) store a grammatical construction, not a plain
   // word — mixing them into a favorites/mistakes list built from several categories
   // would break the quiz's assumption that one category = one item shape, so they're
@@ -2153,6 +2340,13 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       '<span class="fq-drawer-item-count">Présent · Passé Composé · Futur · Imparfait</span>';
     conjBtn.onclick = ()=>{ state.drawerOpen = false; startConjugTrainer(); };
     panel.appendChild(conjBtn);
+    const sbBtn = document.createElement("button");
+    sbBtn.type = "button";
+    sbBtn.className = "fq-drawer-item";
+    sbBtn.innerHTML = '<span class="fq-drawer-item-title">🧩 Побудова речення</span>' +
+      '<span class="fq-drawer-item-count">Склади речення зі слів у правильному порядку</span>';
+    sbBtn.onclick = ()=>{ state.drawerOpen = false; startSentenceBuilder(); };
+    panel.appendChild(sbBtn);
     const mistakeN = mistakesCount();
     const mistakeBtn = document.createElement("button");
     mistakeBtn.type = "button";
@@ -2396,6 +2590,67 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     nextConjugQuestion(false);
     render();
   }
+  // ---------- sentence builder logic ----------
+  function startSentenceBuilder(){
+    state.sbPool = shuffle(SENTENCE_BANK.map((_,i)=>i));
+    state.sbIndex = 0;
+    state.sbBatchStart = 0;
+    state.sbScore = 0;
+    state.sbMissed = [];
+    state.view = "sentence";
+    nextSentenceQuestion(true);
+    render();
+  }
+  function nextSentenceQuestion(isFirst){
+    if(!isFirst) state.sbIndex++;
+    if(state.sbIndex >= state.sbPool.length || state.sbIndex >= state.sbBatchStart + SB_BATCH_SIZE){
+      state.view = "sentenceSummary";
+      recordHistoryEntry("🧩 Побудова речення", state.sbScore, state.sbIndex - state.sbBatchStart);
+      return;
+    }
+    const s = SENTENCE_BANK[state.sbPool[state.sbIndex]];
+    state.sbCurrent = s;
+    state.sbAvailable = shuffle(s.chunks.map((text,id)=>({ text, id })));
+    state.sbPlaced = [];
+    state.sbAnswered = false;
+    state.sbCorrect = null;
+  }
+  function sbTapAvailable(id){
+    if(state.sbAnswered) return;
+    const idx = state.sbAvailable.findIndex(c=>c.id===id);
+    if(idx === -1) return;
+    const [chunk] = state.sbAvailable.splice(idx,1);
+    state.sbPlaced.push(chunk);
+    render();
+  }
+  function sbTapPlaced(id){
+    if(state.sbAnswered) return;
+    const idx = state.sbPlaced.findIndex(c=>c.id===id);
+    if(idx === -1) return;
+    const [chunk] = state.sbPlaced.splice(idx,1);
+    state.sbAvailable.push(chunk);
+    render();
+  }
+  function sbCheck(){
+    if(state.sbAnswered || state.sbAvailable.length > 0) return;
+    const order = state.sbPlaced.map(c=>c.id);
+    const correct = order.every((id,i)=>id===i);
+    state.sbAnswered = true;
+    state.sbCorrect = correct;
+    if(correct) state.sbScore++;
+    else state.sbMissed.push(state.sbCurrent);
+    render();
+  }
+  function sbReset(){
+    if(state.sbAnswered) return;
+    state.sbAvailable = shuffle([...state.sbAvailable, ...state.sbPlaced]);
+    state.sbPlaced = [];
+    render();
+  }
+  function handleSentenceNext(){
+    nextSentenceQuestion(false);
+    render();
+  }
   function render(){
     root.innerHTML = "";
     renderThemeToggle();
@@ -2411,8 +2666,12 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     else if(state.view === "history") renderHistory();
     else if(state.view === "conjug") renderConjugQuiz();
     else if(state.view === "conjugSummary") renderConjugSummary();
+    else if(state.view === "sentence") renderSentenceBuilder();
+    else if(state.view === "sentenceSummary") renderSentenceSummary();
     else if(state.view === "themes") renderThemesPicker();
     else if(state.view === "themeCats") renderThemeCatPicker();
+    else if(state.view === "readingList") renderReadingList();
+    else if(state.view === "readingText") renderReadingText();
   }
   function renderTabs(){
     const tabs = document.createElement("div"); tabs.className="fq-tabs";
@@ -2424,7 +2683,9 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     t3.onclick = ()=>{ state.mode="dictionary"; state.view="dictList"; render(); };
     const t4 = document.createElement("button"); t4.className="fq-tab" + (state.mode==="history"?" active":""); t4.textContent="Прогрес";
     t4.onclick = ()=>{ state.mode="history"; state.view="history"; render(); };
-    tabs.appendChild(t1); tabs.appendChild(t2); tabs.appendChild(t3); tabs.appendChild(t4);
+    const t5 = document.createElement("button"); t5.className="fq-tab" + (state.mode==="reading"?" active":""); t5.textContent="Читання";
+    t5.onclick = ()=>{ state.mode="reading"; state.view="readingList"; render(); };
+    tabs.appendChild(t1); tabs.appendChild(t2); tabs.appendChild(t3); tabs.appendChild(t4); tabs.appendChild(t5);
     root.appendChild(tabs);
   }
   function renderHistory(){
@@ -2435,10 +2696,12 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     // ---- overview chips: favorites / mistakes / theory topics started ----
     const chipWrap = document.createElement("div"); chipWrap.className="fq-stat-chips";
     const topicsStarted = Object.keys(theoryProgress).length;
+    const readingStarted = Object.keys(readingProgress).length;
     [
       ["⭐ Закладки", favoritesCount() + " слів"],
       ["🔁 На повторення", mistakesCount() + " слів"],
-      ["📘 Тем теорії розпочато", topicsStarted + " / " + THEORY_ORDER.length]
+      ["📘 Тем теорії розпочато", topicsStarted + " / " + THEORY_ORDER.length],
+      ["📖 Текстів прочитано", readingStarted + " / " + READING_ORDER.length]
     ].forEach(([label,val])=>{
       const chip = document.createElement("div"); chip.className="fq-stat-chip";
       const chipVal = document.createElement("div"); chipVal.className="fq-stat-chip-val"; chipVal.textContent = val;
@@ -2497,6 +2760,32 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
         table2.appendChild(tr);
       });
       root.appendChild(table2);
+    }
+
+    // ---- reading comprehension progress ----
+    const subTitle3 = document.createElement("h3"); subTitle3.className="fq-progress-subtitle"; subTitle3.textContent = "Читання з розумінням";
+    root.appendChild(subTitle3);
+    const attemptedReading = READING_ORDER.filter(key => readingProgress[key]);
+    if(!attemptedReading.length){
+      const empty = document.createElement("p"); empty.className="fq-history-note";
+      empty.textContent = "Ще не пройдено жодного тексту. Відкрий розділ «Читання» і пройди питання після будь-якого тексту.";
+      root.appendChild(empty);
+    } else {
+      const table3 = document.createElement("table"); table3.className="fq-dict-table";
+      const thead3 = document.createElement("tr");
+      ["Текст","Рівень","Найкращий результат","Спроб"].forEach(h=>{ const th=document.createElement("th"); th.textContent=h; thead3.appendChild(th); });
+      table3.appendChild(thead3);
+      attemptedReading.forEach((key,i)=>{
+        const t = READING[key]; const prog = readingProgress[key];
+        const tr = document.createElement("tr"); if(i%2===1) tr.className="alt";
+        const c1 = document.createElement("td"); c1.textContent = t.title;
+        const c2 = document.createElement("td"); c2.textContent = t.level;
+        const c3 = document.createElement("td"); c3.textContent = prog.best + "%";
+        const c4 = document.createElement("td"); c4.textContent = prog.attempts;
+        tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3); tr.appendChild(c4);
+        table3.appendChild(tr);
+      });
+      root.appendChild(table3);
     }
   }
   function renderDictList(){
@@ -2795,6 +3084,171 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     wrap.appendChild(nextbar);
     root.appendChild(wrap);
   }
+  function renderReadingList(){
+    renderTabs();
+    const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Читання з розумінням · короткі тексти з питаннями";
+    const title = document.createElement("h2"); title.className="fq-title"; title.textContent="Обери текст";
+    root.appendChild(kicker); root.appendChild(title);
+
+    const lvlWrap = document.createElement("div"); lvlWrap.className="fq-dirtoggle";
+    READING_LEVELS.forEach(lvl=>{
+      const btn = document.createElement("button");
+      btn.className = "fq-dirbtn" + (state.readingLevelFilter === lvl.key ? " active" : "");
+      btn.textContent = lvl.label;
+      btn.onclick = ()=>{ state.readingLevelFilter = lvl.key; render(); };
+      lvlWrap.appendChild(btn);
+    });
+    root.appendChild(lvlWrap);
+
+    const visibleKeys = READING_ORDER.filter(key => state.readingLevelFilter === "all" || READING[key].level === state.readingLevelFilter);
+
+    const grid = document.createElement("div"); grid.className="fq-grid";
+    visibleKeys.forEach(key=>{
+      const t = READING[key];
+      const tile = document.createElement("div"); tile.className="fq-tile";
+      const topRow = document.createElement("div"); topRow.className="fq-tile-toprow";
+      const name = document.createElement("div"); name.className="fq-tile-name"; name.textContent = t.title;
+      const badge = document.createElement("span"); badge.className="fq-level-badge lvl-"+t.level.toLowerCase(); badge.textContent = t.level;
+      topRow.appendChild(name); topRow.appendChild(badge);
+      const count = document.createElement("div"); count.className="fq-tile-count"; count.textContent = t.questions.length + " питань на розуміння тексту";
+      tile.appendChild(topRow); tile.appendChild(count);
+      const prog = readingProgress[key];
+      if(prog){
+        const progLine = document.createElement("div"); progLine.className="fq-tile-progress";
+        progLine.textContent = "найкращий результат " + prog.best + "% · спроб: " + prog.attempts;
+        tile.appendChild(progLine);
+      }
+      tile.onclick = ()=>{
+        state.readingKey = key;
+        state.view = "readingText";
+        state.readingQIndex = 0;
+        state.readingAnswered = false;
+        state.readingSelected = null;
+        state.readingScore = 0;
+        render();
+      };
+      grid.appendChild(tile);
+    });
+    root.appendChild(grid);
+  }
+
+  function renderReadingText(){
+    const t = READING[state.readingKey];
+    const topbar = document.createElement("div"); topbar.className="fq-topbar";
+    const back = document.createElement("button"); back.className="fq-back"; back.textContent="← Тексти"; back.onclick=()=>{state.view="readingList"; render();};
+    topbar.appendChild(back);
+    root.appendChild(topbar);
+
+    const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Читання · " + t.level;
+    const title = document.createElement("h2"); title.className="fq-title"; title.textContent = t.title;
+    root.appendChild(kicker); root.appendChild(title);
+
+    const article = document.createElement("div"); article.className="fq-theory-article";
+    const p = document.createElement("p"); p.textContent = t.text;
+    article.appendChild(p);
+    root.appendChild(article);
+
+    const speakBtn = document.createElement("button");
+    speakBtn.type = "button";
+    speakBtn.className = "fq-speak";
+    speakBtn.textContent = "🔊 Прослухати текст";
+    speakBtn.onclick = ()=> speakFrench(t.text);
+    root.appendChild(speakBtn);
+
+    renderReadingQuestions(state.readingKey);
+  }
+
+  function renderReadingQuestions(textKey){
+    const t = READING[textKey];
+    const qs = t.questions;
+
+    const wrap = document.createElement("div"); wrap.className="fq-mp-wrap";
+    const divider = document.createElement("div"); divider.className="fq-mp-divider";
+    wrap.appendChild(divider);
+
+    const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Питання на розуміння";
+    const heading = document.createElement("h3"); heading.className="fq-mp-heading"; heading.textContent="Перевір, чи все зрозуміло";
+    wrap.appendChild(kicker); wrap.appendChild(heading);
+
+    if(state.readingQIndex >= qs.length){
+      const done = document.createElement("div"); done.className="fq-mp-done";
+      done.innerHTML = "Текст пройдено: <b>" + state.readingScore + " / " + qs.length + "</b>";
+      wrap.appendChild(done);
+      const prog = readingProgress[textKey];
+      if(prog){
+        const bestLine = document.createElement("p"); bestLine.className="fq-mp-progress";
+        bestLine.textContent = "Найкращий результат: " + prog.best + "% · спроб: " + prog.attempts;
+        wrap.appendChild(bestLine);
+      }
+      const btnrow = document.createElement("div"); btnrow.className="fq-btnrow";
+      const retry = document.createElement("button"); retry.className="fq-btn-secondary"; retry.textContent="Пройти ще раз";
+      retry.onclick = ()=>{
+        state.readingQIndex = 0;
+        state.readingAnswered = false;
+        state.readingSelected = null;
+        state.readingScore = 0;
+        render();
+      };
+      const nextText = document.createElement("button"); nextText.className="fq-btn-primary"; nextText.textContent="Інший текст";
+      nextText.onclick = ()=>{ state.view = "readingList"; render(); };
+      btnrow.appendChild(retry); btnrow.appendChild(nextText);
+      wrap.appendChild(btnrow);
+      root.appendChild(wrap);
+      return;
+    }
+
+    const q = qs[state.readingQIndex];
+
+    const progress = document.createElement("p"); progress.className="fq-mp-progress";
+    progress.textContent = (state.readingQIndex+1) + " / " + qs.length;
+    wrap.appendChild(progress);
+
+    const sentence = document.createElement("p"); sentence.className="fq-mp-sentence"; sentence.textContent = q.text;
+    wrap.appendChild(sentence);
+
+    const optWrap = document.createElement("div"); optWrap.className="fq-options";
+    q.options.forEach(opt=>{
+      const btn = document.createElement("button"); btn.className="fq-opt"; btn.textContent = opt;
+      if(state.readingAnswered){
+        btn.disabled = true;
+        if(opt === q.answer) btn.classList.add("correct");
+        else if(opt === state.readingSelected) btn.classList.add("wrong");
+      }
+      btn.onclick = ()=>{
+        if(state.readingAnswered) return;
+        state.readingAnswered = true;
+        state.readingSelected = opt;
+        if(opt === q.answer) state.readingScore++;
+        render();
+      };
+      optWrap.appendChild(btn);
+    });
+    wrap.appendChild(optWrap);
+
+    if(state.readingAnswered && q.note){
+      const note = document.createElement("p"); note.className="fq-mp-note"; note.innerHTML = q.note;
+      wrap.appendChild(note);
+    }
+
+    const nextbar = document.createElement("div"); nextbar.className="fq-nextbar";
+    const nextBtn = document.createElement("button"); nextBtn.className="fq-next";
+    nextBtn.textContent = (state.readingQIndex+1 === qs.length) ? "Завершити" : "Далі →";
+    nextBtn.disabled = !state.readingAnswered;
+    nextBtn.onclick = ()=>{
+      state.readingQIndex++;
+      state.readingAnswered = false;
+      state.readingSelected = null;
+      if(state.readingQIndex >= qs.length){
+        recordReadingResult(textKey, state.readingScore, qs.length);
+      }
+      render();
+    };
+    nextbar.appendChild(nextBtn);
+    wrap.appendChild(nextbar);
+
+    root.appendChild(wrap);
+  }
+
   function renderPicker(){
     renderTabs();
     const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Активне пригадування · за розділами";
@@ -3126,7 +3580,141 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     btnrow.appendChild(toPicker);
     root.appendChild(btnrow);
   }
-  applyTheme();
+  function renderSentenceBuilder(){
+    const s = state.sbCurrent;
+    const topbar = document.createElement("div"); topbar.className="fq-topbar";
+    const back = document.createElement("button"); back.className="fq-back"; back.textContent="← Розділи"; back.onclick=()=>{state.view="picker"; render();};
+    const rightWrap = document.createElement("div"); rightWrap.className="fq-topbar-right";
+    const info = document.createElement("span");
+    const posInBatch = (state.sbIndex - state.sbBatchStart) + 1;
+    info.textContent = "Побудова речення · " + posInBatch + "/" + Math.min(SB_BATCH_SIZE, state.sbPool.length - state.sbBatchStart) + " · рахунок " + state.sbScore;
+    rightWrap.appendChild(info);
+    topbar.appendChild(back); topbar.appendChild(rightWrap);
+    root.appendChild(topbar);
+
+    const barWrap = document.createElement("div"); barWrap.className="fq-progressbar";
+    const barFill = document.createElement("div"); barFill.className="fq-progressbar-fill";
+    const pct = Math.round((posInBatch-1)/Math.min(SB_BATCH_SIZE, state.sbPool.length-state.sbBatchStart)*100);
+    barFill.style.width = pct + "%";
+    barWrap.appendChild(barFill);
+    root.appendChild(barWrap);
+
+    const label = document.createElement("p"); label.className="fq-prompt-label";
+    label.textContent = "Склади французьке речення (рівень " + s.level + "):";
+    root.appendChild(label);
+    const prompt = document.createElement("p"); prompt.className="fq-prompt";
+    prompt.style.fontSize = "24px";
+    prompt.textContent = s.ua;
+    root.appendChild(prompt);
+
+    const answerWrap = document.createElement("div");
+    answerWrap.className = "fq-sb-answer" + (state.sbAnswered ? (state.sbCorrect ? " correct" : " wrong") : "");
+    if(state.sbPlaced.length === 0){
+      const placeholder = document.createElement("span"); placeholder.className="fq-sb-placeholder";
+      placeholder.textContent = "Обирай слова знизу в потрібному порядку…";
+      answerWrap.appendChild(placeholder);
+    } else {
+      state.sbPlaced.forEach(chunk=>{
+        const chip = document.createElement("button"); chip.type="button"; chip.className="fq-sb-chip placed";
+        chip.textContent = chunk.text;
+        chip.disabled = state.sbAnswered;
+        chip.onclick = ()=> sbTapPlaced(chunk.id);
+        answerWrap.appendChild(chip);
+      });
+    }
+    root.appendChild(answerWrap);
+
+    const bankWrap = document.createElement("div"); bankWrap.className="fq-sb-bank";
+    state.sbAvailable.forEach(chunk=>{
+      const chip = document.createElement("button"); chip.type="button"; chip.className="fq-sb-chip";
+      chip.textContent = chunk.text;
+      chip.disabled = state.sbAnswered;
+      chip.onclick = ()=> sbTapAvailable(chunk.id);
+      bankWrap.appendChild(chip);
+    });
+    root.appendChild(bankWrap);
+
+    const actionRow = document.createElement("div"); actionRow.className="fq-btnrow";
+    if(!state.sbAnswered){
+      const resetBtn = document.createElement("button"); resetBtn.className="fq-btn-secondary"; resetBtn.textContent="Скинути";
+      resetBtn.disabled = state.sbPlaced.length === 0;
+      resetBtn.onclick = sbReset;
+      actionRow.appendChild(resetBtn);
+      const checkBtn = document.createElement("button"); checkBtn.className="fq-btn-primary"; checkBtn.textContent="Перевірити";
+      checkBtn.disabled = state.sbAvailable.length > 0;
+      checkBtn.onclick = sbCheck;
+      actionRow.appendChild(checkBtn);
+    }
+    root.appendChild(actionRow);
+
+    const hint = document.createElement("div"); hint.className="fq-hint";
+    if(state.sbAnswered){
+      const correctSentence = s.chunks.join(" ").replace(/\s([?.,!])/g, "$1");
+      const line = document.createElement("p");
+      line.innerHTML = (state.sbCorrect ? "✅ Правильно: " : "❌ Правильний варіант: ") + "<b>" + correctSentence + "</b>";
+      hint.appendChild(line);
+      const speakBtn = document.createElement("button");
+      speakBtn.type = "button";
+      speakBtn.className = "fq-speak";
+      speakBtn.textContent = "🔊 Прослухати вимову";
+      speakBtn.onclick = ()=> speakFrench(correctSentence);
+      hint.appendChild(speakBtn);
+    }
+    root.appendChild(hint);
+
+    const nextbar = document.createElement("div"); nextbar.className="fq-nextbar";
+    const nextBtn = document.createElement("button"); nextBtn.className="fq-next"; nextBtn.textContent="Далі →";
+    nextBtn.disabled = !state.sbAnswered;
+    nextBtn.onclick = handleSentenceNext;
+    nextbar.appendChild(nextBtn);
+    root.appendChild(nextbar);
+  }
+  function renderSentenceSummary(){
+    const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent = "🧩 Побудова речення";
+    const title = document.createElement("h2"); title.className="fq-title"; title.textContent = "Порція завершена";
+    root.appendChild(kicker); root.appendChild(title);
+    const total = state.sbIndex - state.sbBatchStart;
+    const scoreEl = document.createElement("div"); scoreEl.className="fq-summary-score"; scoreEl.textContent = state.sbScore + " / " + total;
+    const sub = document.createElement("div"); sub.className="fq-summary-sub";
+    sub.textContent = "Порядок слів, заперечення, питання та часи впереміш";
+    root.appendChild(scoreEl); root.appendChild(sub);
+    if(state.sbMissed.length){
+      const mt = document.createElement("div"); mt.className="fq-missed-title"; mt.textContent = "Варто повторити:";
+      root.appendChild(mt);
+      state.sbMissed.forEach(m=>{
+        const correctSentence = m.chunks.join(" ").replace(/\s([?.,!])/g, "$1");
+        const row = document.createElement("div"); row.className="fq-missed-item";
+        const fr = document.createElement("span"); fr.className="fq-missed-fr"; fr.textContent = correctSentence;
+        const ua = document.createElement("span"); ua.className="fq-missed-ua"; ua.textContent = m.ua;
+        row.appendChild(fr); row.appendChild(ua);
+        root.appendChild(row);
+      });
+    }
+    const btnrow = document.createElement("div"); btnrow.className="fq-btnrow";
+    const hasMore = state.sbIndex < state.sbPool.length;
+    if(hasMore){
+      const cont = document.createElement("button"); cont.className="fq-btn-primary";
+      cont.textContent = "Наступні " + Math.min(SB_BATCH_SIZE, state.sbPool.length - state.sbIndex) + " речень";
+      cont.onclick = ()=>{
+        state.sbBatchStart = state.sbIndex;
+        state.sbScore = 0;
+        state.sbMissed = [];
+        state.view = "sentence";
+        nextSentenceQuestion(true);
+        render();
+      };
+      btnrow.appendChild(cont);
+    } else {
+      const again = document.createElement("button"); again.className="fq-btn-primary"; again.textContent="Пройти ще раз";
+      again.onclick = startSentenceBuilder;
+      btnrow.appendChild(again);
+    }
+    const toPicker = document.createElement("button"); toPicker.className="fq-btn-secondary"; toPicker.textContent="Обрати інший розділ";
+    toPicker.onclick = ()=>{ state.view="picker"; render(); };
+    btnrow.appendChild(toPicker);
+    root.appendChild(btnrow);
+  }
+
   render();
 })();</script>
 
