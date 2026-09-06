@@ -164,6 +164,20 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
 .fq-dict-pron{ font-style:italic; color:var(--gold); }
 .fq-dict-empty{ text-align:center; color:var(--muted); padding:20px 0; }
 .fq-dict-count{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:12.5px; color:var(--muted); margin-top:12px; text-align:right;}
+/* ---- conjugation reference ---- */
+.fq-conj-meta{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:13.5px; color:var(--muted); margin:0 0 18px; line-height:1.55; }
+.fq-conj-meta b{ color:var(--navy); }
+.fq-conj-tense{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:15px; font-weight:600; color:var(--navy); margin:20px 0 8px; }
+.fq-conj-table-wrap{ overflow-x:auto; margin:0 0 6px; }
+.fq-conj-suggest{ margin-top:4px; }
+.fq-conj-suggest-item{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; width:100%; text-align:left; background:var(--card); border:1px solid var(--line); border-bottom:none; padding:12px 14px; cursor:pointer; color:var(--ink); font-size:14.5px; font-family:"Helvetica Neue",Arial,sans-serif; }
+.fq-conj-suggest-item:last-child{ border-bottom:1px solid var(--line); }
+.fq-conj-suggest-item:hover{ background:var(--card-alt); }
+.fq-conj-suggest-fr{ font-weight:600; }
+.fq-conj-suggest-ua{ color:var(--muted); font-size:13px; }
+.fq-conj-form{ background:none; border:none; padding:0; cursor:pointer; color:inherit; font:inherit; text-align:left; }
+.fq-conj-form:hover{ color:var(--navy); text-decoration:underline; }
+.fq-conj-note{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:12.5px; color:var(--muted); margin:8px 0 0; line-height:1.5; }
 </style>
 </head>
 <body>
@@ -862,6 +876,383 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     return shuffle(pool);
   }
   const CONJ_BATCH_SIZE = 20;
+  const CONJ_AVOIR_IMPARFAIT = ["avais","avais","avait","avions","aviez","avaient"];
+  const CONJ_ETRE_IMPARFAIT = ["étais","étais","était","étions","étiez","étaient"];
+  const CONJ_REF_TENSES = [
+    { key:"present", label:"Présent" },
+    { key:"imparfait", label:"Imparfait" },
+    { key:"futur", label:"Futur simple" },
+    { key:"cond", label:"Conditionnel présent" },
+    { key:"pc", label:"Passé Composé" },
+    { key:"pqp", label:"Plus-que-parfait" },
+    { key:"subj", label:"Subjonctif présent" }
+  ];
+  const CONJ_ETRE_SET = new Set([
+    "aller","arriver","descendre","entrer","monter","mourir","naître","naitre","partir","rester",
+    "retourner","sortir","tomber","venir","devenir","revenir","parvenir","survenir","rentrer",
+    "intervenir","repartir","revenir","décéder"
+  ]);
+  const CONJ_SUBJ_IRREG = {
+    "être":["sois","sois","soit","soyons","soyez","soient"],
+    "avoir":["aie","aies","ait","ayons","ayez","aient"],
+    "aller":["aille","ailles","aille","allions","alliez","aillent"],
+    "faire":["fasse","fasses","fasse","fassions","fassiez","fassent"],
+    "pouvoir":["puisse","puisses","puisse","puissions","puissiez","puissent"],
+    "savoir":["sache","saches","sache","sachions","sachiez","sachent"],
+    "vouloir":["veuille","veuilles","veuille","voulions","vouliez","veuillent"],
+    "falloir":["","","faille","","",""],
+    "valoir":["vaille","vailles","vaille","valions","valiez","vaillent"],
+    "pleuvoir":["","","pleuve","","",""]
+  };
+  function endings(stem, list){ return list.map(e => stem + e); }
+  function stripInflectPrefix(inf){
+    const m = inf.match(/^(se |s'|s’)/i);
+    if(!m) return { reflexive:false, base:inf };
+    return { reflexive:true, base:inf.slice(m[1].length) };
+  }
+  function defaultImparfait(present){
+    const nous = present[3] || "";
+    const stem = nous.endsWith("ons") ? nous.slice(0,-3) : nous;
+    return endings(stem, ["ais","ais","ait","ions","iez","aient"]);
+  }
+  function defaultSubj(present, imparfait, inf){
+    if(CONJ_SUBJ_IRREG[inf]) return CONJ_SUBJ_IRREG[inf].slice();
+    const ils = present[5] || "";
+    const stem = ils.endsWith("ent") ? ils.slice(0,-3) : ils.replace(/t$/,"");
+    return [stem+"e", stem+"es", stem+"e", imparfait[3], imparfait[4], stem+"ent"];
+  }
+  function defaultCond(futur){
+    const je = futur[0] || "";
+    const stem = je.endsWith("ai") ? je.slice(0,-2) : je;
+    return endings(stem, ["ais","ais","ait","ions","iez","aient"]);
+  }
+  function defaultFuturFromInf(inf){
+    let stem = inf;
+    if(inf.endsWith("re")) stem = inf.slice(0,-1);
+    return endings(stem, ["ai","as","a","ons","ez","ont"]);
+  }
+  function erPresent(stem, inf){
+    const p = endings(stem, ["e","es","e","ons","ez","ent"]);
+    if(inf.endsWith("ger")) p[3] = stem + "eons";
+    if(inf.endsWith("cer")) p[3] = stem.slice(0,-1) + "çons";
+    if(/e[lt]er$/.test(inf) && !/acheter$|geler$|peler$|haleter$|racheter$/.test(inf)){
+      const cons = inf.slice(-3,-2);
+      const s = inf.slice(0,-3);
+      p[0]=s+cons+cons+"e"; p[1]=s+cons+cons+"es"; p[2]=s+cons+cons+"e";
+      p[3]=s+cons+"ons"; p[4]=s+cons+"ez"; p[5]=s+cons+cons+"ent";
+    } else if(/é[^aeiou]er$/.test(inf)){
+      const alt = stem.replace(/é([^aeiou])$/, "è$1");
+      p[0]=alt+"e"; p[1]=alt+"es"; p[2]=alt+"e"; p[5]=alt+"ent";
+    } else if(/e[^aeiou]er$/.test(inf)){
+      const alt = stem.replace(/e([^aeiou])$/, "è$1");
+      p[0]=alt+"e"; p[1]=alt+"es"; p[2]=alt+"e"; p[5]=alt+"ent";
+    }
+    if(/[aeiou]yer$/.test(inf) || inf.endsWith("yer")){
+      const iStem = inf.slice(0,-3) + "i";
+      p[0]=iStem+"e"; p[1]=iStem+"es"; p[2]=iStem+"e"; p[5]=iStem+"ent";
+    }
+    return p;
+  }
+  function erFuturStem(inf){
+    if(/e[lt]er$/.test(inf) && !/acheter$|geler$|peler$|haleter$|racheter$/.test(inf)){
+      const cons = inf.slice(-3,-2);
+      return inf.slice(0,-3) + cons + cons + "er";
+    }
+    if(/e[^aeiou]er$/.test(inf) && !/é[^aeiou]er$/.test(inf)){
+      return inf.replace(/e([^aeiou]er)$/, "è$1");
+    }
+    if(inf.endsWith("yer")) return inf.slice(0,-3) + "ier";
+    return inf;
+  }
+  function mapPrefixed(baseForms, prefix){
+    return baseForms.map(f => f ? prefix + f : f);
+  }
+  function familyForms(kind, inf){
+    if(kind === "prendre"){
+      const pre = inf.slice(0, -"prendre".length);
+      return {
+        present: mapPrefixed(["prends","prends","prend","prenons","prenez","prennent"], pre),
+        futur: mapPrefixed(["prendrai","prendras","prendra","prendrons","prendrez","prendront"], pre),
+        pc:{ aux:"avoir", participle: pre + "pris" }
+      };
+    }
+    if(kind === "venir"){
+      const pre = inf.slice(0, -"venir".length);
+      return {
+        present: mapPrefixed(["viens","viens","vient","venons","venez","viennent"], pre),
+        futur: mapPrefixed(["viendrai","viendras","viendra","viendrons","viendrez","viendront"], pre),
+        pc:{ aux:"être", participle: pre + "venu" }
+      };
+    }
+    if(kind === "tenir"){
+      const pre = inf.slice(0, -"tenir".length);
+      return {
+        present: mapPrefixed(["tiens","tiens","tient","tenons","tenez","tiennent"], pre),
+        futur: mapPrefixed(["tiendrai","tiendras","tiendra","tiendrons","tiendrez","tiendront"], pre),
+        pc:{ aux:"avoir", participle: pre + "tenu" }
+      };
+    }
+    if(kind === "mettre"){
+      const pre = inf.slice(0, -"mettre".length);
+      return {
+        present: mapPrefixed(["mets","mets","met","mettons","mettez","mettent"], pre),
+        futur: mapPrefixed(["mettrai","mettras","mettra","mettrons","mettrez","mettront"], pre),
+        pc:{ aux:"avoir", participle: pre + "mis" }
+      };
+    }
+    if(kind === "indre"){
+      const stem = inf.slice(0,-5);
+      return {
+        present: endings(stem, ["s","s","t","gnons","gnez","gnent"]),
+        futur: defaultFuturFromInf(inf),
+        pc:{ aux:"avoir", participle: stem + "t" }
+      };
+    }
+    if(kind === "uire"){
+      const stem = inf.slice(0,-3);
+      const part = (inf === "nuire" || inf === "luire") ? inf.slice(0,-2) : stem + "t";
+      return {
+        present: endings(stem, ["s","s","t","sons","sez","sent"]),
+        futur: defaultFuturFromInf(inf),
+        pc:{ aux:"avoir", participle: part }
+      };
+    }
+    if(kind === "cevoir"){
+      const pre = inf.slice(0, -"cevoir".length);
+      return {
+        present: [pre+"çois", pre+"çois", pre+"çoit", pre+"cevons", pre+"cevez", pre+"çoivent"],
+        futur: mapPrefixed(["cevrai","cevras","cevra","cevrons","cevrez","cevront"], pre),
+        pc:{ aux:"avoir", participle: pre + "çu" }
+      };
+    }
+    if(kind === "ouvrir"){
+      const pre = inf.slice(0, -"ouvrir".length);
+      const part = pre + "ouvert";
+      return {
+        present: mapPrefixed(["ouvre","ouvres","ouvre","ouvrons","ouvrez","ouvrent"], pre),
+        futur: defaultFuturFromInf(inf),
+        pc:{ aux:"avoir", participle: part }
+      };
+    }
+    if(kind === "offrir"){
+      const pre = inf.slice(0, -"offrir".length);
+      return {
+        present: mapPrefixed(["offre","offres","offre","offrons","offrez","offrent"], pre),
+        futur: defaultFuturFromInf(inf),
+        pc:{ aux:"avoir", participle: pre + "offert" }
+      };
+    }
+    if(kind === "crire"){
+      const pre = inf.slice(0, -"crire".length);
+      return {
+        present: mapPrefixed(["cris","cris","crit","crivons","crivez","crivent"], pre),
+        futur: defaultFuturFromInf(inf),
+        pc:{ aux:"avoir", participle: pre + "crit" }
+      };
+    }
+    if(kind === "aître" || kind === "aitre"){
+      const raw = inf.replace(/ître$/,"aitre");
+      const pre = raw.slice(0, -"aitre".length);
+      const naitre = /na[îi]tre$/.test(inf);
+      return {
+        present: [pre+"ais", pre+"ais", pre+"aît", pre+"aissons", pre+"aissez", pre+"aissent"],
+        futur: defaultFuturFromInf(inf.replace("î","i")),
+        pc:{ aux: naitre ? "être" : "avoir", participle: naitre ? pre+"é" : pre+"u" }
+      };
+    }
+    return null;
+  }
+  function detectFamily(inf){
+    if(/prendre$/.test(inf)) return "prendre";
+    if(/venir$/.test(inf)) return "venir";
+    if(/tenir$/.test(inf)) return "tenir";
+    if(/mettre$/.test(inf)) return "mettre";
+    if(/indre$/.test(inf)) return "indre";
+    if(/uire$/.test(inf)) return "uire";
+    if(/cevoir$/.test(inf)) return "cevoir";
+    if(/ouvrir$/.test(inf) || /couvrir$/.test(inf)) return "ouvrir";
+    if(/offrir$/.test(inf) || /souffrir$/.test(inf)) return "offrir";
+    if(/crire$/.test(inf)) return "crire";
+    if(/[aâ]ître$/.test(inf) || /aitre$/.test(inf)) return inf.endsWith("aitre") ? "aitre" : "aître";
+    return null;
+  }
+  const CONJ_IRREG_EXTRA = {
+    "savoir":{ present:["sais","sais","sait","savons","savez","savent"], futur:["saurai","sauras","saura","saurons","saurez","sauront"], pc:{aux:"avoir", participle:"su"} },
+    "falloir":{ present:["","","faut","","",""], imparfait:["","","fallait","","",""], futur:["","","faudra","","",""], pc:{aux:"avoir", participle:"fallu"}, impersonal:true },
+    "pleuvoir":{ present:["","","pleut","","",""], imparfait:["","","pleuvait","","",""], futur:["","","pleuvra","","",""], pc:{aux:"avoir", participle:"plu"}, impersonal:true },
+    "lire":{ present:["lis","lis","lit","lisons","lisez","lisent"], pc:{aux:"avoir", participle:"lu"} },
+    "relire":{ present:["relis","relis","relit","relisons","relisez","relisent"], pc:{aux:"avoir", participle:"relu"} },
+    "boire":{ present:["bois","bois","boit","buvons","buvez","boivent"], pc:{aux:"avoir", participle:"bu"} },
+    "vivre":{ present:["vis","vis","vit","vivons","vivez","vivent"], pc:{aux:"avoir", participle:"vécu"} },
+    "revivre":{ present:["revis","revis","revit","revivons","revivez","revivent"], pc:{aux:"avoir", participle:"revécu"} },
+    "survivre":{ present:["survis","survis","survit","survivons","survivez","survivent"], pc:{aux:"avoir", participle:"survécu"} },
+    "suivre":{ present:["suis","suis","suit","suivons","suivez","suivent"], pc:{aux:"avoir", participle:"suivi"} },
+    "poursuivre":{ present:["poursuis","poursuis","poursuit","poursuivons","poursuivez","poursuivent"], pc:{aux:"avoir", participle:"poursuivi"} },
+    "courir":{ present:["cours","cours","court","courons","courez","courent"], futur:["courrai","courras","courra","courrons","courrez","courront"], pc:{aux:"avoir", participle:"couru"} },
+    "mourir":{ present:["meurs","meurs","meurt","mourons","mourez","meurent"], futur:["mourrai","mourras","mourra","mourrons","mourrez","mourront"], pc:{aux:"être", participle:"mort"} },
+    "rire":{ present:["ris","ris","rit","rions","riez","rient"], pc:{aux:"avoir", participle:"ri"} },
+    "sourire":{ present:["souris","souris","sourit","sourions","souriez","sourient"], pc:{aux:"avoir", participle:"souri"} },
+    "croire":{ present:["crois","crois","croit","croyons","croyez","croient"], pc:{aux:"avoir", participle:"cru"} },
+    "croir":{ present:["crois","crois","croit","croyons","croyez","croient"], pc:{aux:"avoir", participle:"cru"} },
+    "fuir":{ present:["fuis","fuis","fuit","fuyons","fuyez","fuient"], pc:{aux:"avoir", participle:"fui"} },
+    "partir":{ present:["pars","pars","part","partons","partez","partent"], pc:{aux:"être", participle:"parti"} },
+    "sortir":{ present:["sors","sors","sort","sortons","sortez","sortent"], pc:{aux:"être", participle:"sorti"} },
+    "dormir":{ present:["dors","dors","dort","dormons","dormez","dorment"], pc:{aux:"avoir", participle:"dormi"} },
+    "servir":{ present:["sers","sers","sert","servons","servez","servent"], pc:{aux:"avoir", participle:"servi"} },
+    "sentir":{ present:["sens","sens","sent","sentons","sentez","sentent"], pc:{aux:"avoir", participle:"senti"} },
+    "mentir":{ present:["mens","mens","ment","mentons","mentez","mentent"], pc:{aux:"avoir", participle:"menti"} },
+    "battre":{ present:["bats","bats","bat","battons","battez","battent"], pc:{aux:"avoir", participle:"battu"} },
+    "combattre":{ present:["combats","combats","combat","combattons","combattez","combattent"], pc:{aux:"avoir", participle:"combattu"} },
+    "conclure":{ present:["conclus","conclus","conclut","concluons","concluez","concluent"], pc:{aux:"avoir", participle:"conclu"} },
+    "exclure":{ present:["exclus","exclus","exclut","excluons","excluez","excluent"], pc:{aux:"avoir", participle:"exclu"} },
+    "inclure":{ present:["inclus","inclus","inclut","incluons","incluez","incluent"], pc:{aux:"avoir", participle:"inclus"} },
+    "vaincre":{ present:["vaincs","vaincs","vainc","vainquons","vainquez","vainquent"], pc:{aux:"avoir", participle:"vaincu"} },
+    "convaincre":{ present:["convaincs","convaincs","convainc","convainquons","convainquez","convainquent"], pc:{aux:"avoir", participle:"convaincu"} },
+    "coudre":{ present:["couds","couds","coud","cousons","cousez","cousent"], pc:{aux:"avoir", participle:"cousu"} },
+    "résoudre":{ present:["résous","résous","résout","résolvons","résolvez","résolvent"], pc:{aux:"avoir", participle:"résolu"} },
+    "valoir":{ present:["vaux","vaux","vaut","valons","valez","valent"], futur:["vaudrai","vaudras","vaudra","vaudrons","vaudrez","vaudront"], pc:{aux:"avoir", participle:"valu"} },
+    "asseoir":{ present:["assois","assois","assoit","assoyons","assoyez","assoient"], futur:["assoirai","assoiras","assoira","assoirons","assoirez","assoiront"], pc:{aux:"avoir", participle:"assis"} },
+    "souffrir":{ present:["souffre","souffres","souffre","souffrons","souffrez","souffrent"], pc:{aux:"avoir", participle:"souffert"} },
+"cueillir":{ present:["cueille","cueilles","cueille","cueillons","cueillez","cueillent"], futur:["cueillerai","cueilleras","cueillera","cueillerons","cueillerez","cueilleront"], pc:{aux:"avoir", participle:"cueilli"} },
+    "bouillir":{ present:["bous","bous","bout","bouillons","bouillez","bouillent"], pc:{aux:"avoir", participle:"bouilli"} },
+    "acquérir":{ present:["acquiers","acquiers","acquiert","acquérons","acquérrez","acquièrent"], futur:["acquerrai","acquerras","acquerra","acquerrons","acquerrez","acquerront"], pc:{aux:"avoir", participle:"acquis"} },
+    "haïr":{ present:["hais","hais","hait","haïssons","haïssez","haïssent"], pc:{aux:"avoir", participle:"haï"} }
+  };
+  function regularGroupConj(inf){
+    if(inf.endsWith("er") && inf !== "aller"){
+      const stem = inf.slice(0,-2);
+      const present = erPresent(stem, inf);
+      const futur = endings(erFuturStem(inf), ["ai","as","a","ons","ez","ont"]);
+      return { present, futur, pc:{ aux: CONJ_ETRE_SET.has(inf) ? "être" : "avoir", participle: stem + "é" }, group:"1-ша група (−er)" };
+    }
+    const thirdIr = /venir$|tenir$|partir$|sortir$|dormir$|servir$|sentir$|mentir$|ouvrir$|offrir$|courir$|mourir$|cueillir$|accueillir$|bouillir$|fuir$|vêtir$|acquérir$|haïr$/.test(inf);
+    if(inf.endsWith("ir") && !thirdIr){
+      const stem = inf.slice(0,-2);
+      const present = endings(stem, ["is","is","it","issons","issez","issent"]);
+      return { present, futur: defaultFuturFromInf(inf), pc:{ aux:"avoir", participle: stem + "i" }, group:"2-га група (−ir)" };
+    }
+    if(inf.endsWith("re")){
+      const stem = inf.slice(0,-2);
+      const present = [stem+"s", stem+"s", stem, stem+"ons", stem+"ez", stem+"ent"];
+      return { present, futur: defaultFuturFromInf(inf), pc:{ aux: CONJ_ETRE_SET.has(inf) ? "être" : "avoir", participle: stem + "u" }, group:"3-тя група (−re)" };
+    }
+    return null;
+  }
+  function completeConjugation(inf, ua, partial, group, flags){
+    const present = partial.present;
+    const imparfait = partial.imparfait || defaultImparfait(present);
+    const futur = partial.futur || defaultFuturFromInf(inf);
+    const pc = partial.pc ? { aux: partial.pc.aux, participle: partial.pc.participle } : { aux:"avoir", participle: inf };
+    if(CONJ_ETRE_SET.has(inf) && pc.aux === "avoir" && inf !== "être" && inf !== "avoir"){
+      pc.aux = "être";
+    }
+    const verb = {
+      inf: inf,
+      ua: ua,
+      present: present,
+      imparfait: imparfait,
+      futur: futur,
+      cond: defaultCond(futur),
+      subj: defaultSubj(present, imparfait, inf),
+      pc: pc,
+      group: group || "",
+      impersonal: !!(partial.impersonal || (flags && flags.impersonal)),
+      reflexive: !!(flags && flags.reflexive),
+      generated: !!(flags && flags.generated)
+    };
+    return verb;
+  }
+  function conjugateAny(rawInf, ua){
+    const stripped = stripInflectPrefix((rawInf || "").trim().toLowerCase().replace(/’/g,"'"));
+    const inf = stripped.base;
+    const flags = { reflexive: stripped.reflexive };
+    const known = CONJ_VERBS.find(v => v.inf === inf);
+    if(known){
+      const knownGroup = (known.inf.endsWith("er") && known.inf !== "aller") ? "1-ша група (−er)" : (known.inf === "finir" ? "2-га група (−ir)" : "3-тя група");
+      return completeConjugation(inf, ua || known.ua, known, knownGroup, flags);
+    }
+    const extra = CONJ_IRREG_EXTRA[inf];
+    if(extra){
+      return completeConjugation(inf, ua || "", extra, "3-тя група (неправильне)", Object.assign({ impersonal: extra.impersonal, generated:false }, flags));
+    }
+    const fam = detectFamily(inf);
+    if(fam){
+      const f = familyForms(fam, inf);
+      return completeConjugation(inf, ua || "", f, "3-тя група (модель " + fam + ")", Object.assign({ generated:true }, flags));
+    }
+    const regular = regularGroupConj(inf);
+    if(regular){
+      return completeConjugation(inf, ua || "", regular, regular.group, Object.assign({ generated:true }, flags));
+    }
+    return null;
+  }
+  function conjFormRef(verb, tenseKey, pIdx){
+    if(!verb) return "";
+    if(verb.impersonal && pIdx !== 2) return "";
+    if(tenseKey === "pc") return conjFormFor(verb, "pc", pIdx);
+    if(tenseKey === "pqp"){
+      const auxForms = verb.pc.aux === "être" ? CONJ_ETRE_IMPARFAIT : CONJ_AVOIR_IMPARFAIT;
+      let participle = verb.pc.participle;
+      if(verb.pc.aux === "être" && CONJ_PLURAL[pIdx]) participle = conjPluralParticiple(participle);
+      const form = auxForms[pIdx] + " " + participle;
+      return verb.impersonal && pIdx !== 2 ? "" : form;
+    }
+    const arr = verb[tenseKey];
+    if(!arr) return "";
+    return arr[pIdx] || "";
+  }
+  function conjPronounsForDisplay(verb){
+    if(verb.reflexive) return ["Je me / m'","Tu te / t'","Il/Elle se / s'","Nous nous","Vous vous","Ils/Elles se / s'"];
+    return ["Je","Tu","Il / Elle","Nous","Vous","Ils / Elles"];
+  }
+  let _conjCatalog = null;
+  function getConjCatalog(){
+    if(_conjCatalog) return _conjCatalog;
+    const byInf = new Map();
+    CONJ_VERBS.forEach(v => byInf.set(v.inf, v.ua));
+    if(DATA.verbs){
+      DATA.verbs.items.forEach(it=>{
+        const inf = (it[0] || "").trim();
+        if(!inf || /[а-яіїєґ]/i.test(inf)) return;
+        if(!byInf.has(inf)) byInf.set(inf, it[2]);
+      });
+    }
+    _conjCatalog = [];
+    byInf.forEach((ua, inf)=>{
+      const conj = conjugateAny(inf, ua);
+      if(!conj) return;
+      const forms = [];
+      CONJ_REF_TENSES.forEach(t=>{
+        for(let p=0;p<6;p++){
+          const f = conjFormRef(conj, t.key, p);
+          if(f) forms.push(f.toLowerCase());
+        }
+      });
+      _conjCatalog.push({ inf: inf, ua: ua, forms: forms, conj: conj });
+    });
+    _conjCatalog.sort((a,b)=> a.inf.localeCompare(b.inf, "fr"));
+    return _conjCatalog;
+  }
+  function searchConjCatalog(query){
+    const q = (query || "").toLowerCase().trim();
+    const cat = getConjCatalog();
+    if(!q) return cat.slice(0, 40);
+    const scored = [];
+    cat.forEach(entry=>{
+      const inf = entry.inf.toLowerCase();
+      const ua = (entry.ua || "").toLowerCase();
+      let score = 0;
+      if(inf === q) score = 100;
+      else if(inf.startsWith(q)) score = 80;
+      else if(inf.includes(q)) score = 60;
+      else if(ua.includes(q)) score = 50;
+      else if(entry.forms.some(f => f === q || f.replace(/ /g,"") === q.replace(/ /g,""))) score = 70;
+      else if(entry.forms.some(f => f.startsWith(q))) score = 40;
+      if(score) scored.push({ entry, score });
+    });
+    scored.sort((a,b)=> b.score - a.score || a.entry.inf.localeCompare(b.entry.inf, "fr"));
+    return scored.slice(0, 60).map(s => s.entry);
+  }
 
   // ---------- sentence builder: arrange scrambled chunks into the right order ----------
   const SENTENCE_BANK = [
@@ -902,7 +1293,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     // A1 — фундамент
     "pronounsEtreAvoir","regularVerbsPresent","articles","nounsPlural","adjectivesAgreement","wordOrder","cestIlEst","pronunciation",
     // A2 — розширення
-    "reflexiveVerbs","possessivesDemonstratives","ilYaIlFaut","extendedNegation","verbGroups","modalVerbs","passeCompose",
+    "reflexiveVerbs","possessivesDemonstratives","ilYaIlFaut","extendedNegation","verbGroups","modalVerbs","passeCompose","fauxAmis",
     // B1 — просунутий рівень
     "comparatives","questionWords","additionalTenses","objectPronouns","relativePronouns","plusQueParfait",
     // B2 — вищий проміжний рівень
@@ -1163,6 +1554,33 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
         <div class="fq-ex"><b>Il ne s'est pas levé.</b><span>Він не встав.</span></div>
       `
     },
+    fauxAmis: {
+  title: "Faux amis (фальшиві друзі)",
+  level: "A2",
+  summary: "Слова, схожі на українські чи англійські, але з іншим значенням",
+  html: `
+    <h3>Що це таке</h3>
+    <p>«Faux amis» — слова, які виглядають чи звучать знайомо (нагадують українське або англійське слово), але насправді означають щось інше. Це одне з найчастіших джерел помилок у перекладі й розумінні на слух.</p>
+    <table class="fq-theory-table">
+      <tr><th>Слово</th><th>Здається, що означає</th><th>Насправді означає</th><th>Приклад</th></tr>
+      <tr><td><b>actuellement</b></td><td>актуально</td><td>зараз, наразі</td><td>Actuellement, je travaille à Paris. — Зараз я працюю в Парижі.</td></tr>
+      <tr><td><b>une lecture</b></td><td>лекція</td><td>читання</td><td>J'aime la lecture. — Я люблю читання.</td></tr>
+      <tr><td><b>assister à</b></td><td>асистувати</td><td>бути присутнім, відвідувати</td><td>J'ai assisté à la réunion. — Я був присутній на зустрічі.</td></tr>
+      <tr><td><b>une librairie</b></td><td>бібліотека</td><td>книгарня</td><td>J'achète des livres à la librairie. — Я купую книги в книгарні.</td></tr>
+      <tr><td><b>un conducteur</b></td><td>кондуктор</td><td>водій</td><td>Le conducteur du bus est gentil. — Водій автобуса приємний.</td></tr>
+      <tr><td><b>un journal</b></td><td>журнал</td><td>газета</td><td>Je lis le journal chaque matin. — Я читаю газету щоранку.</td></tr>
+      <tr><td><b>rester</b></td><td>відпочивати</td><td>залишатися</td><td>Je reste à la maison. — Я залишаюся вдома.</td></tr>
+      <tr><td><b>attendre</b></td><td>відвідувати</td><td>чекати</td><td>J'attends le bus. — Я чекаю автобус.</td></tr>
+      <tr><td><b>demander</b></td><td>вимагати</td><td>просити / питати</td><td>Je demande de l'aide. — Я прошу допомоги.</td></tr>
+      <tr><td><b>une envie</b></td><td>заздрість</td><td>бажання</td><td>J'ai envie de dormir. — Мені хочеться спати.</td></tr>
+      <tr><td><b>large</b></td><td>великий</td><td>широкий</td><td>Cette rue est large. — Ця вулиця широка.</td></tr>
+      <tr><td><b>un car</b></td><td>автомобіль</td><td>міжміський автобус</td><td>On part en car. — Ми їдемо автобусом.</td></tr>
+      <tr><td><b>la monnaie</b></td><td>монета</td><td>дрібні гроші / решта</td><td>Je n'ai pas de monnaie. — У мене немає дрібних грошей.</td></tr>
+      <tr><td><b>sensible</b></td><td>розсудливий</td><td>чутливий</td><td>Elle est très sensible. — Вона дуже чутлива.</td></tr>
+    </table>
+    <p>Для деяких слів варто запам'ятати й «правильний» відповідник: журнал — <i>magazine</i>, бібліотека — <i>bibliothèque</i>, вимагати — <i>exiger</i>, заздрість — <i>jalousie</i>, великий — <i>grand</i>, автомобіль — <i>voiture</i>.</p>
+  `
+},
     pronunciation: {
       title: "Правила читання",
       level: "A1",
@@ -1857,6 +2275,13 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       { text:"Elle ________ (se lever) à 7 heures.", options:["s'est levée","s'est levé","a levé","est levée"], answer:"s'est levée", note:"Зворотні дієслова завжди з être; se = пряме «себе» → узгодження з підметом." },
       { text:"La pomme qu'il ________ (manger).", options:["a mangée","a mangé","est mangée","a mangés"], answer:"a mangée", note:"Прямий додаток (la pomme) стоїть перед дієсловом → participe passé узгоджується з ним." }
     ],
+    fauxAmis: [
+  { text:"Je lis le ________ chaque matin. (газета)", options:["journal","magazine","livre","lettre"], answer:"journal", note:"Journal = газета; журнал (glossy) французькою — magazine." },
+  { text:"Що означає слово 'actuellement' у реченні 'Actuellement, je travaille à Paris'?", options:["актуально","зараз","дивно","дійсно"], answer:"зараз", note:"Actuellement = зараз/наразі, а не «актуально» (топікал = pertinent, important)." },
+  { text:"J'achète des livres à la ________.", options:["librairie","bibliothèque","boutique","banque"], answer:"librairie", note:"Librairie = книгарня; бібліотека французькою — bibliothèque." },
+  { text:"Elle a ________ à la réunion. (бути присутньою)", options:["assisté","aidé","attendu","demandé"], answer:"assisté", note:"Assister à = бути присутнім/відвідувати, а не «асистувати»." },
+  { text:"Le ________ du bus est gentil. (водій)", options:["conducteur","contrôleur","passager","piéton"], answer:"conducteur", note:"Conducteur = водій; кондуктор (у транспорті) французькою — contrôleur." }
+],
     pronunciation: [
       { text:"Яка кінцева буква НЕ читається в слові 'gros'?", options:["s","g","r","o"], answer:"s" },
       { text:"Обери правильне звучання буквосполучення 'ch' у слові 'chat':", options:["ш","к","х","ч"], answer:"ш" },
@@ -2156,6 +2581,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   // ---------- state ----------
   let state = { view:"picker", mode:"practice", direction:"ua_fr", catKey:null, batchStart:0, qIndex:0, score:0, missed:[], answered:false, options:[], correctIdx:-1, theme:loadTheme(), history:loadHistory(), taskType:"normal", drawerOpen:false, themeKey:null, theoryKey:null, practiceIndex:0, practiceAnswered:false, practiceSelected:null, practiceScore:0, theoryLevelFilter:"all",
     conjPool:null, conjIndex:0, conjBatchStart:0, conjScore:0, conjMissed:[], conjAnswered:false, conjSelected:null, conjOptions:[], conjCorrectText:null, conjCurrent:null,
+    conjRefQuery:"", conjRefInf:null,
     sbPool:null, sbIndex:0, sbBatchStart:0, sbScore:0, sbMissed:[], sbCurrent:null, sbAvailable:[], sbPlaced:[], sbAnswered:false, sbCorrect:null,
     readingKey:null, readingLevelFilter:"all", readingQIndex:0, readingAnswered:false, readingSelected:null, readingScore:0 };
   const progressStore = loadProgressStore(); // catKey -> how many items completed, persisted across sessions/reloads
@@ -2340,6 +2766,13 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       '<span class="fq-drawer-item-count">Présent · Passé Composé · Futur · Imparfait</span>';
     conjBtn.onclick = ()=>{ state.drawerOpen = false; startConjugTrainer(); };
     panel.appendChild(conjBtn);
+    const conjRefBtn = document.createElement("button");
+    conjRefBtn.type = "button";
+    conjRefBtn.className = "fq-drawer-item";
+    conjRefBtn.innerHTML = '<span class="fq-drawer-item-title">📖 Довідник відмінювання</span>' +
+      '<span class="fq-drawer-item-count">Пошук дієслова · усі часи в таблиці</span>';
+    conjRefBtn.onclick = ()=>{ state.drawerOpen = false; state.view = "conjugRef"; render(); };
+    panel.appendChild(conjRefBtn);
     const sbBtn = document.createElement("button");
     sbBtn.type = "button";
     sbBtn.className = "fq-drawer-item";
@@ -2672,6 +3105,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     else if(state.view === "history") renderHistory();
     else if(state.view === "conjug") renderConjugQuiz();
     else if(state.view === "conjugSummary") renderConjugSummary();
+    else if(state.view === "conjugRef") renderConjugRef();
     else if(state.view === "sentence") renderSentenceBuilder();
     else if(state.view === "sentenceSummary") renderSentenceSummary();
     else if(state.view === "themes") renderThemesPicker();
@@ -3642,7 +4076,172 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     const toPicker = document.createElement("button"); toPicker.className="fq-btn-secondary"; toPicker.textContent="Обрати інший розділ";
     toPicker.onclick = ()=>{ state.view="picker"; render(); };
     btnrow.appendChild(toPicker);
+    const toRef = document.createElement("button"); toRef.className="fq-btn-secondary"; toRef.textContent="📖 Довідник відмінювання";
+    toRef.onclick = ()=>{ state.view="conjugRef"; render(); };
+    btnrow.appendChild(toRef);
     root.appendChild(btnrow);
+  }
+  function renderConjugRef(){
+    const topbar = document.createElement("div"); topbar.className="fq-topbar";
+    const back = document.createElement("button"); back.className="fq-back"; back.textContent="← Розділи"; back.onclick=()=>{state.view="picker"; render();};
+    const rightWrap = document.createElement("div"); rightWrap.className="fq-topbar-right";
+    const quizLink = document.createElement("button"); quizLink.className="fq-back"; quizLink.textContent="Тренажер →";
+    quizLink.onclick = startConjugTrainer;
+    rightWrap.appendChild(quizLink);
+    topbar.appendChild(back); topbar.appendChild(rightWrap);
+    root.appendChild(topbar);
+    const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Окремо від квізу — лише таблиці форм";
+    const title = document.createElement("h2"); title.className="fq-title"; title.textContent="Довідник відмінювання";
+    root.appendChild(kicker); root.appendChild(title);
+    const search = document.createElement("input"); search.className="fq-search"; search.type="search";
+    search.placeholder = "Введи дієслово: parler, бути, suis...";
+    search.value = state.conjRefQuery || "";
+    search.setAttribute("autocomplete","off");
+    search.oninput = (e)=>{
+      state.conjRefQuery = e.target.value;
+      const q = e.target.value.trim().toLowerCase();
+      const exact = getConjCatalog().find(v => v.inf.toLowerCase() === q);
+      state.conjRefInf = exact ? exact.inf : null;
+      renderConjugRefBody();
+    };
+    search.onkeydown = (e)=>{
+      if(e.key !== "Enter") return;
+      const q = (state.conjRefQuery || "").trim();
+      const hits = searchConjCatalog(q);
+      if(hits.length){ state.conjRefInf = hits[0].inf; renderConjugRefBody(); }
+      else if(conjugateAny(q, "")){ state.conjRefInf = stripInflectPrefix(q.toLowerCase()).base; renderConjugRefBody(); }
+    };
+    root.appendChild(search);
+    const bodyWrap = document.createElement("div"); bodyWrap.id="fqConjRefBody";
+    root.appendChild(bodyWrap);
+    renderConjugRefBody();
+    setTimeout(()=>{ try{ search.focus(); search.setSelectionRange(search.value.length, search.value.length); }catch(err){} }, 0);
+  }
+  function renderConjugRefTable(verb){
+    const wrap = document.createElement("div");
+    const meta = document.createElement("p"); meta.className="fq-conj-meta";
+    const bits = ["<b>" + verb.inf + "</b>"];
+    if(verb.ua) bits.push(verb.ua);
+    if(verb.group) bits.push(verb.group);
+    bits.push("допоміжне " + verb.pc.aux);
+    bits.push("дієприкметник " + verb.pc.participle);
+    meta.innerHTML = bits.join(" · ");
+    wrap.appendChild(meta);
+    const pronouns = conjPronounsForDisplay(verb);
+    CONJ_REF_TENSES.forEach(t=>{
+      const h = document.createElement("h3"); h.className="fq-conj-tense"; h.textContent = t.label;
+      wrap.appendChild(h);
+      const tableWrap = document.createElement("div"); tableWrap.className="fq-conj-table-wrap";
+      const table = document.createElement("table"); table.className="fq-theory-table";
+      const thead = document.createElement("tr");
+      ["Особа","Форма"].forEach(label=>{ const th=document.createElement("th"); th.textContent=label; thead.appendChild(th); });
+      table.appendChild(thead);
+      let rows = 0;
+      for(let p=0;p<6;p++){
+        let form = conjFormRef(verb, t.key, p);
+        if(!form) continue;
+        if(verb.reflexive){
+          const rp = ["me","te","se","nous","vous","se"][p];
+          const elide = /^[aeiouhâàéèêëîïôùû]/i.test(form) && (rp === "me" || rp === "te" || rp === "se");
+          form = (elide ? rp.charAt(0) + "'" : rp + " ") + form;
+        }
+        const tr = document.createElement("tr");
+        const c1 = document.createElement("td");
+        const subj = conjSubjectText(p, form.replace(/^(me|te|se|nous|vous|m'|t'|s')\s*/i,""));
+        c1.textContent = verb.impersonal ? "Il" : (p === 0 && subj === "J'" ? "J'" : pronouns[p]);
+        const c2 = document.createElement("td");
+        const btn = document.createElement("button"); btn.type="button"; btn.className="fq-conj-form";
+        const shown = (p === 0 && !verb.reflexive && !verb.impersonal && conjSubjectText(p, form) === "J'") ? "J'" + form : form;
+        btn.textContent = shown;
+        btn.onclick = ()=> speakFrench((p === 0 && conjSubjectText(p, form) === "J'" ? "J'" : (verb.impersonal ? "Il " : pronouns[p].split(" / ")[0] + " ")) + form);
+        c2.appendChild(btn);
+        tr.appendChild(c1); tr.appendChild(c2);
+        table.appendChild(tr);
+        rows++;
+      }
+      tableWrap.appendChild(table);
+      wrap.appendChild(tableWrap);
+      if(!rows){
+        const empty = document.createElement("p"); empty.className="fq-conj-note"; empty.textContent = "Немає особових форм у цьому часі.";
+        wrap.appendChild(empty);
+      }
+    });
+    if(verb.pc.aux === "être"){
+      const note = document.createElement("p"); note.className="fq-conj-note";
+      note.textContent = "З être дієприкметник узгоджується з підметом: au féminin — " + verb.pc.participle + "e, au pluriel — " + conjPluralParticiple(verb.pc.participle) + ".";
+      wrap.appendChild(note);
+    }
+    if(verb.generated){
+      const note = document.createElement("p"); note.className="fq-conj-note";
+      note.textContent = "Форми зібрано за правилами групи. Якщо дієслово дуже неправильне, звір з граматичним словником.";
+      wrap.appendChild(note);
+    }
+    return wrap;
+  }
+  function renderConjugRefBody(){
+    const wrap = document.getElementById("fqConjRefBody");
+    if(!wrap) return;
+    wrap.innerHTML = "";
+    const q = (state.conjRefQuery || "").trim();
+    const qLow = q.toLowerCase();
+    const hits = searchConjCatalog(q);
+    const exactInf = hits.find(h => h.inf.toLowerCase() === qLow);
+    const exactForm = q.length >= 3 ? hits.find(h => h.forms.some(f => f === qLow || f.replace(/ /g,"") === qLow.replace(/ /g,""))) : null;
+    const typed = (!exactInf && q.length >= 2) ? conjugateAny(q, "") : null;
+    let tableVerb = null;
+    let tableInf = null;
+    if(state.conjRefInf){
+      const hit = getConjCatalog().find(v => v.inf === state.conjRefInf);
+      tableVerb = hit ? hit.conj : conjugateAny(state.conjRefInf, "");
+      tableInf = state.conjRefInf;
+    } else if(exactInf){
+      tableVerb = exactInf.conj;
+      tableInf = exactInf.inf;
+    } else if(exactForm){
+      tableVerb = exactForm.conj;
+      tableInf = exactForm.inf;
+    } else if(typed){
+      tableVerb = typed;
+      tableInf = typed.inf;
+    }
+    if(!q && !state.conjRefInf){
+      const hint = document.createElement("p"); hint.className="fq-conj-meta";
+      hint.textContent = "Почни вводити інфінітив, український переклад або вже відмінену форму. У таблиці: présent, imparfait, futur, conditionnel, passé composé, plus-que-parfait і subjonctif.";
+      wrap.appendChild(hint);
+    }
+    if(tableVerb && (state.conjRefInf || exactInf || exactForm || typed)){
+      wrap.appendChild(renderConjugRefTable(tableVerb));
+    }
+    const listSource = hits.filter(h => h.inf !== tableInf);
+    if(!q && !state.conjRefInf){
+      const count = document.createElement("p"); count.className="fq-dict-count";
+      count.textContent = "Перші дієслова зі словника — або шукай вище";
+      wrap.appendChild(count);
+    } else if(listSource.length){
+      const more = document.createElement("p"); more.className="fq-missed-title";
+      more.textContent = tableVerb ? "Інші збіги" : "Збіги";
+      wrap.appendChild(more);
+    }
+    if(listSource.length && (q || !state.conjRefInf)){
+      const list = document.createElement("div"); list.className="fq-conj-suggest";
+      (q ? listSource : hits).slice(0, 40).forEach(h=>{
+        const b = document.createElement("button"); b.type="button"; b.className="fq-conj-suggest-item";
+        const fr = document.createElement("span"); fr.className="fq-conj-suggest-fr"; fr.textContent = h.inf;
+        const ua = document.createElement("span"); ua.className="fq-conj-suggest-ua"; ua.textContent = h.ua || "";
+        b.appendChild(fr); b.appendChild(ua);
+        b.onclick = ()=>{
+          state.conjRefInf = h.inf;
+          state.conjRefQuery = h.inf;
+          render();
+        };
+        list.appendChild(b);
+      });
+      wrap.appendChild(list);
+    } else if(q && !tableVerb){
+      const empty = document.createElement("p"); empty.className="fq-dict-empty";
+      empty.textContent = "Нічого не знайдено. Спробуй інфінітив на -er, -ir або -re.";
+      wrap.appendChild(empty);
+    }
   }
   function renderSentenceBuilder(){
     const s = state.sbCurrent;
@@ -3655,14 +4254,12 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     rightWrap.appendChild(info);
     topbar.appendChild(back); topbar.appendChild(rightWrap);
     root.appendChild(topbar);
-
     const barWrap = document.createElement("div"); barWrap.className="fq-progressbar";
     const barFill = document.createElement("div"); barFill.className="fq-progressbar-fill";
     const pct = Math.round((posInBatch-1)/Math.min(SB_BATCH_SIZE, state.sbPool.length-state.sbBatchStart)*100);
     barFill.style.width = pct + "%";
     barWrap.appendChild(barFill);
     root.appendChild(barWrap);
-
     const label = document.createElement("p"); label.className="fq-prompt-label";
     const audioMode = state.taskType === "audio";
     label.textContent = audioMode
@@ -3685,7 +4282,6 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       prompt.textContent = s.ua;
       root.appendChild(prompt);
     }
-
     const answerWrap = document.createElement("div");
     answerWrap.className = "fq-sb-answer" + (state.sbAnswered ? (state.sbCorrect ? " correct" : " wrong") : "");
     if(state.sbPlaced.length === 0){
@@ -3702,7 +4298,6 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       });
     }
     root.appendChild(answerWrap);
-
     const bankWrap = document.createElement("div"); bankWrap.className="fq-sb-bank";
     state.sbAvailable.forEach(chunk=>{
       const chip = document.createElement("button"); chip.type="button"; chip.className="fq-sb-chip";
@@ -3712,7 +4307,6 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       bankWrap.appendChild(chip);
     });
     root.appendChild(bankWrap);
-
     const actionRow = document.createElement("div"); actionRow.className="fq-btnrow";
     if(!state.sbAnswered){
       const resetBtn = document.createElement("button"); resetBtn.className="fq-btn-secondary"; resetBtn.textContent="Скинути";
@@ -3725,7 +4319,6 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       actionRow.appendChild(checkBtn);
     }
     root.appendChild(actionRow);
-
     const hint = document.createElement("div"); hint.className="fq-hint";
     if(state.sbAnswered){
       const correctSentence = sbFullSentence(s);
@@ -3798,9 +4391,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     btnrow.appendChild(toPicker);
     root.appendChild(btnrow);
   }
-
   render();
 })();</script>
-
 </body>
 </html>
