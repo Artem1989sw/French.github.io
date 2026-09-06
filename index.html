@@ -2344,7 +2344,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     sbBtn.type = "button";
     sbBtn.className = "fq-drawer-item";
     sbBtn.innerHTML = '<span class="fq-drawer-item-title">🧩 Побудова речення</span>' +
-      '<span class="fq-drawer-item-count">Склади речення зі слів у правильному порядку</span>';
+      '<span class="fq-drawer-item-count">' + (state.taskType === "audio" ? "🎧 На слух — без перекладу, тільки звук" : "Склади речення зі слів у правильному порядку") + '</span>';
     sbBtn.onclick = ()=>{ state.drawerOpen = false; startSentenceBuilder(); };
     panel.appendChild(sbBtn);
     const mistakeN = mistakesCount();
@@ -2591,6 +2591,9 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     render();
   }
   // ---------- sentence builder logic ----------
+  function sbFullSentence(s){
+    return s.chunks.join(" ").replace(/\s([?.,!])/g, "$1");
+  }
   function startSentenceBuilder(){
     state.sbPool = shuffle(SENTENCE_BANK.map((_,i)=>i));
     state.sbIndex = 0;
@@ -2614,6 +2617,9 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     state.sbPlaced = [];
     state.sbAnswered = false;
     state.sbCorrect = null;
+    if(state.taskType === "audio"){
+      speakFrench(sbFullSentence(s));
+    }
   }
   function sbTapAvailable(id){
     if(state.sbAnswered) return;
@@ -2688,6 +2694,38 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     tabs.appendChild(t1); tabs.appendChild(t2); tabs.appendChild(t3); tabs.appendChild(t4); tabs.appendChild(t5);
     root.appendChild(tabs);
   }
+  function collectProgressList(){
+    const list = [];
+    THEORY_ORDER.forEach(key=>{
+      const p = theoryProgress[key];
+      if(p) list.push({ key, title: THEORY[key].title, level: THEORY[key].level, typeLabel:"Теорія", best:p.best, attempts:p.attempts, kind:"theory" });
+    });
+    READING_ORDER.forEach(key=>{
+      const p = readingProgress[key];
+      if(p) list.push({ key, title: READING[key].title, level: READING[key].level, typeLabel:"Читання", best:p.best, attempts:p.attempts, kind:"reading" });
+    });
+    return list;
+  }
+  function goToWeakItem(item){
+    if(item.kind === "theory"){
+      state.mode = "theory";
+      state.theoryKey = item.key;
+      state.view = "theoryArticle";
+      state.practiceIndex = 0;
+      state.practiceAnswered = false;
+      state.practiceSelected = null;
+      state.practiceScore = 0;
+    } else {
+      state.mode = "reading";
+      state.readingKey = item.key;
+      state.view = "readingText";
+      state.readingQIndex = 0;
+      state.readingAnswered = false;
+      state.readingSelected = null;
+      state.readingScore = 0;
+    }
+    render();
+  }
   function renderHistory(){
     renderTabs();
     const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Огляд і останні завершені порції";
@@ -2710,6 +2748,32 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       chipWrap.appendChild(chip);
     });
     root.appendChild(chipWrap);
+    // ---- weakest topics: lowest best-score across theory + reading ----
+    const subTitleWeak = document.createElement("h3"); subTitleWeak.className="fq-progress-subtitle"; subTitleWeak.textContent = "🎯 Над чим варто попрацювати";
+    root.appendChild(subTitleWeak);
+    const progressList = collectProgressList().sort((a,b)=> a.best - b.best);
+    if(!progressList.length){
+      const empty = document.createElement("p"); empty.className="fq-history-note";
+      empty.textContent = "Ще немає даних. Пройди кілька тем у «Теорії» чи текстів у «Читанні» — тут з'явиться підказка, де найнижчий відсоток правильних відповідей.";
+      root.appendChild(empty);
+    } else {
+      progressList.slice(0,3).forEach(item=>{
+        const row = document.createElement("div"); row.className="fq-missed-item";
+        const info = document.createElement("div");
+        const left = document.createElement("div"); left.className="fq-missed-fr";
+        left.textContent = item.title + " (" + item.level + ")";
+        const mid = document.createElement("div"); mid.className="fq-missed-ua";
+        mid.textContent = item.typeLabel + " · найкращий результат " + item.best + "% · спроб: " + item.attempts;
+        info.appendChild(left); info.appendChild(mid);
+        const retryBtn = document.createElement("button");
+        retryBtn.className = "fq-btn-secondary";
+        retryBtn.style.cssText = "padding:5px 12px;font-size:12.5px;margin-left:10px;flex:0 0 auto;align-self:center;";
+        retryBtn.textContent = "Повторити →";
+        retryBtn.onclick = ()=> goToWeakItem(item);
+        row.appendChild(info); row.appendChild(retryBtn);
+        root.appendChild(row);
+      });
+    }
     // ---- session history ----
     const subTitle1 = document.createElement("h3"); subTitle1.className="fq-progress-subtitle"; subTitle1.textContent = "Останні завершені порції практики";
     root.appendChild(subTitle1);
@@ -3600,12 +3664,27 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     root.appendChild(barWrap);
 
     const label = document.createElement("p"); label.className="fq-prompt-label";
-    label.textContent = "Склади французьке речення (рівень " + s.level + "):";
+    const audioMode = state.taskType === "audio";
+    label.textContent = audioMode
+      ? "🎧 Послухай речення і склади його зі шматків (рівень " + s.level + "):"
+      : "Склади французьке речення (рівень " + s.level + "):";
     root.appendChild(label);
-    const prompt = document.createElement("p"); prompt.className="fq-prompt";
-    prompt.style.fontSize = "24px";
-    prompt.textContent = s.ua;
-    root.appendChild(prompt);
+    if(audioMode){
+      const audioBox = document.createElement("div"); audioBox.className="fq-audio-box";
+      const playBtn = document.createElement("button");
+      playBtn.type = "button";
+      playBtn.className = "fq-audio-play";
+      playBtn.title = "Прослухати ще раз";
+      playBtn.textContent = "🔊";
+      playBtn.onclick = ()=> speakFrench(sbFullSentence(s));
+      audioBox.appendChild(playBtn);
+      root.appendChild(audioBox);
+    } else {
+      const prompt = document.createElement("p"); prompt.className="fq-prompt";
+      prompt.style.fontSize = "24px";
+      prompt.textContent = s.ua;
+      root.appendChild(prompt);
+    }
 
     const answerWrap = document.createElement("div");
     answerWrap.className = "fq-sb-answer" + (state.sbAnswered ? (state.sbCorrect ? " correct" : " wrong") : "");
@@ -3649,10 +3728,15 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
 
     const hint = document.createElement("div"); hint.className="fq-hint";
     if(state.sbAnswered){
-      const correctSentence = s.chunks.join(" ").replace(/\s([?.,!])/g, "$1");
+      const correctSentence = sbFullSentence(s);
       const line = document.createElement("p");
       line.innerHTML = (state.sbCorrect ? "✅ Правильно: " : "❌ Правильний варіант: ") + "<b>" + correctSentence + "</b>";
       hint.appendChild(line);
+      if(audioMode){
+        const trLine = document.createElement("p"); trLine.className="fq-hint-wrong";
+        trLine.innerHTML = "Переклад: <i>" + s.ua + "</i>";
+        hint.appendChild(trLine);
+      }
       const speakBtn = document.createElement("button");
       speakBtn.type = "button";
       speakBtn.className = "fq-speak";
@@ -3682,7 +3766,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       const mt = document.createElement("div"); mt.className="fq-missed-title"; mt.textContent = "Варто повторити:";
       root.appendChild(mt);
       state.sbMissed.forEach(m=>{
-        const correctSentence = m.chunks.join(" ").replace(/\s([?.,!])/g, "$1");
+        const correctSentence = sbFullSentence(m);
         const row = document.createElement("div"); row.className="fq-missed-item";
         const fr = document.createElement("span"); fr.className="fq-missed-fr"; fr.textContent = correctSentence;
         const ua = document.createElement("span"); ua.className="fq-missed-ua"; ua.textContent = m.ua;
