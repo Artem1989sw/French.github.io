@@ -29,11 +29,20 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
 .fq-drawer-item-count{ display:block; font-size:11.5px; color:var(--gold); font-weight:600; white-space:normal; overflow-wrap:break-word; margin-top:4px; line-height:1.4; }
 .fq-drawer-item.active .fq-drawer-item-count{ color:#fff; }
 .fq-drawer-note{ font-size:12.5px; color:var(--muted); margin-top:18px; line-height:1.5; }
+.fq-voice-gender-row{ display:flex; gap:8px; margin-bottom:14px; }
+.fq-voice-gender-btn{ flex:1; text-align:center; background:none; border:1px solid var(--line); color:var(--ink); padding:10px 8px; font-size:13.5px; cursor:pointer; font-family:inherit; }
+.fq-voice-gender-btn.active{ border-color:var(--navy-solid); background:var(--navy-solid); color:#fff; font-weight:600; }
+.fq-voice-rate-row{ margin-bottom:14px; }
+.fq-voice-rate-label{ display:block; font-size:12.5px; color:var(--muted); margin-bottom:6px; }
+.fq-voice-rate-slider{ width:100%; }
 /* ---- audio mode ---- */
 .fq-audio-box{ display:flex; justify-content:center; align-items:center; margin:14px 0 30px; }
 .fq-audio-play{ width:96px; height:96px; border-radius:50%; border:2px solid var(--navy); background:var(--card); color:var(--navy); font-size:38px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .fq-audio-play:hover{ background:var(--navy-solid); color:#fff; }
 .fq-audio-play:active{ transform:scale(.96); }
+.fq-audio-play-listening{ border-color:var(--bad); color:var(--bad); animation:fq-pulse 1s infinite; }
+@keyframes fq-pulse{ 0%{ box-shadow:0 0 0 0 rgba(176,65,62,.4);} 70%{ box-shadow:0 0 0 14px rgba(176,65,62,0);} 100%{ box-shadow:0 0 0 0 rgba(176,65,62,0);} }
+.fq-hint-correct{ color:var(--good); font-weight:600; }
 .fq-hint-reveal{ font-weight:600; color:var(--ink); margin-bottom:8px !important; }
 .fq-kicker{ font-family: "Helvetica Neue",Arial,sans-serif; font-size:12.5px; letter-spacing:.04em; color:var(--muted); margin:0 0 4px; }
 .fq-title{ font-size:28px; font-weight:600; margin:0 0 22px; color:var(--navy); border-bottom:1px solid var(--line); padding-bottom:16px; }
@@ -1118,6 +1127,17 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     "acquérir":{ present:["acquiers","acquiers","acquiert","acquérons","acquérrez","acquièrent"], futur:["acquerrai","acquerras","acquerra","acquerrons","acquerrez","acquerront"], pc:{aux:"avoir", participle:"acquis"} },
     "haïr":{ present:["hais","hais","hait","haïssons","haïssez","haïssent"], pc:{aux:"avoir", participle:"haï"} }
   };
+  function stripDiacritics(s){
+    return (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  let _conjAccentIndex = null;
+  function getConjAccentIndex(){
+    if(_conjAccentIndex) return _conjAccentIndex;
+    _conjAccentIndex = {};
+    CONJ_VERBS.forEach(v=>{ _conjAccentIndex[stripDiacritics(v.inf)] = v.inf; });
+    Object.keys(CONJ_IRREG_EXTRA).forEach(k=>{ _conjAccentIndex[stripDiacritics(k)] = k; });
+    return _conjAccentIndex;
+  }
   function regularGroupConj(inf){
     if(inf.endsWith("er") && inf !== "aller"){
       const stem = inf.slice(0,-2);
@@ -1164,9 +1184,19 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   }
   function conjugateAny(rawInf, ua){
     const stripped = stripInflectPrefix((rawInf || "").trim().toLowerCase().replace(/’/g,"'"));
-    const inf = stripped.base;
+    let inf = stripped.base;
     const flags = { reflexive: stripped.reflexive };
-    const known = CONJ_VERBS.find(v => v.inf === inf);
+    let known = CONJ_VERBS.find(v => v.inf === inf);
+    let extraPeek = CONJ_IRREG_EXTRA[inf];
+    if(!known && !extraPeek){
+      // Людина могла ввести дієслово без діакритики (etre, resoudre, acquerir, hair...) —
+      // не даємо цим "провалитись" у регулярний -re/-ir шаблон і показати хибне відмінювання.
+      const fixed = getConjAccentIndex()[stripDiacritics(inf)];
+      if(fixed && fixed !== inf){
+        inf = fixed;
+        known = CONJ_VERBS.find(v => v.inf === inf);
+      }
+    }
     if(known){
       const knownGroup = (known.inf.endsWith("er") && known.inf !== "aller") ? "1-ша група (−er)" : (known.inf === "finir" ? "2-га група (−ir)" : "3-тя група");
       return completeConjugation(inf, ua || known.ua, known, knownGroup, flags);
@@ -1295,9 +1325,9 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     // A2 — розширення
     "reflexiveVerbs","possessivesDemonstratives","ilYaIlFaut","extendedNegation","verbGroups","modalVerbs","passeCompose","fauxAmis",
     // B1 — просунутий рівень
-    "comparatives","questionWords","additionalTenses","objectPronouns","relativePronouns","plusQueParfait",
+    "comparatives","questionWords","additionalTenses","objectPronouns","relativePronouns","plusQueParfait","pronounsYEn","gerondif",
     // B2 — вищий проміжний рівень
-    "conditionnel","subjonctifPresent"
+    "conditionnel","subjonctifPresent","subjonctifPasse","passiveVoice","indirectSpeech"
   ];
   const THEORY_LEVELS = [
     { key:"all", label:"Усі рівні" },
@@ -1991,6 +2021,177 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
         <div class="fq-ex"><b>Je doute qu'il <u>vienne</u>. (subjonctif — сумнів)</b><span>Я сумніваюсь, що він прийде.</span></div>
       `
     },
+    pronounsYEn: {
+      title: "Займенники y та en",
+      level: "B1",
+      summary: "y = à + місце/річ, en = de + іменник — маленькі слова, які замінюють цілі групи",
+      html: `
+        <h3>1. Займенник y</h3>
+        <p><b>y</b> замінює <b>à + місце</b> (означає «туди», «там») або <b>à + річ/ідея</b> (не особу!) після дієслів, що керуються прийменником à (penser à, réfléchir à, s'intéresser à).</p>
+        <div class="fq-ex"><b>Tu vas à Paris? — Oui, j'<u>y</u> vais.</b><span>Так, я туди їду. (y = à Paris, місце)</span></div>
+        <div class="fq-ex"><b>Tu penses à ton examen? — Oui, j'<u>y</u> pense.</b><span>Так, я про нього думаю. (y = à ton examen, річ)</span></div>
+        <p>Якщо після à йде особа, замінюємо не на y, а на lui/leur: <i>Je pense à Marie → Je pense <b>à elle</b></i> (не «j'y pense»).</p>
+        <h3>2. Займенник en</h3>
+        <p><b>en</b> замінює <b>de + іменник</b> — партитив («трохи чогось»), кількість або вираз із de (avoir besoin de, avoir envie de, parler de, venir de).</p>
+        <div class="fq-ex"><b>Tu veux du café? — Oui, j'<u>en</u> veux.</b><span>Так, я хочу (його трохи). (en = du café)</span></div>
+        <div class="fq-ex"><b>Tu as des frères? — J'<u>en</u> ai deux.</b><span>У мене їх двоє. (en обов'язковий разом із числом!)</span></div>
+        <div class="fq-ex"><b>Tu as besoin de ce livre? — Oui, j'<u>en</u> ai besoin.</b><span>Так, він мені потрібен. (en = de ce livre)</span></div>
+        <p>Важливо: коли en замінює іменник із числівником або виразом кількості (deux, plusieurs, beaucoup de), сам числівник/вираз кількості <b>залишається</b> в реченні після дієслова — це типова помилка новачків його забувати.</p>
+        <h3>3. Місце в реченні</h3>
+        <p>Як і інші займенники-додатки, y та en стоять <b>перед дієсловом</b>, якому підпорядковані:</p>
+        <div class="fq-ex"><b>Je n'<u>y</u> vais pas.</b><span>Я туди не йду. (ne...pas оточує "y + дієслово")</span></div>
+        <div class="fq-ex"><b>Je vais <u>en</u> acheter.</b><span>Я збираюсь купити (їх). (перед інфінітивом, якому підпорядкований)</span></div>
+        <p>У стверджувальному наказовому способі — після дієслова через дефіс. Для -er дієслів перед y/en додається -s для милозвучності:</p>
+        <div class="fq-ex"><b>Vas-y!</b><span>Іди туди! / Уперед! (va + y → vas-y)</span></div>
+        <div class="fq-ex"><b>Manges-en!</b><span>З'їж (трохи)! (mange + en → manges-en)</span></div>
+        <h3>4. Стійкі вирази</h3>
+        <ul>
+          <li><b>il y a</b> — є/маємо: <i>Il y a un problème.</i></li>
+          <li><b>on y va</b> — розмовне «ходімо», «поїхали»</li>
+          <li><b>je n'en sais rien</b> — я про це нічого не знаю</li>
+          <li><b>ça y est</b> — готово / все, справу зроблено</li>
+        </ul>
+      `
+    },
+    gerondif: {
+      title: "Gérondif (en + participe présent)",
+      level: "B1",
+      summary: "en travaillant, en mangeant — дія, що відбувається одночасно з іншою",
+      html: `
+        <h3>1. Утворення</h3>
+        <p>Gérondif = <b>en</b> + participe présent. Participe présent утворюється від основи <b>nous</b> у Présent (без -ons) + закінчення <b>-ant</b>.</p>
+        <table class="fq-theory-table">
+          <tr><th>Дієслово</th><th>Nous-форма</th><th>Participe présent</th><th>Gérondif</th></tr>
+          <tr><td>parler</td><td>parl<u>ons</u></td><td>parlant</td><td>en parlant</td></tr>
+          <tr><td>finir</td><td>finiss<u>ons</u></td><td>finissant</td><td>en finissant</td></tr>
+          <tr><td>faire</td><td>fais<u>ons</u></td><td>faisant</td><td>en faisant</td></tr>
+        </table>
+        <p>Лише три винятки не за цим правилом: <b>être → en étant</b>, <b>avoir → en ayant</b>, <b>savoir → en sachant</b>.</p>
+        <h3>2. Головне правило: той самий підмет</h3>
+        <p>Gérondif описує дію того самого підмета, що й головне дієслово речення — обидві дії виконує одна й та сама особа.</p>
+        <div class="fq-ex"><b>Il mange <u>en regardant</u> la télé.</b><span>Він їсть, дивлячись телевізор. (той самий "він" їсть і дивиться)</span></div>
+        <h3>3. Основні значення</h3>
+        <ul>
+          <li><b>Одночасність</b> (роблячи одне, одночасно робить інше): <i>Elle chante en cuisinant.</i> (Вона співає, готуючи їжу.)</li>
+          <li><b>Спосіб дії</b> (як саме щось робиться): <i>Il a réussi en travaillant dur.</i> (Він досяг успіху, наполегливо працюючи.)</li>
+          <li><b>Умова</b> (якщо/за умови): <i>En partant maintenant, tu arriveras à temps.</i> (Якщо вийдеш зараз, встигнеш вчасно.)</li>
+        </ul>
+        <p>Для підкреслення одночасності перед gérondif часто додають <b>tout</b>: <i>Tout en souriant, elle a refusé.</i> (Посміхаючись, вона все ж відмовила — підкреслює контраст.)</p>
+        <h3>4. Gérondif проти простого participe présent</h3>
+        <p>Без <b>en</b> participe présent вживається рідше — здебільшого як означення (замінює підрядне речення з qui), і тоді не вимагає того самого підмета, що в головному реченні:</p>
+        <div class="fq-ex"><b>Une personne <u>parlant</u> français...</b><span>Людина, яка говорить французькою... (= qui parle français, означення, без en)</span></div>
+        <h3>5. Приклад-прислів'я</h3>
+        <div class="fq-ex"><b>C'est <u>en forgeant</u> qu'on devient forgeron.</b><span>Кується залізо, поки гаряче (дослівно: саме коваючи, стають ковалем — практика робить майстра).</span></div>
+      `
+    },
+    passiveVoice: {
+      title: "Пасивний стан (voix passive)",
+      level: "B2",
+      summary: "être + participe passé — коли підмет отримує дію, а не виконує її",
+      html: `
+        <h3>1. Активний vs пасивний стан</h3>
+        <p>В активному стані підмет виконує дію; у пасивному — підмет <b>отримує</b> дію, а виконавець (якщо взагалі згаданий) стає додатком з prийменником:</p>
+        <div class="fq-ex"><b>Le chat mange la souris. (активний)</b><span>Кіт їсть мишу. (кіт — виконавець)</span></div>
+        <div class="fq-ex"><b>La souris est mangée par le chat. (пасивний)</b><span>Миша з'їдена котом. (миша — та, з ким це роблять)</span></div>
+        <h3>2. Формула</h3>
+        <p>Пасив = <b>être</b> у тому самому часі, що й активне дієслово, + <b>participe passé</b>, який обов'язково узгоджується з підметом у роді й числі (як прикметник).</p>
+        <table class="fq-theory-table">
+          <tr><th>Час активного дієслова</th><th>Пасивна конструкція</th></tr>
+          <tr><td>Présent: écrit</td><td>est écrit(e)</td></tr>
+          <tr><td>Passé composé: a écrit</td><td>a été écrit(e)</td></tr>
+          <tr><td>Futur: écrira</td><td>sera écrit(e)</td></tr>
+          <tr><td>Imparfait: écrivait</td><td>était écrit(e)</td></tr>
+        </table>
+        <div class="fq-ex"><b>Ce livre <u>a été écrit</u> par Camus.</b><span>Ця книга була написана Камю.</span></div>
+        <div class="fq-ex"><b>La décision <u>sera prise</u> demain.</b><span>Рішення буде прийняте завтра.</span></div>
+        <h3>3. Лише перехідні дієслова (з COD)</h3>
+        <p>У пасив можна перетворити тільки речення, де активне дієслово має прямий додаток (COD) — саме він стає підметом пасивного речення. Дієслова з непрямим додатком (téléphoner à, parler à) пасиву не утворюють.</p>
+        <h3>4. par чи de?</h3>
+        <p><b>par</b> вживається для конкретної дії/події (більшість випадків); <b>de</b> — для стану, почуття або звичної/тривалої ситуації, часто з дієсловами на кшталт aimer, respecter, entourer, couvrir, connaître:</p>
+        <div class="fq-ex"><b>Il est aimé <u>de</u> tous.</b><span>Його всі люблять. (стан, а не одноразова дія)</span></div>
+        <div class="fq-ex"><b>La fenêtre a été cassée <u>par</u> le vent.</b><span>Вікно розбив вітер. (конкретна дія)</span></div>
+        <h3>5. Коли виконавця не називають</h3>
+        <p>Якщо той, хто виконує дію, невідомий або неважливий, доповнення з par/de просто опускають:</p>
+        <div class="fq-ex"><b>Le magasin <u>est fermé</u> le dimanche.</b><span>Магазин зачинений по неділях.</span></div>
+        <h3>6. Розмовна альтернатива: on</h3>
+        <p>У повсякденній мові пасив звучить формально — французи частіше перефразовують речення з <b>on</b> + активне дієслово:</p>
+        <div class="fq-ex"><b>On parle français ici. (замість: Le français est parlé ici.)</b><span>Тут говорять французькою.</span></div>
+      `
+    },
+    indirectSpeech: {
+      title: "Непряма мова (discours indirect)",
+      level: "B2",
+      summary: "il a dit que..., elle a demandé si... — переказуємо чужі слова, узгоджуючи часи",
+      html: `
+        <h3>1. Пряма і непряма мова</h3>
+        <p>Пряма мова передає слова дослівно в лапках; непряма — переказує їх у підрядному реченні, без лапок, зі зміною займенників, присвійних слів і, якщо головне дієслово в минулому, — часів.</p>
+        <div class="fq-ex"><b>Il dit : « Je suis fatigué. »</b><span>Він каже: «Я втомлений».</span></div>
+        <div class="fq-ex"><b>Il dit <u>qu'</u>il est fatigué.</b><span>Він каже, що він втомлений.</span></div>
+        <h3>2. Три типи речень і сполучник</h3>
+        <table class="fq-theory-table">
+          <tr><th>Тип прямої мови</th><th>Сполучник у непрямій мові</th></tr>
+          <tr><td>Стверджувальне речення</td><td><b>que</b> — il dit que...</td></tr>
+          <tr><td>Питання (так/ні, est-ce que)</td><td><b>si</b> — il demande si...</td></tr>
+          <tr><td>Питання з qu'est-ce que / que</td><td><b>ce que</b> — il demande ce que...</td></tr>
+          <tr><td>Питання з qu'est-ce qui / qui</td><td><b>ce qui / qui</b> — il demande ce qui... / qui...</td></tr>
+          <tr><td>Наказовий спосіб</td><td><b>de + infinitif</b> — il dit de...</td></tr>
+        </table>
+        <div class="fq-ex"><b>« Est-ce que tu viens? » → Il demande <u>si</u> je viens.</b><span>Він питає, чи я прийду.</span></div>
+        <div class="fq-ex"><b>« Qu'est-ce que tu fais? » → Il demande <u>ce que</u> je fais.</b><span>Він питає, що я роблю.</span></div>
+        <div class="fq-ex"><b>« Viens ici! » → Il me dit <u>de venir</u> ici.</b><span>Він каже мені прийти сюди.</span></div>
+        <h3>3. Узгодження часів (concordance des temps)</h3>
+        <p>Якщо дієслово, що вводить непряму мову (dire, demander...), стоїть у <b>минулому часі</b>, час підрядного речення "зсувається назад":</p>
+        <table class="fq-theory-table">
+          <tr><th>Пряма мова</th><th>Непряма мова (після минулого)</th></tr>
+          <tr><td>Présent</td><td>Imparfait</td></tr>
+          <tr><td>Passé composé</td><td>Plus-que-parfait</td></tr>
+          <tr><td>Futur simple</td><td>Conditionnel présent</td></tr>
+          <tr><td>Imparfait</td><td>Imparfait (без змін)</td></tr>
+        </table>
+        <div class="fq-ex"><b>« Je viendrai. » → Il a dit qu'il <u>viendrait</u>.</b><span>Він сказав, що прийде. (futur → conditionnel)</span></div>
+        <p>Якщо ж вводить дієслово в теперішньому чи майбутньому часі (il dit que...), час підрядного речення <b>не змінюється</b>.</p>
+        <h3>4. Займенники та присвійні слова</h3>
+        <p>Особа й присвійні слова змінюються так само, як в українській при переказі чужих слів (я→він, мій→його тощо):</p>
+        <div class="fq-ex"><b>« Mon frère m'a aidé. » → Il a dit que <u>son</u> frère l'avait aidé.</b><span>Він сказав, що його брат йому допоміг.</span></div>
+        <h3>5. Обставини часу і місця</h3>
+        <table class="fq-theory-table">
+          <tr><th>Пряма мова</th><th>Непряма мова (у минулому)</th></tr>
+          <tr><td>aujourd'hui</td><td>ce jour-là</td></tr>
+          <tr><td>hier</td><td>la veille</td></tr>
+          <tr><td>demain</td><td>le lendemain</td></tr>
+          <tr><td>maintenant</td><td>à ce moment-là</td></tr>
+          <tr><td>ici</td><td>là</td></tr>
+        </table>
+        <div class="fq-ex"><b>« Je pars demain. » → Il a dit qu'il partait <u>le lendemain</u>.</b><span>Він сказав, що поїде наступного дня.</span></div>
+      `
+    },
+    subjonctifPasse: {
+      title: "Subjonctif passé",
+      level: "B2",
+      summary: "que tu sois venu — subjonctif для дії, що вже завершилась",
+      html: `
+        <h3>1. Формула</h3>
+        <p>Subjonctif passé = subjonctif présent дієслова <b>avoir</b> або <b>être</b> + <b>participe passé</b> смислового дієслова. Вживається за тими самими тригерами, що й subjonctif présent (il faut que, vouloir que, être content que...), коли дія вже <b>завершена</b> відносно моменту головного дієслова.</p>
+        <table class="fq-theory-table">
+          <tr><th>que je</th><td>aie fini / sois parti(e)</td></tr>
+          <tr><th>que tu</th><td>aies fini / sois parti(e)</td></tr>
+          <tr><th>qu'il/elle</th><td>ait fini / soit parti(e)</td></tr>
+          <tr><th>que nous</th><td>ayons fini / soyons parti(e)s</td></tr>
+          <tr><th>que vous</th><td>ayez fini / soyez parti(e)(s)</td></tr>
+          <tr><th>qu'ils/elles</th><td>aient fini / soient parti(e)s</td></tr>
+        </table>
+        <h3>2. Subjonctif présent vs subjonctif passé</h3>
+        <p>Вибір залежить не від форми головного дієслова, а від того, чи дія в підрядному реченні відбувається одночасно/пізніше (présent), чи вже сталася раніше (passé) відносно головної дії:</p>
+        <div class="fq-ex"><b>Je suis content que tu <u>viennes</u>. (présent)</b><span>Я радий, що ти прийдеш/приходиш (зараз чи потім).</span></div>
+        <div class="fq-ex"><b>Je suis content que tu <u>sois venu</u>. (passé)</b><span>Я радий, що ти прийшов (це вже сталося раніше).</span></div>
+        <h3>3. Узгодження participe passé</h3>
+        <p>Правила узгодження ті самі, що й у Passé Composé: з être — узгодження з підметом обов'язкове; з avoir — лише якщо прямий додаток стоїть перед дієсловом.</p>
+        <div class="fq-ex"><b>Je doute qu'elle <u>soit arrivée</u> à temps.</b><span>Я сумніваюсь, що вона прибула вчасно. (être → узгодження -e)</span></div>
+        <h3>4. Приклади з типовими тригерами</h3>
+        <div class="fq-ex"><b>Il est possible qu'il <u>ait oublié</u> son rendez-vous.</b><span>Можливо, він забув про зустріч.</span></div>
+        <div class="fq-ex"><b>Je regrette que vous n'<u>ayez</u> pas <u>pu</u> venir.</b><span>Шкода, що ви не змогли прийти.</span></div>
+      `
+    },
     pronounsEtreAvoir: {
       title: "Займенники + être / avoir",
       summary: "Особові займенники та відмінювання двох базових дієслів у Présent",
@@ -2522,6 +2723,17 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     const t = safeGet("fq_theme","light");
     return t === "dark" ? "dark" : "light";
   }
+  function loadVoiceRate(){
+    const v = parseFloat(safeGet("fq_voice_rate","0.9"));
+    return (isNaN(v) || v < 0.5 || v > 2) ? 0.9 : v;
+  }
+  function loadVoiceGender(){
+    const g = safeGet("fq_voice_gender","auto");
+    return (g === "male" || g === "female") ? g : "auto";
+  }
+  function loadVoiceName(){
+    return safeGet("fq_voice_name","");
+  }
   function loadFavorites(){
     try{ return new Set(JSON.parse(safeGet("fq_favorites","[]"))); } catch(e){ return new Set(); }
   }
@@ -2542,7 +2754,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     safeSet("fq_order", JSON.stringify(orderStore));
   }
   // ---------- backup: export/import everything stored locally ----------
-  const BACKUP_KEYS = ["fq_history","fq_theme","fq_favorites","fq_mistakes","fq_theory_progress","fq_reading_progress","fq_progress","fq_order"];
+  const BACKUP_KEYS = ["fq_history","fq_theme","fq_voice_rate","fq_voice_gender","fq_voice_name","fq_favorites","fq_mistakes","fq_theory_progress","fq_reading_progress","fq_progress","fq_order"];
   function exportProgress(){
     const data = {};
     BACKUP_KEYS.forEach(k=>{
@@ -2579,11 +2791,12 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     reader.readAsText(file);
   }
   // ---------- state ----------
-  let state = { view:"picker", mode:"practice", direction:"ua_fr", catKey:null, batchStart:0, qIndex:0, score:0, missed:[], answered:false, options:[], correctIdx:-1, theme:loadTheme(), history:loadHistory(), taskType:"normal", drawerOpen:false, themeKey:null, theoryKey:null, practiceIndex:0, practiceAnswered:false, practiceSelected:null, practiceScore:0, theoryLevelFilter:"all",
+  let state = { view:"picker", mode:"practice", direction:"ua_fr", catKey:null, batchStart:0, qIndex:0, score:0, missed:[], answered:false, options:[], correctIdx:-1, theme:loadTheme(), voiceRate:loadVoiceRate(), voiceGender:loadVoiceGender(), voiceName:loadVoiceName(), history:loadHistory(), taskType:"normal", drawerOpen:false, themeKey:null, theoryKey:null, practiceIndex:0, practiceAnswered:false, practiceSelected:null, practiceScore:0, theoryLevelFilter:"all",
     conjPool:null, conjIndex:0, conjBatchStart:0, conjScore:0, conjMissed:[], conjAnswered:false, conjSelected:null, conjOptions:[], conjCorrectText:null, conjCurrent:null,
     conjRefQuery:"", conjRefInf:null,
     sbPool:null, sbIndex:0, sbBatchStart:0, sbScore:0, sbMissed:[], sbCurrent:null, sbAvailable:[], sbPlaced:[], sbAnswered:false, sbCorrect:null,
-    readingKey:null, readingLevelFilter:"all", readingQIndex:0, readingAnswered:false, readingSelected:null, readingScore:0 };
+    readingKey:null, readingLevelFilter:"all", readingQIndex:0, readingAnswered:false, readingSelected:null, readingScore:0,
+    speechPool:[], speechIndex:0, speechScore:0, speechMissed:[], speechCurrent:null, speechAnswered:false, speechCorrect:null, speechRecognized:"", speechListening:false, speechError:null };
   const progressStore = loadProgressStore(); // catKey -> how many items completed, persisted across sessions/reloads
   const orderStore = loadOrderStore(); // catKey -> shuffled array of item indices, persisted across sessions/reloads
   let favorites = loadFavorites();     // Set of "catKey::idx" — words the user starred
@@ -2780,6 +2993,13 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       '<span class="fq-drawer-item-count">' + (state.taskType === "audio" ? "🎧 На слух — без перекладу, тільки звук" : "Склади речення зі слів у правильному порядку") + '</span>';
     sbBtn.onclick = ()=>{ state.drawerOpen = false; startSentenceBuilder(); };
     panel.appendChild(sbBtn);
+    const speechBtn = document.createElement("button");
+    speechBtn.type = "button";
+    speechBtn.className = "fq-drawer-item";
+    speechBtn.innerHTML = '<span class="fq-drawer-item-title">🎙️ Вимова (розпізнавання мовлення)</span>' +
+      '<span class="fq-drawer-item-count">' + (SPEECH_RECOGNITION_SUPPORTED ? "Скажи слово вголос — перевіримо, чи розпізналось" : "Потрібен Chrome — цей браузер не підтримує") + '</span>';
+    speechBtn.onclick = ()=>{ state.drawerOpen = false; startSpeechPractice(); };
+    panel.appendChild(speechBtn);
     const mistakeN = mistakesCount();
     const mistakeBtn = document.createElement("button");
     mistakeBtn.type = "button";
@@ -2806,6 +3026,88 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       favHint.textContent = "Постав ⭐ біля слова в квізі чи словнику.";
       panel.appendChild(favHint);
     }
+    const voiceTitle = document.createElement("div");
+    voiceTitle.className = "fq-drawer-title fq-drawer-title-spaced";
+    voiceTitle.textContent = "Голос озвучення";
+    panel.appendChild(voiceTitle);
+
+    const genderRow = document.createElement("div");
+    genderRow.className = "fq-voice-gender-row";
+    [["female","👩 Жіночий"],["male","👨 Чоловічий"]].forEach(function(pair){
+      const key = pair[0], label = pair[1];
+      const gb = document.createElement("button");
+      gb.type = "button";
+      gb.className = "fq-voice-gender-btn" + (state.voiceGender === key ? " active" : "");
+      gb.textContent = label;
+      gb.onclick = ()=> setVoiceGender(key);
+      genderRow.appendChild(gb);
+    });
+    panel.appendChild(genderRow);
+
+    const rateRow = document.createElement("div");
+    rateRow.className = "fq-voice-rate-row";
+    const rateLabel = document.createElement("span");
+    rateLabel.className = "fq-voice-rate-label";
+    rateLabel.textContent = "Швидкість: " + (state.voiceRate || 0.9).toFixed(1) + "×";
+    const rateSlider = document.createElement("input");
+    rateSlider.type = "range";
+    rateSlider.min = "0.6";
+    rateSlider.max = "1.3";
+    rateSlider.step = "0.1";
+    rateSlider.value = state.voiceRate || 0.9;
+    rateSlider.className = "fq-voice-rate-slider";
+    rateSlider.oninput = function(e){
+      const r = parseFloat(e.target.value);
+      state.voiceRate = r;
+      rateLabel.textContent = "Швидкість: " + r.toFixed(1) + "×";
+    };
+    rateSlider.onchange = function(e){
+      setVoiceRate(parseFloat(e.target.value));
+    };
+    rateRow.appendChild(rateLabel);
+    rateRow.appendChild(rateSlider);
+    panel.appendChild(rateRow);
+
+    const frVoicePool = getAvailableFrenchVoices();
+    const hasMaleNamed = frVoicePool.some(v => VOICE_GENDER_HINTS.male.some(h => (v.name||"").toLowerCase().indexOf(h) !== -1));
+    if(frVoicePool.length && !hasMaleNamed){
+      const noMaleNote = document.createElement("p"); noMaleNote.className = "fq-drawer-note";
+      noMaleNote.textContent = "На цьому пристрої серед " + frVoicePool.length + " французьких голосів немає жодного зі стандартним чоловічим іменем — це залежить від телефона/браузера, а не від застосунку. Спробуй обрати голос вручну зі списку нижче, або встанови додатковий голос у налаштуваннях системи (Android: Налаштування → Мова та введення → Синтез мовлення; iOS: Налаштування → Спеціальні можливості → Читання вголос).";
+      panel.appendChild(noMaleNote);
+    }
+    if(frVoicePool.length > 1){
+      const voiceSelectLabel = document.createElement("span");
+      voiceSelectLabel.className = "fq-voice-rate-label";
+      voiceSelectLabel.textContent = "Або обери голос вручну:";
+      panel.appendChild(voiceSelectLabel);
+      const voiceSelect = document.createElement("select");
+      voiceSelect.className = "fq-search";
+      const autoOpt = document.createElement("option");
+      autoOpt.value = "";
+      autoOpt.textContent = "Авто (за обраною статтю вище)";
+      voiceSelect.appendChild(autoOpt);
+      frVoicePool.forEach(v=>{
+        const opt = document.createElement("option");
+        opt.value = v.name;
+        opt.textContent = v.name + " (" + v.lang + ")";
+        if(state.voiceName === v.name) opt.selected = true;
+        voiceSelect.appendChild(opt);
+      });
+      voiceSelect.onchange = (e)=> setVoiceName(e.target.value);
+      panel.appendChild(voiceSelect);
+    } else if(!frVoicePool.length){
+      const noVoiceNote = document.createElement("p"); noVoiceNote.className = "fq-drawer-note";
+      noVoiceNote.textContent = "Голоси ще завантажуються або на пристрої немає жодного встановленого голосу для озвучення. Спробуй відкрити цю панель ще раз за кілька секунд.";
+      panel.appendChild(noVoiceNote);
+    }
+
+    const voiceTestBtn = document.createElement("button");
+    voiceTestBtn.type = "button";
+    voiceTestBtn.className = "fq-drawer-item";
+    voiceTestBtn.innerHTML = '<span class="fq-drawer-item-title">🔊 Прослухати приклад</span>';
+    voiceTestBtn.onclick = ()=> speakFrench("Bonjour, comment ça va ?");
+    panel.appendChild(voiceTestBtn);
+
     const backupTitle = document.createElement("div");
     backupTitle.className = "fq-drawer-title fq-drawer-title-spaced";
     backupTitle.textContent = "Резервна копія прогресу";
@@ -2862,15 +3164,208 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     return a;
   }
   function pcAnswer(item){ return item[1] + " + " + item[2]; }
+  const VOICE_GENDER_HINTS = {
+    female: ["amelie","amélie","audrey","aurelie","aurélie","celine","céline","chantal","charlotte","marie","virginie","julie","lea","léa","hortense","elise","élise","manon","fabienne","female","femme","women"],
+    male: ["thomas","nicolas","daniel","henri","paul","guillaume","bruno","jacques","antoine","yannick","male","homme","man"]
+  };
+  // ================= Розпізнавання мовлення (shadowing) =================
+  const SpeechRecCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SPEECH_RECOGNITION_SUPPORTED = !!SpeechRecCtor;
+  const SPEECH_BATCH_SIZE = 15;
+  let speechRecognizer = null;
+  function getSpeechRecognizer(){
+    if(!SPEECH_RECOGNITION_SUPPORTED) return null;
+    if(!speechRecognizer){
+      speechRecognizer = new SpeechRecCtor();
+      speechRecognizer.lang = "fr-FR";
+      speechRecognizer.continuous = false;
+      speechRecognizer.interimResults = false;
+      speechRecognizer.maxAlternatives = 1;
+    }
+    return speechRecognizer;
+  }
+  function levenshteinDistance(a, b){
+    const m = a.length, n = b.length;
+    if(m === 0) return n;
+    if(n === 0) return m;
+    const dp = new Array(n+1);
+    for(let j=0;j<=n;j++) dp[j] = j;
+    for(let i=1;i<=m;i++){
+      let prev = dp[0];
+      dp[0] = i;
+      for(let j=1;j<=n;j++){
+        const temp = dp[j];
+        dp[j] = Math.min(dp[j]+1, dp[j-1]+1, prev + (a[i-1]===b[j-1] ? 0 : 1));
+        prev = temp;
+      }
+    }
+    return dp[n];
+  }
+  function speechNormalize(s){
+    return stripDiacritics((s||"").toLowerCase()).replace(/[^a-z' ]/g,"").replace(/\s+/g," ").trim();
+  }
+  function speechErrorMessage(code){
+    const map = {
+      "not-allowed": "Доступ до мікрофона заблоковано. Дозволь мікрофон у налаштуваннях браузера й спробуй ще раз.",
+      "no-speech": "Нічого не почув. Спробуй ще раз і скажи слово чіткіше.",
+      "audio-capture": "Не знайдено мікрофон на цьому пристрої.",
+      "network": "Проблема з мережею під час розпізнавання. Перевір інтернет-з'єднання.",
+      "aborted": "Розпізнавання перервано.",
+      "start-failed": "Не вдалося запустити мікрофон. Спробуй ще раз.",
+      "unsupported": "Цей браузер не підтримує розпізнавання мовлення."
+    };
+    return map[code] || "Сталася помилка розпізнавання. Спробуй ще раз.";
+  }
+  function buildSpeechPool(){
+    const items = [];
+    ["nouns","verbs","adjectives","adverbs"].forEach(key=>{
+      const cat = DATA[key];
+      if(!cat || !cat.items) return;
+      cat.items.forEach(it=>{
+        if(it[0]) items.push({ fr: it[0], pron: it[1], ua: it[2], catLabel: cat.label });
+      });
+    });
+    return items;
+  }
+  function startSpeechPractice(){
+    state.view = "speech";
+    if(!SPEECH_RECOGNITION_SUPPORTED){
+      state.speechPool = [];
+      render();
+      return;
+    }
+    state.speechPool = shuffle(buildSpeechPool()).slice(0, SPEECH_BATCH_SIZE);
+    state.speechIndex = 0;
+    state.speechScore = 0;
+    state.speechMissed = [];
+    nextSpeechQuestion(true);
+    render();
+  }
+  function nextSpeechQuestion(isFirst){
+    if(!isFirst) state.speechIndex++;
+    state.speechAnswered = false;
+    state.speechCorrect = null;
+    state.speechRecognized = "";
+    state.speechListening = false;
+    state.speechError = null;
+    if(state.speechIndex >= state.speechPool.length){
+      state.view = "speechSummary";
+      recordHistoryEntry("🎙️ Вимова", state.speechScore, state.speechPool.length);
+      return;
+    }
+    state.speechCurrent = state.speechPool[state.speechIndex];
+  }
+  function handleSpeechNext(){
+    nextSpeechQuestion(false);
+    render();
+  }
+  function speechRetry(){
+    if(state.speechListening) return;
+    state.speechAnswered = false;
+    state.speechCorrect = null;
+    state.speechRecognized = "";
+    state.speechError = null;
+    render();
+  }
+  function speechJudge(transcript){
+    const target = speechNormalize(state.speechCurrent.fr);
+    const heard = speechNormalize(transcript);
+    const dist = levenshteinDistance(target, heard);
+    const threshold = target.length <= 4 ? 0 : 1;
+    const correct = heard.length > 0 && (heard === target || dist <= threshold);
+    state.speechRecognized = transcript;
+    state.speechAnswered = true;
+    state.speechCorrect = correct;
+    if(correct) state.speechScore++;
+    else state.speechMissed.push(state.speechCurrent);
+    render();
+  }
+  function speechStartListening(){
+    if(state.speechAnswered || state.speechListening) return;
+    const rec = getSpeechRecognizer();
+    if(!rec){ state.speechError = "unsupported"; render(); return; }
+    state.speechError = null;
+    state.speechListening = true;
+    render();
+    rec.onresult = function(e){
+      const transcript = e.results && e.results[0] && e.results[0][0] ? e.results[0][0].transcript : "";
+      state.speechListening = false;
+      speechJudge(transcript);
+    };
+    rec.onerror = function(e){
+      state.speechListening = false;
+      state.speechError = (e && e.error) || "error";
+      render();
+    };
+    rec.onend = function(){
+      if(state.speechListening){ state.speechListening = false; render(); }
+    };
+    try{ rec.start(); }
+    catch(err){ state.speechListening = false; state.speechError = "start-failed"; render(); }
+  }
+  function getAvailableFrenchVoices(){
+    try{
+      if(!("speechSynthesis" in window)) return [];
+      const voices = window.speechSynthesis.getVoices() || [];
+      const frVoices = voices.filter(v => /^fr/i.test(v.lang));
+      return frVoices.length ? frVoices : voices;
+    }catch(e){ return []; }
+  }
+  function pickFrenchVoice(genderPref){
+    const pool = getAvailableFrenchVoices();
+    if(!pool.length) return null;
+    if(genderPref !== "male" && genderPref !== "female") return pool[0];
+    const hints = VOICE_GENDER_HINTS[genderPref];
+    const match = pool.find(v => hints.some(h => (v.name||"").toLowerCase().indexOf(h) !== -1));
+    return match || pool[0];
+  }
+  // Явно обраний голос (зі списку) має пріоритет над евристикою за статтю —
+  // це рятує ситуацію, коли на пристрої взагалі немає голосу зі "стандартним"
+  // чоловічим/жіночим іменем і евристика нічого не знаходить.
+  function resolveVoice(){
+    if(state.voiceName){
+      const pool = getAvailableFrenchVoices();
+      const exact = pool.find(v => v.name === state.voiceName);
+      if(exact) return exact;
+    }
+    return pickFrenchVoice(state.voiceGender);
+  }
+  function setVoiceGender(g){
+    state.voiceGender = g;
+    state.voiceName = "";
+    safeSet("fq_voice_gender", g);
+    safeSet("fq_voice_name", "");
+    render();
+  }
+  function setVoiceName(name){
+    state.voiceName = name;
+    safeSet("fq_voice_name", name);
+    render();
+  }
+  function setVoiceRate(r){
+    state.voiceRate = r;
+    safeSet("fq_voice_rate", String(r));
+  }
   function speakFrench(text){
     try{
       if(!("speechSynthesis" in window) || !text) return;
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "fr-FR";
-      u.rate = 0.9;
+      u.rate = state.voiceRate || 0.9;
+      const voice = resolveVoice();
+      if(voice) u.voice = voice;
       window.speechSynthesis.speak(u);
     }catch(e){ /* speech synthesis unavailable — silently ignore */ }
+  }
+  if(typeof window !== "undefined" && "speechSynthesis" in window){
+    // Voices often load asynchronously — prime the list so the very first
+    // pickFrenchVoice() call (before any speak) already has options.
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = function(){
+      window.speechSynthesis.getVoices();
+      if(state.drawerOpen) render();
+    };
   }
   // text shown as the "answer side" for a given item, depending on category type + direction
   function answerText(cat, item, direction){
@@ -3112,6 +3607,8 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     else if(state.view === "themeCats") renderThemeCatPicker();
     else if(state.view === "readingList") renderReadingList();
     else if(state.view === "readingText") renderReadingText();
+    else if(state.view === "speech") renderSpeechPractice();
+    else if(state.view === "speechSummary") renderSpeechSummary();
   }
   function renderTabs(){
     const tabs = document.createElement("div"); tabs.className="fq-tabs";
@@ -4387,6 +4884,130 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       btnrow.appendChild(again);
     }
     const toPicker = document.createElement("button"); toPicker.className="fq-btn-secondary"; toPicker.textContent="Обрати інший розділ";
+    toPicker.onclick = ()=>{ state.view="picker"; render(); };
+    btnrow.appendChild(toPicker);
+    root.appendChild(btnrow);
+  }
+  function renderSpeechPractice(){
+    const topbar = document.createElement("div"); topbar.className="fq-topbar";
+    const back = document.createElement("button"); back.className="fq-back"; back.textContent="← Розділи"; back.onclick=()=>{state.view="picker"; render();};
+    topbar.appendChild(back);
+    if(SPEECH_RECOGNITION_SUPPORTED && state.speechPool.length){
+      const info = document.createElement("span");
+      info.textContent = "Вимова · " + (state.speechIndex+1) + "/" + state.speechPool.length + " · рахунок " + state.speechScore;
+      topbar.appendChild(info);
+    }
+    root.appendChild(topbar);
+
+    if(!SPEECH_RECOGNITION_SUPPORTED){
+      const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Розпізнавання мовлення";
+      const title = document.createElement("h2"); title.className="fq-title"; title.textContent="🎙️ Вимова";
+      root.appendChild(kicker); root.appendChild(title);
+      const msg = document.createElement("p"); msg.className="fq-drawer-note";
+      msg.textContent = "Цей браузер не підтримує розпізнавання мовлення (Web Speech API). Спробуй відкрити застосунок у Chrome на комп'ютері або Android — там ця функція працює найкраще.";
+      root.appendChild(msg);
+      return;
+    }
+    if(!state.speechCurrent) return;
+
+    const barWrap = document.createElement("div"); barWrap.className="fq-progressbar";
+    const barFill = document.createElement("div"); barFill.className="fq-progressbar-fill";
+    barFill.style.width = Math.round(state.speechIndex/state.speechPool.length*100) + "%";
+    barWrap.appendChild(barFill);
+    root.appendChild(barWrap);
+
+    const label = document.createElement("p"); label.className="fq-prompt-label";
+    label.textContent = "Прочитай вголос:";
+    root.appendChild(label);
+
+    const prompt = document.createElement("p"); prompt.className="fq-prompt";
+    prompt.textContent = state.speechCurrent.fr;
+    root.appendChild(prompt);
+
+    const subLabel = document.createElement("p"); subLabel.className="fq-history-note";
+    subLabel.textContent = state.speechCurrent.ua + " · " + state.speechCurrent.catLabel;
+    root.appendChild(subLabel);
+
+    const micBox = document.createElement("div"); micBox.className="fq-audio-box";
+    const micBtn = document.createElement("button");
+    micBtn.type = "button";
+    micBtn.className = "fq-audio-play" + (state.speechListening ? " fq-audio-play-listening" : "");
+    micBtn.textContent = state.speechListening ? "🔴" : "🎙️";
+    micBtn.title = state.speechListening ? "Слухаю..." : "Натисни і скажи слово вголос";
+    micBtn.disabled = state.speechAnswered || state.speechListening;
+    micBtn.onclick = speechStartListening;
+    micBox.appendChild(micBtn);
+    root.appendChild(micBox);
+
+    if(state.speechListening){
+      const listeningNote = document.createElement("p"); listeningNote.className="fq-history-note";
+      listeningNote.style.textAlign = "center";
+      listeningNote.textContent = "Слухаю... кажи чітко у мікрофон.";
+      root.appendChild(listeningNote);
+    }
+
+    if(state.speechError){
+      const errNote = document.createElement("p"); errNote.className="fq-hint-wrong";
+      errNote.textContent = speechErrorMessage(state.speechError);
+      root.appendChild(errNote);
+    }
+
+    if(state.speechAnswered){
+      const resultBox = document.createElement("div"); resultBox.className="fq-hint";
+      const verdict = document.createElement("p");
+      verdict.className = state.speechCorrect ? "fq-hint-correct" : "fq-hint-wrong";
+      verdict.textContent = state.speechCorrect ? "✅ Розпізнано правильно!" : "❌ Почуто інакше";
+      resultBox.appendChild(verdict);
+      const heard = document.createElement("p"); heard.className="fq-history-note";
+      heard.innerHTML = "Розпізнано: «<b>" + (state.speechRecognized || "—") + "</b>»";
+      resultBox.appendChild(heard);
+      const speakBtn = document.createElement("button");
+      speakBtn.type = "button";
+      speakBtn.className = "fq-speak";
+      speakBtn.textContent = "🔊 Почути правильну вимову";
+      speakBtn.onclick = ()=> speakFrench(state.speechCurrent.fr);
+      resultBox.appendChild(speakBtn);
+      root.appendChild(resultBox);
+
+      const retryBtn = document.createElement("button");
+      retryBtn.type = "button";
+      retryBtn.className = "fq-btn-secondary";
+      retryBtn.style.marginTop = "10px";
+      retryBtn.textContent = "🔁 Спробувати ще раз";
+      retryBtn.onclick = speechRetry;
+      root.appendChild(retryBtn);
+    }
+
+    const nextbar = document.createElement("div"); nextbar.className="fq-nextbar";
+    const nextBtn = document.createElement("button"); nextBtn.className="fq-next"; nextBtn.textContent="Далі →";
+    nextBtn.disabled = !state.speechAnswered;
+    nextBtn.onclick = handleSpeechNext;
+    nextbar.appendChild(nextBtn);
+    root.appendChild(nextbar);
+  }
+  function renderSpeechSummary(){
+    const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent = "🎙️ Вимова";
+    const title = document.createElement("h2"); title.className="fq-title"; title.textContent = "Порція завершена";
+    root.appendChild(kicker); root.appendChild(title);
+    const total = state.speechPool.length;
+    const scoreEl = document.createElement("div"); scoreEl.className="fq-summary-score"; scoreEl.textContent = state.speechScore + " / " + total;
+    root.appendChild(scoreEl);
+    if(state.speechMissed.length){
+      const mt = document.createElement("div"); mt.className="fq-missed-title"; mt.textContent="Варто повторити вимову:";
+      root.appendChild(mt);
+      state.speechMissed.forEach(it=>{
+        const row = document.createElement("div"); row.className="fq-missed-item";
+        const fr = document.createElement("span"); fr.className="fq-missed-fr"; fr.textContent = it.fr;
+        const ua = document.createElement("span"); ua.className="fq-missed-ua"; ua.textContent = it.ua;
+        row.appendChild(fr); row.appendChild(ua);
+        root.appendChild(row);
+      });
+    }
+    const btnrow = document.createElement("div"); btnrow.className="fq-btnrow";
+    const again = document.createElement("button"); again.className="fq-btn-primary"; again.textContent="Ще одна порція";
+    again.onclick = startSpeechPractice;
+    btnrow.appendChild(again);
+    const toPicker = document.createElement("button"); toPicker.className="fq-btn-secondary"; toPicker.textContent="Назад до розділів";
     toPicker.onclick = ()=>{ state.view="picker"; render(); };
     btnrow.appendChild(toPicker);
     root.appendChild(btnrow);
