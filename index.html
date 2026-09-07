@@ -3443,6 +3443,15 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     render();
   }
   function beginQuizAfterPreview(){
+    // Reshuffle just this batch's slice so the practice order differs from
+    // the order the words were just previewed in (mutates state.order in
+    // place — it's the same array as orderStore[state.catKey] by reference,
+    // so the new order also sticks for any later resume of this batch).
+    const end = Math.min(state.batchStart + BATCH_SIZE, state.order.length);
+    const segment = shuffle(state.order.slice(state.batchStart, end));
+    for(let i=0;i<segment.length;i++){
+      state.order[state.batchStart+i] = segment[i];
+    }
     state.qIndex = state.batchStart;
     state.score = 0;
     state.missed = [];
