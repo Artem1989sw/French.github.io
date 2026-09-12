@@ -593,8 +593,9 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
     const prompt = document.createElement("p"); prompt.className = "eq-prompt"; prompt.textContent = promptText;
     wrap.appendChild(prompt);
 
-    if(enFirst){
-      const speakBtn = document.createElement("button"); speakBtn.className = "eq-speak"; speakBtn.textContent = "🔊 Прослухати";
+    if(enFirst || state.answered){
+      const speakBtn = document.createElement("button"); speakBtn.className = "eq-speak";
+      speakBtn.textContent = enFirst ? "🔊 Прослухати" : "🔊 Прослухати вимову";
       speakBtn.onclick = ()=> speakEnglish(state.current[0]);
       wrap.appendChild(speakBtn);
     }
