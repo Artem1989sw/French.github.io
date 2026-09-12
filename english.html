@@ -65,11 +65,11 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
 .eq-ex i{ color:var(--muted); font-style:normal; }
 .eq-study-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:22px; }
 .eq-study-item{ font-family:"Helvetica Neue",Arial,sans-serif; display:grid; grid-template-columns:1fr 1fr auto; align-items:center; gap:10px; background:var(--card); border:1px solid var(--line); padding:11px 14px; }
-.eq-study-en{ font-size:16px; font-weight:600; color:var(--navy); }
-.eq-study-ua{ font-size:15px; color:var(--ink); }
+.eq-study-front{ font-size:16px; font-weight:600; color:var(--navy); }
+.eq-study-back{ font-size:15px; color:var(--ink); }
 .eq-study-speak{ width:30px; height:30px; border-radius:50%; border:1px solid var(--line); background:var(--card-alt); cursor:pointer; font-size:13px; padding:0; }
 .eq-study-speak:hover{ border-color:var(--navy); }
-@media (max-width:480px){ .eq-study-item{ grid-template-columns:1fr auto; } .eq-study-ua{ grid-column:1 / 2; color:var(--muted); font-size:13.5px; } }
+@media (max-width:480px){ .eq-study-item{ grid-template-columns:1fr auto; } .eq-study-back{ grid-column:1 / 2; color:var(--muted); font-size:13.5px; } }
 </style>
 </head>
 <body>
@@ -547,14 +547,17 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
     const title = document.createElement("h1"); title.className = "eq-title"; title.textContent = "Ознайомлення зі словами";
     wrap.appendChild(kicker); wrap.appendChild(title);
 
+    renderDirToggle(wrap);
+
+    const enFirst = state.direction === "en-ua";
     const list = document.createElement("div"); list.className = "eq-study-list";
     state.blockItems.forEach(it=>{
       const row = document.createElement("div"); row.className = "eq-study-item";
-      const en = document.createElement("span"); en.className = "eq-study-en"; en.textContent = it[0];
-      const ua = document.createElement("span"); ua.className = "eq-study-ua"; ua.textContent = it[1];
+      const front = document.createElement("span"); front.className = "eq-study-front"; front.textContent = enFirst ? it[0] : it[1];
+      const back = document.createElement("span"); back.className = "eq-study-back"; back.textContent = enFirst ? it[1] : it[0];
       const speakBtn = document.createElement("button"); speakBtn.className = "eq-study-speak"; speakBtn.textContent = "🔊"; speakBtn.title = "Прослухати";
       speakBtn.onclick = ()=> speakEnglish(it[0]);
-      row.appendChild(en); row.appendChild(ua); row.appendChild(speakBtn);
+      row.appendChild(front); row.appendChild(back); row.appendChild(speakBtn);
       list.appendChild(row);
     });
     wrap.appendChild(list);
