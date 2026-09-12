@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Англійська A2 — теорія та лексика</title>
+<style>
+html, body{ height:100%; margin:0; }
+body{ background:#FAF6EF; }
+body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
+:root{ --ink:#1F2A38; --paper:#FAF6EF; --card:#FFFFFF; --card-alt:#F2EEE4; --line:#DCD3C0; --navy:#2E4057; --navy-solid:#2E4057; --gold:#B08D2B; --good:#3F7A54; --good-bg:#EEF6F0; --bad:#B0413E; --bad-bg:#FBEEED; --muted:#6B6459; }
+*{box-sizing:border-box;}
+.eq-root{ font-family:"Iowan Old Style","Palatino Linotype",Georgia,"Times New Roman",serif; color:var(--ink); background:var(--paper); padding:64px 18px 60px; max-width:720px; min-height:100vh; margin:0 auto; position:relative; transition:background-color .2s ease, color .2s ease; }
+.eq-root[data-theme="dark"]{ --ink:#E7E1D3; --paper:#141A24; --card:#1E2734; --card-alt:#242F3E; --line:#2C3849; --navy:#6C93C4; --navy-solid:#3E6690; --gold:#E3C567; --good:#5FBE82; --good-bg:#1D3327; --bad:#E2827E; --bad-bg:#3A2323; --muted:#93A1B5; }
+.eq-top{ position:absolute; top:16px; right:18px; display:flex; justify-content:flex-end; }
+.eq-icon-btn{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--card); color:var(--ink); font-size:15px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; text-decoration:none; }
+.eq-icon-btn:hover{ border-color:var(--gold); }
+.eq-kicker{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:12.5px; letter-spacing:.04em; color:var(--muted); margin:0 0 4px; }
+.eq-title{ font-size:28px; font-weight:600; margin:0 0 22px; color:var(--navy); border-bottom:1px solid var(--line); padding-bottom:16px; }
+.eq-tabs{ font-family:"Helvetica Neue",Arial,sans-serif; display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+.eq-tab{ flex:1 1 100px; text-align:center; padding:10px 12px; font-size:13.5px; border:1px solid var(--line); background:var(--card); color:var(--muted); cursor:pointer; }
+.eq-tab.active{ border-color:var(--navy-solid); background:var(--navy-solid); color:#fff; font-weight:600; }
+.eq-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:480px){ .eq-grid{grid-template-columns:1fr;} }
+.eq-tile{ font-family:"Helvetica Neue",Arial,sans-serif; text-align:left; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--navy); padding:14px 16px; cursor:pointer; transition:transform .12s ease, border-color .12s ease; }
+.eq-tile:hover{ border-left-color:var(--gold); transform:translateX(2px); }
+.eq-tile-name{ font-size:16px; font-weight:600; color:var(--navy); margin-bottom:3px; }
+.eq-tile-count{ font-size:12.5px; color:var(--muted); }
+.eq-back{ background:none; border:none; color:var(--navy); cursor:pointer; font-size:13px; padding:0; font-family:inherit; text-decoration:underline; margin-bottom:18px; display:inline-block; }
+.eq-dirtoggle{ font-family:"Helvetica Neue",Arial,sans-serif; display:flex; gap:8px; margin-bottom:20px; }
+.eq-dirbtn{ flex:1; text-align:center; padding:11px 14px; font-size:13.5px; border:1px solid var(--line); background:var(--card); color:var(--muted); cursor:pointer; }
+.eq-dirbtn.active{ border-color:var(--navy-solid); background:var(--navy-solid); color:#fff; font-weight:600; }
+.eq-topbar{ font-family:"Helvetica Neue",Arial,sans-serif; display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted); margin-bottom:10px; }
+.eq-progressbar{ height:3px; background:var(--line); margin-bottom:26px; }
+.eq-progressbar-fill{ height:3px; background:var(--gold); transition:width .25s ease; }
+.eq-prompt-label{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:12.5px; color:var(--muted); margin-bottom:8px; }
+.eq-prompt{ font-size:32px; line-height:1.25; margin:0 0 8px; color:var(--ink); }
+.eq-speak{ font-family:"Helvetica Neue",Arial,sans-serif; display:inline-flex; align-items:center; gap:7px; background:var(--card); border:1px solid var(--navy); color:var(--navy); padding:7px 13px; font-size:13px; cursor:pointer; margin-bottom:24px; }
+.eq-speak:hover{ background:var(--navy-solid); color:#fff; }
+.eq-options{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
+@media (max-width:480px){ .eq-options{grid-template-columns:1fr;} }
+.eq-opt{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:16px; text-align:left; background:var(--card); border:1px solid var(--line); padding:13px 14px; cursor:pointer; color:var(--ink); }
+.eq-opt:hover:not(:disabled){ border-color:var(--navy); }
+.eq-opt:disabled{ cursor:default; }
+.eq-opt.correct{ border-color:var(--good); background:var(--good-bg); color:var(--good); font-weight:600; }
+.eq-opt.wrong{ border-color:var(--bad); background:var(--bad-bg); color:var(--bad); font-weight:600; }
+.eq-nextbar{ display:flex; justify-content:flex-end; margin-top:16px; }
+.eq-next{ font-family:"Helvetica Neue",Arial,sans-serif; background:var(--navy-solid); color:#fff; border:none; padding:11px 22px; font-size:14px; cursor:pointer; }
+.eq-next:disabled{ opacity:.35; cursor:default; }
+.eq-summary-score{ font-size:44px; font-weight:600; color:var(--navy); text-align:center; margin:20px 0 28px; }
+.eq-missed-title{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:13px; color:var(--muted); margin-bottom:10px; }
+.eq-missed-item{ font-family:"Helvetica Neue",Arial,sans-serif; display:flex; justify-content:space-between; padding:9px 12px; background:var(--card-alt); margin-bottom:6px; font-size:14.5px; }
+.eq-btnrow{ display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; }
+.eq-btn-primary{ font-family:"Helvetica Neue",Arial,sans-serif; background:var(--navy-solid); color:#fff; border:none; padding:12px 20px; font-size:14px; cursor:pointer; flex:1 1 auto; }
+.eq-btn-secondary{ font-family:"Helvetica Neue",Arial,sans-serif; background:var(--card); color:var(--ink); border:1px solid var(--line); padding:12px 20px; font-size:14px; cursor:pointer; flex:1 1 auto; }
+.eq-theory-list-item{ font-family:"Helvetica Neue",Arial,sans-serif; display:block; width:100%; text-align:left; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--gold); padding:14px 16px; margin-bottom:10px; cursor:pointer; font-size:15px; color:var(--ink); }
+.eq-theory-list-item:hover{ border-left-color:var(--navy); }
+.eq-theory-article h3{ color:var(--navy); font-size:20px; margin:26px 0 10px; }
+.eq-theory-article h3:first-child{ margin-top:0; }
+.eq-theory-article p{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:15.5px; line-height:1.65; margin:0 0 12px; }
+.eq-theory-article ul{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:15.5px; line-height:1.65; margin:0 0 14px; padding-left:20px; }
+.eq-theory-article li{ margin-bottom:6px; }
+.eq-ex{ display:block; background:var(--card-alt); border-left:3px solid var(--gold); padding:8px 12px; margin:4px 0 10px; font-size:14.5px; }
+.eq-ex b{ color:var(--navy); }
+.eq-ex i{ color:var(--muted); font-style:normal; }
+</style>
+</head>
+<body>
+<div id="eq-app"></div>
+<script>(function(){
+  const root = document.getElementById("eq-app");
+
+  // ---------- vocabulary data ----------
+  const TOPICS = [
+    {slug:"family", label:"Сім'я", items:[
+      ["mother","мама"],["father","тато"],["parents","батьки"],["sister","сестра"],["brother","брат"],
+      ["son","син"],["daughter","дочка"],["husband","чоловік (у шлюбі)"],["wife","дружина"],["grandmother","бабуся"],
+      ["grandfather","дідусь"],["aunt","тітка"],["uncle","дядько"],["cousin","двоюрідний брат/сестра"],["baby","немовля"],
+      ["child","дитина"],["family","сім'я"],["friend","друг"],["neighbour","сусід"],["relative","родич"]
+    ]},
+    {slug:"numbers", label:"Числа", items:[
+      ["one","один"],["two","два"],["three","три"],["four","чотири"],["five","п'ять"],
+      ["six","шість"],["seven","сім"],["eight","вісім"],["nine","дев'ять"],["ten","десять"],
+      ["eleven","одинадцять"],["twelve","дванадцять"],["twenty","двадцять"],["thirty","тридцять"],["hundred","сто"],
+      ["thousand","тисяча"],["first","перший"],["second","другий"],["third","третій"],["last","останній"]
+    ]},
+    {slug:"colors", label:"Кольори", items:[
+      ["red","червоний"],["blue","синій"],["green","зелений"],["yellow","жовтий"],["black","чорний"],
+      ["white","білий"],["grey","сірий"],["brown","коричневий"],["orange","оранжевий"],["pink","рожевий"],
+      ["purple","фіолетовий"],["light","світлий"],["dark","темний"]
+    ]},
+    {slug:"food", label:"Їжа та напої", items:[
+      ["bread","хліб"],["cheese","сир"],["meat","м'ясо"],["fish","риба"],["egg","яйце"],
+      ["milk","молоко"],["water","вода"],["juice","сік"],["tea","чай"],["coffee","кава"],
+      ["apple","яблуко"],["banana","банан"],["potato","картопля"],["tomato","помідор"],["rice","рис"],
+      ["soup","суп"],["salad","салат"],["sugar","цукор"],["salt","сіль"],["breakfast","сніданок"],
+      ["lunch","обід"],["dinner","вечеря"],["hungry","голодний"],["thirsty","спраглий"],["delicious","смачний"]
+    ]},
+    {slug:"house", label:"Дім та меблі", items:[
+      ["house","будинок"],["flat","квартира"],["room","кімната"],["kitchen","кухня"],["bedroom","спальня"],
+      ["bathroom","ванна кімната"],["living room","вітальня"],["door","двері"],["window","вікно"],["table","стіл"],
+      ["chair","стілець"],["bed","ліжко"],["sofa","диван"],["lamp","лампа"],["mirror","дзеркало"],
+      ["shelf","полиця"],["wall","стіна"],["floor","підлога"],["roof","дах"],["garden","сад"]
+    ]},
+    {slug:"clothes", label:"Одяг", items:[
+      ["shirt","сорочка"],["T-shirt","футболка"],["trousers","штани"],["jeans","джинси"],["dress","сукня"],
+      ["skirt","спідниця"],["jacket","куртка"],["coat","пальто"],["shoes","взуття"],["socks","шкарпетки"],
+      ["hat","капелюх/шапка"],["scarf","шарф"],["gloves","рукавички"],["belt","ремінь"],["bag","сумка"]
+    ]},
+    {slug:"body", label:"Тіло", items:[
+      ["head","голова"],["face","обличчя"],["eye","око"],["ear","вухо"],["nose","ніс"],
+      ["mouth","рот"],["hand","рука (кисть)"],["arm","рука"],["leg","нога"],["foot","стопа"],
+      ["hair","волосся"],["back","спина"],["finger","палець"],["heart","серце"],["tooth","зуб"]
+    ]},
+    {slug:"animals", label:"Тварини", items:[
+      ["dog","собака"],["cat","кіт"],["bird","птах"],["horse","кінь"],["cow","корова"],
+      ["pig","свиня"],["sheep","вівця"],["fish","риба"],["mouse","миша"],["rabbit","кролик"],
+      ["lion","лев"],["tiger","тигр"],["elephant","слон"],["bear","ведмідь"],["monkey","мавпа"]
+    ]},
+    {slug:"weather", label:"Погода", items:[
+      ["sun","сонце"],["rain","дощ"],["snow","сніг"],["wind","вітер"],["cloud","хмара"],
+      ["storm","гроза/буря"],["hot","спекотно"],["cold","холодно"],["warm","тепло"],["cool","прохолодно"],
+      ["sunny","сонячно"],["rainy","дощовий"],["cloudy","хмарно"],["weather","погода"],["temperature","температура"]
+    ]},
+    {slug:"calendar", label:"Дні, місяці, пори року", items:[
+      ["Monday","понеділок"],["Tuesday","вівторок"],["Wednesday","середа"],["Thursday","четвер"],["Friday","п'ятниця"],
+      ["Saturday","субота"],["Sunday","неділя"],["January","січень"],["February","лютий"],["March","березень"],
+      ["April","квітень"],["May","травень"],["June","червень"],["July","липень"],["August","серпень"],
+      ["September","вересень"],["October","жовтень"],["November","листопад"],["December","грудень"],
+      ["spring","весна"],["summer","літо"],["autumn","осінь"],["winter","зима"],["today","сьогодні"],["tomorrow","завтра"],["yesterday","вчора"]
+    ]},
+    {slug:"jobs", label:"Професії", items:[
+      ["teacher","вчитель"],["doctor","лікар"],["nurse","медсестра"],["engineer","інженер"],["driver","водій"],
+      ["waiter","офіціант"],["cook","кухар"],["police officer","поліцейський"],["farmer","фермер"],["shop assistant","продавець"],
+      ["student","студент"],["worker","робітник"],["manager","менеджер"],["builder","будівельник"],["writer","письменник"]
+    ]},
+    {slug:"school", label:"Школа", items:[
+      ["school","школа"],["teacher","вчитель"],["student","учень/студент"],["lesson","урок"],["book","книга"],
+      ["pen","ручка"],["pencil","олівець"],["notebook","зошит"],["desk","парта"],["homework","домашнє завдання"],
+      ["exam","іспит"],["question","питання"],["answer","відповідь"],["class","клас"],["subject","предмет"]
+    ]},
+    {slug:"city", label:"Місто та подорожі", items:[
+      ["city","місто"],["street","вулиця"],["shop","магазин"],["market","ринок"],["park","парк"],
+      ["station","станція/вокзал"],["airport","аеропорт"],["hotel","готель"],["bank","банк"],["hospital","лікарня"],
+      ["car","автомобіль"],["bus","автобус"],["train","потяг"],["plane","літак"],["ticket","квиток"],
+      ["map","карта"],["journey","подорож"],["luggage","багаж"],["passport","паспорт"],["road","дорога"]
+    ]},
+    {slug:"verbs", label:"Дієслова", items:[
+      ["to be","бути"],["to have","мати"],["to do","робити"],["to go","йти/їхати"],["to come","приходити"],
+      ["to see","бачити"],["to know","знати"],["to think","думати"],["to want","хотіти"],["to like","подобатися"],
+      ["to make","робити/створювати"],["to say","казати"],["to speak","говорити"],["to read","читати"],["to write","писати"],
+      ["to eat","їсти"],["to drink","пити"],["to sleep","спати"],["to work","працювати"],["to play","грати"],
+      ["to buy","купувати"],["to live","жити"],["to give","давати"],["to take","брати"],["to help","допомагати"]
+    ]},
+    {slug:"adjectives", label:"Прикметники", items:[
+      ["big","великий"],["small","маленький"],["good","хороший"],["bad","поганий"],["new","новий"],
+      ["old","старий"],["happy","щасливий"],["sad","сумний"],["easy","легкий"],["difficult","складний"],
+      ["fast","швидкий"],["slow","повільний"],["beautiful","гарний"],["strong","сильний"],["cheap","дешевий"],
+      ["expensive","дорогий"],["clean","чистий"],["dirty","брудний"],["tall","високий"],["short","низький/короткий"]
+    ]}
+  ];
+
+  // ---------- theory data ----------
+  const THEORY = [
+    {title:"Дієслово to be (am/is/are)", body:`
+      <p>Дієслово <b>to be</b> — найважливіше дієслово в англійській мові. Воно змінюється залежно від займенника:</p>
+      <ul>
+        <li><b>I am</b> (I'm) — я є</li>
+        <li><b>he / she / it is</b> (he's, she's, it's)</li>
+        <li><b>you / we / they are</b> (you're, we're, they're)</li>
+      </ul>
+      <span class="eq-ex"><b>I am a student.</b> <i>— Я студент.</i></span>
+      <span class="eq-ex"><b>She is happy.</b> <i>— Вона щаслива.</i></span>
+      <p>Заперечення утворюється додаванням <b>not</b>: <i>I am not</i>, <i>he is not (isn't)</i>, <i>they are not (aren't)</i>.</p>
+      <p>Питання: змінюємо порядок слів — <b>Are you tired?</b>, <b>Is he at home?</b></p>
+    `},
+    {title:"Present Simple — теперішній простий час", body:`
+      <p>Використовується для звичок, фактів і розкладу.</p>
+      <ul>
+        <li>Стверджувальна форма: <b>I / you / we / they + дієслово</b>; <b>he / she / it + дієслово + -s</b></li>
+        <li>Заперечення: <b>don't / doesn't + дієслово</b></li>
+        <li>Питання: <b>Do / Does + підмет + дієслово?</b></li>
+      </ul>
+      <span class="eq-ex"><b>I work every day.</b> <i>— Я працюю щодня.</i></span>
+      <span class="eq-ex"><b>She doesn't like coffee.</b> <i>— Вона не любить каву.</i></span>
+      <span class="eq-ex"><b>Do you speak English?</b> <i>— Ти розмовляєш англійською?</i></span>
+      <p>Слова-маркери: always, usually, often, sometimes, never, every day.</p>
+    `},
+    {title:"Present Continuous — теперішній тривалий час", body:`
+      <p>Використовується для дій, які відбуваються прямо зараз, або запланованих подій у майбутньому.</p>
+      <p>Форма: <b>am / is / are + дієслово + -ing</b></p>
+      <span class="eq-ex"><b>I am reading a book now.</b> <i>— Я зараз читаю книгу.</i></span>
+      <span class="eq-ex"><b>They are not watching TV.</b> <i>— Вони не дивляться телевізор.</i></span>
+      <span class="eq-ex"><b>Is she working today?</b> <i>— Вона працює сьогодні?</i></span>
+      <p>Слова-маркери: now, at the moment, right now, today, Look!, Listen!</p>
+    `},
+    {title:"Past Simple — минулий простий час", body:`
+      <p>Використовується для завершених дій у минулому.</p>
+      <ul>
+        <li>Правильні дієслова: +<b>-ed</b> (work → worked, play → played)</li>
+        <li>Неправильні дієслова мають окрему форму (go → went, see → saw, have → had)</li>
+        <li>Заперечення: <b>did not (didn't) + дієслово</b> (базова форма)</li>
+        <li>Питання: <b>Did + підмет + дієслово?</b></li>
+      </ul>
+      <span class="eq-ex"><b>I visited Paris last year.</b> <i>— Я відвідав Париж торік.</i></span>
+      <span class="eq-ex"><b>She didn't call me.</b> <i>— Вона мені не дзвонила.</i></span>
+      <span class="eq-ex"><b>Did you see that film?</b> <i>— Ти бачив цей фільм?</i></span>
+      <p>Слова-маркери: yesterday, last week/year, ago, in 2015.</p>
+    `},
+    {title:"Артиклі a / an / the", body:`
+      <p><b>a / an</b> — неозначений артикль, вживається з обчислюваними іменниками в однині, коли предмет називається вперше або не конкретизується.</p>
+      <ul>
+        <li><b>a</b> — перед приголосним звуком: <i>a book, a car</i></li>
+        <li><b>an</b> — перед голосним звуком: <i>an apple, an hour</i></li>
+      </ul>
+      <p><b>the</b> — означений артикль, коли предмет вже відомий обом співрозмовникам, єдиний у своєму роді, або згадувався раніше.</p>
+      <span class="eq-ex"><b>I have a dog. The dog is black.</b> <i>— У мене є собака. Собака чорна.</i></span>
+      <p>Артикль не вживається з незлічуваними іменниками у загальному значенні (water, love) та більшістю власних назв.</p>
+    `},
+    {title:"Множина іменників", body:`
+      <p>Більшість іменників утворюють множину додаванням <b>-s</b>: book → books, car → cars.</p>
+      <ul>
+        <li>Після -s, -sh, -ch, -x, -o додається <b>-es</b>: box → boxes, watch → watches</li>
+        <li>Після приголосної + y: y → ies: city → cities</li>
+        <li>Винятки: man → men, woman → women, child → children, foot → feet, tooth → teeth, person → people</li>
+      </ul>
+      <span class="eq-ex"><b>There are three children in the room.</b> <i>— У кімнаті троє дітей.</i></span>
+    `},
+    {title:"Займенники", body:`
+      <p>Особові займенники (підмет): I, you, he, she, it, we, they.</p>
+      <p>Об'єктні займенники (додаток): me, you, him, her, it, us, them.</p>
+      <p>Присвійні прикметники: my, your, his, her, its, our, their.</p>
+      <p>Присвійні займенники: mine, yours, his, hers, ours, theirs.</p>
+      <span class="eq-ex"><b>This is my book. It is mine.</b> <i>— Це моя книга. Вона моя.</i></span>
+      <span class="eq-ex"><b>She gave the ball to him.</b> <i>— Вона віддала м'яч йому.</i></span>
+    `},
+    {title:"Прийменники місця та часу", body:`
+      <p><b>Час:</b></p>
+      <ul>
+        <li><b>at</b> — точний час: at 5 o'clock, at night</li>
+        <li><b>on</b> — дні: on Monday, on my birthday</li>
+        <li><b>in</b> — місяці, роки, пори року: in May, in 2024, in summer</li>
+      </ul>
+      <p><b>Місце:</b></p>
+      <ul>
+        <li><b>at</b> — конкретна точка: at home, at the station</li>
+        <li><b>on</b> — поверхня: on the table, on the wall</li>
+        <li><b>in</b> — простір/приміщення: in the room, in London</li>
+      </ul>
+      <span class="eq-ex"><b>The book is on the table in the living room.</b> <i>— Книга на столі у вітальні.</i></span>
+    `},
+    {title:"Прикметники: порівняння", body:`
+      <p>Короткі прикметники (1 склад): +<b>-er / -est</b>: small → smaller → the smallest.</p>
+      <p>Довгі прикметники (2+ склади): <b>more / the most</b>: beautiful → more beautiful → the most beautiful.</p>
+      <p>Винятки: good → better → the best; bad → worse → the worst; far → farther → the farthest.</p>
+      <span class="eq-ex"><b>This car is faster than that one.</b> <i>— Ця машина швидша за ту.</i></span>
+      <span class="eq-ex"><b>She is the most intelligent student.</b> <i>— Вона найрозумніша учениця.</i></span>
+    `},
+    {title:"Модальні дієслова can, must, should", body:`
+      <ul>
+        <li><b>can</b> — вміння, можливість, дозвіл: <i>I can swim.</i> (Я вмію плавати.)</li>
+        <li><b>must</b> — обов'язок, необхідність: <i>You must wear a seatbelt.</i> (Ви повинні пристебнутися.)</li>
+        <li><b>should</b> — порада: <i>You should study more.</i> (Тобі варто більше вчитися.)</li>
+      </ul>
+      <p>Після модальних дієслів дієслово завжди у базовій формі без <b>to</b>. Заперечення: can't, mustn't, shouldn't.</p>
+      <span class="eq-ex"><b>You mustn't smoke here.</b> <i>— Тут не можна курити.</i></span>
+    `},
+    {title:"Питальні слова", body:`
+      <ul>
+        <li><b>What</b> — що/який</li>
+        <li><b>Where</b> — де</li>
+        <li><b>When</b> — коли</li>
+        <li><b>Why</b> — чому</li>
+        <li><b>How</b> — як</li>
+        <li><b>Who</b> — хто</li>
+        <li><b>Which</b> — котрий</li>
+        <li><b>How much / How many</b> — скільки</li>
+      </ul>
+      <span class="eq-ex"><b>Where do you live?</b> <i>— Де ти живеш?</i></span>
+      <span class="eq-ex"><b>How much does it cost?</b> <i>— Скільки це коштує?</i></span>
+    `},
+    {title:"There is / There are", body:`
+      <p>Конструкція для позначення наявності чогось.</p>
+      <ul>
+        <li><b>There is</b> + однина / незлічуваний іменник</li>
+        <li><b>There are</b> + множина</li>
+      </ul>
+      <span class="eq-ex"><b>There is a cat in the garden.</b> <i>— У саду є кіт.</i></span>
+      <span class="eq-ex"><b>There are five books on the shelf.</b> <i>— На полиці п'ять книг.</i></span>
+      <p>Заперечення: There isn't / There aren't. Питання: Is there...? / Are there...?</p>
+    `},
+    {title:"Майбутній час: going to та will", body:`
+      <p><b>be going to</b> — заплановані дії або очевидні прогнози:</p>
+      <span class="eq-ex"><b>I am going to visit my parents.</b> <i>— Я збираюся відвідати батьків.</i></span>
+      <p><b>will</b> — рішення, прийняті в момент розмови, обіцянки, прогнози без доказів:</p>
+      <span class="eq-ex"><b>I think it will rain tomorrow.</b> <i>— Думаю, завтра піде дощ.</i></span>
+      <p>Заперечення: won't (will not), not going to.</p>
+    `},
+    {title:"Кількісні слова: some / any / much / many / a lot of", body:`
+      <ul>
+        <li><b>some</b> — у стверджувальних реченнях: I have some money.</li>
+        <li><b>any</b> — у заперечних і питальних: I don't have any money. Do you have any questions?</li>
+        <li><b>much</b> — з незлічуваними: How much water?</li>
+        <li><b>many</b> — зі злічуваними: How many books?</li>
+        <li><b>a lot of</b> — з обома типами в стверджувальних реченнях: I have a lot of friends.</li>
+      </ul>
+    `}
+  ];
+
+  // ---------- state ----------
+  const state = {
+    theme: localStorage.getItem("eq-theme") || "light",
+    view: "picker", // picker | quiz | summary | theoryList | theoryArticle
+    topic: null,
+    direction: "en-ua", // en-ua | ua-en
+    pool: [],
+    index: 0,
+    score: 0,
+    missed: [],
+    answered: false,
+    current: null,
+    options: [],
+    theoryIndex: 0
+  };
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function speakEnglish(text){
+    if(!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.95;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }
+
+  function startQuiz(topic){
+    state.topic = topic;
+    state.pool = shuffle(topic.items);
+    state.index = 0;
+    state.score = 0;
+    state.missed = [];
+    state.view = "quiz";
+    nextQuestion();
+  }
+
+  function nextQuestion(){
+    if(state.index >= state.pool.length){
+      state.view = "summary";
+      render();
+      return;
+    }
+    const item = state.pool[state.index];
+    state.current = item;
+    state.answered = false;
+    const others = state.topic.items.filter(it=>it!==item);
+    const distractors = shuffle(others).slice(0,3);
+    state.options = shuffle([item, ...distractors]);
+    render();
+  }
+
+  function answer(opt){
+    if(state.answered) return;
+    state.answered = true;
+    const correct = opt === state.current;
+    if(correct) state.score++;
+    else state.missed.push(state.current);
+    render();
+  }
+
+  function handleNext(){
+    state.index++;
+    nextQuestion();
+  }
+
+  // ---------- render ----------
+  function render(){
+    root.innerHTML = "";
+    const wrap = document.createElement("div");
+    wrap.className = "eq-root";
+    wrap.dataset.theme = state.theme;
+    root.appendChild(wrap);
+
+    const top = document.createElement("div"); top.className = "eq-top";
+    const themeBtn = document.createElement("button"); themeBtn.className = "eq-icon-btn"; themeBtn.textContent = state.theme === "dark" ? "☀️" : "🌙";
+    themeBtn.onclick = ()=>{ state.theme = state.theme === "dark" ? "light" : "dark"; localStorage.setItem("eq-theme", state.theme); render(); };
+    top.appendChild(themeBtn);
+    wrap.appendChild(top);
+
+    if(state.view === "picker") renderPicker(wrap);
+    else if(state.view === "quiz") renderQuiz(wrap);
+    else if(state.view === "summary") renderSummary(wrap);
+    else if(state.view === "theoryList") renderTheoryList(wrap);
+    else if(state.view === "theoryArticle") renderTheoryArticle(wrap);
+  }
+
+  function renderModeTabs(wrap){
+    const tabs = document.createElement("div"); tabs.className = "eq-tabs";
+    const t1 = document.createElement("button");
+    t1.className = "eq-tab" + (state.view.indexOf("theory")===-1 ? " active" : "");
+    t1.textContent = "Словник за темами";
+    t1.onclick = ()=>{ state.view = "picker"; render(); };
+    const t2 = document.createElement("button");
+    t2.className = "eq-tab" + (state.view.indexOf("theory")!==-1 ? " active" : "");
+    t2.textContent = "Теорія";
+    t2.onclick = ()=>{ state.view = "theoryList"; render(); };
+    tabs.appendChild(t1); tabs.appendChild(t2);
+    wrap.appendChild(tabs);
+  }
+
+  function renderPicker(wrap){
+    renderModeTabs(wrap);
+    const kicker = document.createElement("p"); kicker.className = "eq-kicker"; kicker.textContent = "Англійська · рівень A2";
+    const title = document.createElement("h1"); title.className = "eq-title"; title.textContent = "Лексика за темами";
+    wrap.appendChild(kicker); wrap.appendChild(title);
+
+    const dirRow = document.createElement("div"); dirRow.className = "eq-dirtoggle";
+    const b1 = document.createElement("button"); b1.className = "eq-dirbtn" + (state.direction==="en-ua"?" active":""); b1.textContent = "EN → UA";
+    b1.onclick = ()=>{ state.direction = "en-ua"; render(); };
+    const b2 = document.createElement("button"); b2.className = "eq-dirbtn" + (state.direction==="ua-en"?" active":""); b2.textContent = "UA → EN";
+    b2.onclick = ()=>{ state.direction = "ua-en"; render(); };
+    dirRow.appendChild(b1); dirRow.appendChild(b2);
+    wrap.appendChild(dirRow);
+
+    const grid = document.createElement("div"); grid.className = "eq-grid";
+    TOPICS.forEach(topic=>{
+      const tile = document.createElement("button"); tile.className = "eq-tile";
+      const name = document.createElement("div"); name.className = "eq-tile-name"; name.textContent = topic.label;
+      const count = document.createElement("div"); count.className = "eq-tile-count"; count.textContent = topic.items.length + " слів";
+      tile.appendChild(name); tile.appendChild(count);
+      tile.onclick = ()=> startQuiz(topic);
+      grid.appendChild(tile);
+    });
+    wrap.appendChild(grid);
+  }
+
+  function renderQuiz(wrap){
+    const back = document.createElement("button"); back.className = "eq-back"; back.textContent = "← Назад до тем";
+    back.onclick = ()=>{ state.view = "picker"; render(); };
+    wrap.appendChild(back);
+
+    const topbar = document.createElement("div"); topbar.className = "eq-topbar";
+    const left = document.createElement("span"); left.textContent = state.topic.label;
+    const right = document.createElement("span"); right.textContent = (state.index+1) + " / " + state.pool.length + " · рахунок: " + state.score;
+    topbar.appendChild(left); topbar.appendChild(right);
+    wrap.appendChild(topbar);
+
+    const pbar = document.createElement("div"); pbar.className = "eq-progressbar";
+    const pfill = document.createElement("div"); pfill.className = "eq-progressbar-fill";
+    pfill.style.width = Math.round((state.index/state.pool.length)*100) + "%";
+    pbar.appendChild(pfill);
+    wrap.appendChild(pbar);
+
+    const enFirst = state.direction === "en-ua";
+    const promptText = enFirst ? state.current[0] : state.current[1];
+
+    const label = document.createElement("p"); label.className = "eq-prompt-label";
+    label.textContent = enFirst ? "Що означає це слово?" : "Як це буде англійською?";
+    wrap.appendChild(label);
+
+    const prompt = document.createElement("p"); prompt.className = "eq-prompt"; prompt.textContent = promptText;
+    wrap.appendChild(prompt);
+
+    if(enFirst){
+      const speakBtn = document.createElement("button"); speakBtn.className = "eq-speak"; speakBtn.textContent = "🔊 Прослухати";
+      speakBtn.onclick = ()=> speakEnglish(state.current[0]);
+      wrap.appendChild(speakBtn);
+    }
+
+    const opts = document.createElement("div"); opts.className = "eq-options";
+    state.options.forEach(opt=>{
+      const btn = document.createElement("button"); btn.className = "eq-opt";
+      btn.textContent = enFirst ? opt[1] : opt[0];
+      btn.disabled = state.answered;
+      if(state.answered){
+        if(opt === state.current) btn.classList.add("correct");
+        else if(btn.dataset.picked) btn.classList.add("wrong");
+      }
+      btn.onclick = ()=>{ btn.dataset.picked = "1"; answer(opt); };
+      opts.appendChild(btn);
+    });
+    wrap.appendChild(opts);
+
+    const nextbar = document.createElement("div"); nextbar.className = "eq-nextbar";
+    const nextBtn = document.createElement("button"); nextBtn.className = "eq-next"; nextBtn.textContent = "Далі →";
+    nextBtn.disabled = !state.answered;
+    nextBtn.onclick = handleNext;
+    nextbar.appendChild(nextBtn);
+    wrap.appendChild(nextbar);
+  }
+
+  function renderSummary(wrap){
+    const kicker = document.createElement("p"); kicker.className = "eq-kicker"; kicker.textContent = state.topic.label;
+    const title = document.createElement("h2"); title.className = "eq-title"; title.textContent = "Порція завершена";
+    wrap.appendChild(kicker); wrap.appendChild(title);
+
+    const score = document.createElement("div"); score.className = "eq-summary-score";
+    score.textContent = state.score + " / " + state.pool.length;
+    wrap.appendChild(score);
+
+    if(state.missed.length){
+      const mt = document.createElement("div"); mt.className = "eq-missed-title"; mt.textContent = "Варто повторити:";
+      wrap.appendChild(mt);
+      state.missed.forEach(it=>{
+        const row = document.createElement("div"); row.className = "eq-missed-item";
+        const en = document.createElement("span"); en.textContent = it[0];
+        const ua = document.createElement("span"); ua.textContent = it[1];
+        row.appendChild(en); row.appendChild(ua);
+        wrap.appendChild(row);
+      });
+    }
+
+    const btnrow = document.createElement("div"); btnrow.className = "eq-btnrow";
+    const again = document.createElement("button"); again.className = "eq-btn-primary"; again.textContent = "Ще одна спроба";
+    again.onclick = ()=> startQuiz(state.topic);
+    const toPicker = document.createElement("button"); toPicker.className = "eq-btn-secondary"; toPicker.textContent = "Назад до тем";
+    toPicker.onclick = ()=>{ state.view = "picker"; render(); };
+    btnrow.appendChild(again); btnrow.appendChild(toPicker);
+    wrap.appendChild(btnrow);
+  }
+
+  function renderTheoryList(wrap){
+    renderModeTabs(wrap);
+    const kicker = document.createElement("p"); kicker.className = "eq-kicker"; kicker.textContent = "Англійська · рівень A2";
+    const title = document.createElement("h1"); title.className = "eq-title"; title.textContent = "Базова граматика";
+    wrap.appendChild(kicker); wrap.appendChild(title);
+
+    THEORY.forEach((topic, i)=>{
+      const item = document.createElement("button"); item.className = "eq-theory-list-item";
+      item.textContent = (i+1) + ". " + topic.title;
+      item.onclick = ()=>{ state.theoryIndex = i; state.view = "theoryArticle"; render(); };
+      wrap.appendChild(item);
+    });
+  }
+
+  function renderTheoryArticle(wrap){
+    const back = document.createElement("button"); back.className = "eq-back"; back.textContent = "← Усі теми";
+    back.onclick = ()=>{ state.view = "theoryList"; render(); };
+    wrap.appendChild(back);
+
+    const topic = THEORY[state.theoryIndex];
+    const kicker = document.createElement("p"); kicker.className = "eq-kicker"; kicker.textContent = "Теорія";
+    const title = document.createElement("h1"); title.className = "eq-title"; title.textContent = topic.title;
+    wrap.appendChild(kicker); wrap.appendChild(title);
+
+    const article = document.createElement("div"); article.className = "eq-theory-article";
+    article.innerHTML = topic.body;
+    wrap.appendChild(article);
+
+    const nav = document.createElement("div"); nav.className = "eq-btnrow";
+    if(state.theoryIndex > 0){
+      const prev = document.createElement("button"); prev.className = "eq-btn-secondary"; prev.textContent = "← Попередня";
+      prev.onclick = ()=>{ state.theoryIndex--; render(); };
+      nav.appendChild(prev);
+    }
+    if(state.theoryIndex < THEORY.length - 1){
+      const next = document.createElement("button"); next.className = "eq-btn-primary"; next.textContent = "Наступна →";
+      next.onclick = ()=>{ state.theoryIndex++; render(); };
+      nav.appendChild(next);
+    }
+    if(nav.children.length) wrap.appendChild(nav);
+  }
+
+  render();
+})();</script>
+</body>
+</html>
