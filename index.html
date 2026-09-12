@@ -178,10 +178,62 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
 .fq-stat-chip{ flex:1 1 140px; font-family:"Helvetica Neue",Arial,sans-serif; background:var(--card); border:1px solid var(--line); border-top:3px solid var(--gold); padding:12px 14px; }
 .fq-stat-chip-val{ font-size:20px; font-weight:700; color:var(--navy); }
 .fq-stat-chip-label{ font-size:12px; color:var(--muted); margin-top:2px; }
+/* ---- streak + calendar ---- */
+.fq-streak-wrap{ font-family:"Helvetica Neue",Arial,sans-serif; background:var(--card); border:1px solid var(--line); padding:16px 18px 18px; margin-bottom:22px; }
+.fq-streak-flamerow{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+.fq-streak-flame{ font-size:34px; opacity:.35; filter:grayscale(1); }
+.fq-streak-flame.active{ opacity:1; filter:none; }
+.fq-streak-count{ display:flex; flex-direction:column; }
+.fq-streak-num{ font-size:26px; font-weight:700; color:var(--navy); line-height:1.1; }
+.fq-streak-label{ font-size:12.5px; color:var(--muted); }
+.fq-streak-best{ font-size:12.5px; color:var(--muted); margin-left:auto; }
+.fq-cal-nav{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.fq-cal-navbtn{ background:none; border:1px solid var(--line); color:var(--ink); width:26px; height:26px; cursor:pointer; font-size:14px; line-height:1; }
+.fq-cal-navbtn:disabled{ opacity:.35; cursor:default; }
+.fq-cal-monthlabel{ font-size:13.5px; font-weight:600; color:var(--navy); }
+.fq-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.fq-cal-weekday{ text-align:center; font-size:10.5px; color:var(--muted); padding-bottom:4px; }
+.fq-cal-cell{ position:relative; aspect-ratio:1/1; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid var(--line); background:var(--paper); font-size:11px; color:var(--ink); }
+.fq-cal-cell-empty{ border:none; background:none; }
+.fq-cal-daynum{ line-height:1; }
+.fq-cal-fire{ font-size:11px; line-height:1; margin-top:1px; }
+.fq-cal-active{ border-color:var(--gold); background:var(--good-bg); }
+.fq-cal-today{ border-color:var(--navy-solid); border-width:2px; font-weight:700; }
+.fq-cal-future{ opacity:.4; }
+/* ---- accuracy chart ---- */
+.fq-chart-wrap{ margin-bottom:22px; }
+.fq-chart-svg{ width:100%; height:auto; display:block; }
+.fq-chart-grid{ stroke:var(--line); stroke-width:1; }
+.fq-chart-axislabel{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:9px; fill:var(--muted); }
+.fq-chart-xlabel{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:9px; fill:var(--muted); }
+.fq-chart-line{ fill:none; stroke:var(--navy-solid); stroke-width:2.5; stroke-linejoin:round; stroke-linecap:round; }
+.fq-chart-area{ fill:var(--navy-solid); opacity:.08; stroke:none; }
+.fq-chart-dot{ fill:var(--gold); stroke:var(--card); stroke-width:1.5; }
+/* ---- achievements / badges ---- */
+.fq-badges-wrap{ margin-bottom:22px; }
+.fq-badges-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:10px; }
+.fq-badge{ font-family:"Helvetica Neue",Arial,sans-serif; text-align:center; border:1px solid var(--line); background:var(--card); padding:12px 6px 10px; }
+.fq-badge-unlocked{ border-color:var(--gold); background:var(--card-alt); }
+.fq-badge-locked{ opacity:.5; }
+.fq-badge-icon{ font-size:26px; margin-bottom:5px; line-height:1; }
+.fq-badge-label{ font-size:10.5px; color:var(--ink); line-height:1.25; }
 .fq-dict-fr{ font-weight:600; color:var(--ink); }
 .fq-dict-pron{ font-style:italic; color:var(--gold); }
 .fq-dict-empty{ text-align:center; color:var(--muted); padding:20px 0; }
 .fq-dict-count{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:12.5px; color:var(--muted); margin-top:12px; text-align:right;}
+.fq-dict-example{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:12px; color:var(--muted); font-style:italic; margin-top:3px; line-height:1.4; }
+.fq-dict-family{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:11.5px; color:var(--navy); margin-top:3px; line-height:1.4; }
+.fq-dict-family b{ font-weight:600; }
+.fq-mastered-badge{ color:var(--good); font-weight:700; margin-right:5px; }
+tr.fq-dict-mastered-row .fq-dict-fr{ color:var(--good); }
+/* ---- word of the day ---- */
+.fq-wotd{ position:relative; font-family:"Helvetica Neue",Arial,sans-serif; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--gold); padding:14px 52px 14px 16px; margin-bottom:20px; }
+.fq-wotd-kicker{ font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.fq-wotd-fr{ font-size:21px; font-weight:700; color:var(--navy); }
+.fq-wotd-pron{ font-style:italic; color:var(--gold); font-size:13px; margin:2px 0; }
+.fq-wotd-ua{ font-size:14px; color:var(--ink); }
+.fq-wotd-example{ font-size:12.5px; color:var(--muted); margin-top:7px; font-style:italic; }
+.fq-wotd-listen{ position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; border:1px solid var(--line); background:var(--paper); color:var(--navy); cursor:pointer; font-size:15px; }
 /* ---- conjugation reference ---- */
 .fq-conj-meta{ font-family:"Helvetica Neue",Arial,sans-serif; font-size:13.5px; color:var(--muted); margin:0 0 18px; line-height:1.55; }
 .fq-conj-meta b{ color:var(--navy); }
@@ -559,6 +611,219 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   Object.keys(DATA).forEach(key=>{
     DATA[key].items.forEach((it,idx)=>{ it._catKey = key; it._idx = idx; });
   });
+
+  // ---------- example sentences ----------
+  // Hand-curated examples for parts of speech where a generic template risks bad grammar
+  // (prepositions/conjunctions need a specific complement, quantity words like "aucun(e)"
+  // require a matching negation, etc). Keyed by the exact French headword text.
+  const EXAMPLE_OVERRIDES = {
+    "aujourd'hui": { fr:"Je travaille aujourd'hui.", ua:"Я працюю сьогодні." },
+    "hier": { fr:"Il est parti hier.", ua:"Він поїхав учора." },
+    "demain": { fr:"On se voit demain.", ua:"Побачимось завтра." },
+    "maintenant": { fr:"Je dois partir maintenant.", ua:"Мені треба йти зараз." },
+    "toujours": { fr:"Elle est toujours en retard.", ua:"Вона завжди спізнюється." },
+    "jamais": { fr:"Je ne mange jamais de viande.", ua:"Я ніколи не їм м'яса." },
+    "souvent": { fr:"Nous sortons souvent le soir.", ua:"Ми часто виходимо ввечері." },
+    "parfois": { fr:"Parfois, il pleut ici.", ua:"Іноді тут іде дощ." },
+    "déjà": { fr:"J'ai déjà fini mon travail.", ua:"Я вже закінчив свою роботу." },
+    "encore": { fr:"Il est encore là.", ua:"Він ще тут." },
+    "beaucoup": { fr:"Elle aime beaucoup ce livre.", ua:"Їй дуже подобається ця книга." },
+    "un peu": { fr:"J'ai un peu faim.", ua:"Я трохи голодний." },
+    "trop": { fr:"Ce café est trop chaud.", ua:"Ця кава занадто гаряча." },
+    "très": { fr:"Elle est très gentille.", ua:"Вона дуже мила." },
+    "bien": { fr:"Il chante bien.", ua:"Він добре співає." },
+    "mal": { fr:"J'ai mal dormi.", ua:"Я погано спав." },
+    "vite": { fr:"Viens vite !", ua:"Приходь швидко!" },
+    "ici": { fr:"Le magasin est ici.", ua:"Магазин тут." },
+    "là": { fr:"Mets-le là.", ua:"Постав це там." },
+    "aussi": { fr:"Moi aussi, j'aime le café.", ua:"Я теж люблю каву." },
+    "surtout": { fr:"J'aime les fruits, surtout les pommes.", ua:"Мені подобаються фрукти, особливо яблука." },
+    "ensemble": { fr:"Nous travaillons ensemble.", ua:"Ми працюємо разом." },
+    "seulement": { fr:"Il reste seulement deux minutes.", ua:"Залишилось тільки дві хвилини." },
+    "vraiment": { fr:"C'est vraiment difficile.", ua:"Це справді складно." },
+    "cependant": { fr:"Il pleut ; cependant, nous sortons.", ua:"Іде дощ; однак ми виходимо." },
+    "en effet": { fr:"Il fait froid ; en effet, il neige.", ua:"Холодно; дійсно, йде сніг." },
+    "par contre": { fr:"J'aime le thé, par contre je n'aime pas le café.", ua:"Мені подобається чай, натомість я не люблю каву." },
+    "par conséquent": { fr:"Il a plu ; par conséquent, la route est glissante.", ua:"Йшов дощ, отже дорога слизька." },
+    "d'ailleurs": { fr:"Elle est intelligente, d'ailleurs elle parle trois langues.", ua:"Вона розумна, до речі, вона розмовляє трьома мовами." },
+    "néanmoins": { fr:"Il est fatigué ; néanmoins, il continue.", ua:"Він втомлений; тим не менш він продовжує." },
+    "en revanche": { fr:"Il est timide, en revanche son frère est très sociable.", ua:"Він сором'язливий, натомість його брат дуже товариський." },
+    "puisque": { fr:"Puisque tu es là, aide-moi.", ua:"Оскільки ти тут, допоможи мені." },
+    "pourtant": { fr:"Il a étudié, pourtant il a échoué.", ua:"Він навчався, проте провалив іспит." },
+    "enfin": { fr:"Enfin, le train est arrivé.", ua:"Нарешті потяг прибув." },
+    "d'abord": { fr:"D'abord, on mange.", ua:"Спочатку поїмо." },
+    "ensuite": { fr:"On mange, ensuite on part.", ua:"Ми їмо, потім ідемо." },
+    "absolument": { fr:"C'est absolument nécessaire.", ua:"Це абсолютно необхідно." },
+    "probablement": { fr:"Il va probablement pleuvoir.", ua:"Ймовірно, піде дощ." },
+    "exactement": { fr:"C'est exactement ce que je voulais.", ua:"Це саме те, що я хотів." },
+    "personnellement": { fr:"Personnellement, je préfère le thé.", ua:"Особисто я віддаю перевагу чаю." },
+    "précisément": { fr:"C'est précisément le problème.", ua:"Це саме та проблема." },
+    "généralement": { fr:"Généralement, je me lève tôt.", ua:"Зазвичай я прокидаюся рано." },
+    "notamment": { fr:"Plusieurs pays, notamment la France, ont voté oui.", ua:"Кілька країн, зокрема Франція, проголосували «так»." },
+    "par ailleurs": { fr:"Le projet avance ; par ailleurs, le budget est stable.", ua:"Проєкт просувається; крім того, бюджет стабільний." },
+    "au contraire": { fr:"Il n'est pas triste, au contraire, il est content.", ua:"Він не сумний, навпаки, він задоволений." },
+    "à": { fr:"Je vais à Paris.", ua:"Я їду до Парижа." },
+    "de": { fr:"Elle vient de Kyiv.", ua:"Вона з Києва." },
+    "avec": { fr:"Je viens avec toi.", ua:"Я йду з тобою." },
+    "sans": { fr:"Il est parti sans dire au revoir.", ua:"Він пішов, не попрощавшись." },
+    "pour": { fr:"C'est un cadeau pour toi.", ua:"Це подарунок для тебе." },
+    "dans": { fr:"Le chat est dans la boîte.", ua:"Кіт у коробці." },
+    "sur": { fr:"Le livre est sur la table.", ua:"Книга на столі." },
+    "sous": { fr:"Le chat dort sous la table.", ua:"Кіт спить під столом." },
+    "chez": { fr:"Je vais chez mes parents.", ua:"Я їду до батьків (додому)." },
+    "entre": { fr:"Il est assis entre nous deux.", ua:"Він сидить між нами двома." },
+    "avant": { fr:"Il est arrivé avant midi.", ua:"Він приїхав до полудня." },
+    "après": { fr:"On se voit après le travail.", ua:"Побачимось після роботи." },
+    "pendant": { fr:"Il a dormi pendant le film.", ua:"Він спав протягом фільму." },
+    "depuis": { fr:"J'habite ici depuis deux ans.", ua:"Я живу тут вже два роки." },
+    "parce que": { fr:"Je reste parce qu'il pleut.", ua:"Я залишаюсь, тому що йде дощ." },
+    "mais": { fr:"C'est petit mais confortable.", ua:"Це маленьке, але зручне." },
+    "donc": { fr:"Il pleut, donc je reste à la maison.", ua:"Іде дощ, тому я залишаюсь удома." },
+    "si": { fr:"Si tu veux, on y va.", ua:"Якщо хочеш, ми йдемо." },
+    "quand": { fr:"Appelle-moi quand tu arrives.", ua:"Подзвони мені, коли приїдеш." },
+    "comme": { fr:"Comme il fait froid, je reste chez moi.", ua:"Оскільки холодно, я залишаюсь удома." },
+    "malgré": { fr:"Il sort malgré la pluie.", ua:"Він виходить, незважаючи на дощ." },
+    "envers": { fr:"Elle est gentille envers tout le monde.", ua:"Вона добра до всіх." },
+    "vers": { fr:"Nous partons vers midi.", ua:"Ми виїжджаємо приблизно опівдні." },
+    "selon": { fr:"Selon lui, c'est vrai.", ua:"За його словами, це правда." },
+    "sauf": { fr:"Tout le monde est venu, sauf lui.", ua:"Всі прийшли, крім нього." },
+    "parmi": { fr:"Elle est la meilleure parmi nous.", ua:"Вона найкраща серед нас." },
+    "grâce à": { fr:"J'ai réussi grâce à toi.", ua:"Я досяг успіху завдяки тобі." },
+    "à cause de": { fr:"On est en retard à cause de la circulation.", ua:"Ми запізнюємось через затори." },
+    "afin de": { fr:"Il travaille dur afin de réussir.", ua:"Він старанно працює, щоб досягти успіху." },
+    "car": { fr:"Je pars car il est tard.", ua:"Я йду, бо вже пізно." },
+    "tandis que": { fr:"Il travaille tandis que je me repose.", ua:"Він працює, тоді як я відпочиваю." },
+    "alors que": { fr:"Il rit, alors que je pleure.", ua:"Він сміється, тоді як я плачу." },
+    "jusqu'à": { fr:"Attends-moi jusqu'à demain.", ua:"Почекай на мене до завтра." },
+    "au lieu de": { fr:"Prends le train au lieu de la voiture.", ua:"Візьми потяг замість машини." },
+    "à travers": { fr:"Ils marchent à travers la forêt.", ua:"Вони йдуть через ліс." },
+    "autour de": { fr:"Les enfants courent autour de la table.", ua:"Діти бігають навколо столу." },
+    "au-dessus de": { fr:"L'avion vole au-dessus de la ville.", ua:"Літак летить над містом." },
+    "en dessous de": { fr:"Le chat se cache en dessous de la table.", ua:"Кіт ховається під столом." },
+    "le long de": { fr:"Nous marchons le long de la rivière.", ua:"Ми йдемо вздовж річки." },
+    "quant à": { fr:"Quant à moi, je suis d'accord.", ua:"Що стосується мене, я згоден." },
+    "dès que": { fr:"Appelle-moi dès que tu arrives.", ua:"Подзвони мені, як тільки приїдеш." },
+    "peu": { fr:"Il a peu d'amis.", ua:"У нього мало друзів." },
+    "plusieurs": { fr:"J'ai lu plusieurs livres cet été.", ua:"Я прочитав кілька книг цим літом." },
+    "quelques": { fr:"Il reste quelques minutes.", ua:"Залишилось декілька хвилин." },
+    "chaque": { fr:"Chaque élève a un livre.", ua:"Кожен учень має книгу." },
+    "chacun(e)": { fr:"Chacun paie sa part.", ua:"Кожен платить свою частку." },
+    "tout / toute": { fr:"Il a mangé tout le gâteau.", ua:"Він з'їв весь торт." },
+    "tous / toutes": { fr:"Tous sont venus.", ua:"Всі прийшли." },
+    "rien": { fr:"Je n'ai rien à dire.", ua:"Мені нічого сказати." },
+    "personne": { fr:"Personne n'est venu.", ua:"Ніхто не прийшов." },
+    "quelqu'un": { fr:"Quelqu'un frappe à la porte.", ua:"Хтось стукає у двері." },
+    "quelque chose": { fr:"J'ai vu quelque chose d'étrange.", ua:"Я побачив щось дивне." },
+    "plus": { fr:"J'en veux plus.", ua:"Я хочу цього більше." },
+    "moins": { fr:"Il travaille moins qu'avant.", ua:"Він працює менше, ніж раніше." },
+    "autant": { fr:"Il mange autant que moi.", ua:"Він їсть стільки ж, скільки я." },
+    "assez": { fr:"J'ai assez d'argent.", ua:"У мене достатньо грошей." },
+    "environ": { fr:"Il est environ midi.", ua:"Зараз приблизно полудень." },
+    "presque": { fr:"J'ai presque fini.", ua:"Я майже закінчив." },
+    "entièrement": { fr:"Le projet est entièrement terminé.", ua:"Проєкт повністю завершено." },
+    "complètement": { fr:"Je suis complètement d'accord.", ua:"Я повністю згоден." },
+    "partiellement": { fr:"Le problème est partiellement résolu.", ua:"Проблема частково вирішена." },
+    "aucun(e)": { fr:"Je n'ai aucun problème.", ua:"У мене немає жодної проблеми." },
+    "certains": { fr:"Certains élèves sont absents.", ua:"Деякі учні відсутні." },
+    "la plupart": { fr:"La plupart des gens sont d'accord.", ua:"Більшість людей згодні." },
+    "la moitié": { fr:"J'ai mangé la moitié du gâteau.", ua:"Я з'їв половину торта." },
+    "le quart": { fr:"Il reste le quart du travail.", ua:"Залишилась чверть роботи." },
+    "double": { fr:"Ça coûte le double du prix normal.", ua:"Це коштує вдвічі більше звичайної ціни." },
+    "tant": { fr:"Il a tant travaillé.", ua:"Він так багато працював." }
+  };
+  // Strips a masculine/feminine marker down to a plain masculine-singular base, so an
+  // adjective like "content(e)" or "sérieux / sérieuse" becomes a safe drop-in for a
+  // template sentence ("content", "sérieux").
+  function adjBaseForm(raw){
+    let w = raw.split(" / ")[0].trim();
+    w = w.replace(/\([^)]*\)$/, "").trim();
+    return w;
+  }
+  // Builds (or looks up) a short, grammatically-safe example sentence for a word. Prepositions,
+  // conjunctions and quantity words come from the hand-curated table above (a generic template
+  // risks bad grammar there); nouns/verbs/adjectives/numbers use a template that's valid for
+  // essentially any word of that type.
+  function exampleFor(word, partKey){
+    if(EXAMPLE_OVERRIDES[word]) return EXAMPLE_OVERRIDES[word];
+    if(partKey === "nouns") return { fr: "J'aime " + word + ".", ua: null };
+    if(partKey === "verbs") return { fr: "Il faut " + word + ".", ua: null };
+    if(partKey === "adjectives") return { fr: "Il est très " + adjBaseForm(word) + ".", ua: null };
+    if(partKey === "numbers"){
+      const singular = (word === "un" || word === "une" || word === "zéro");
+      return { fr: "Il y a " + word + (singular ? " livre." : " livres."), ua: null };
+    }
+    return null;
+  }
+  // Resolves a (possibly synthetic, per-level or per-theme) category key down to the base
+  // part-of-speech key it was built from, so exampleFor() knows which template to use.
+  function basePartOfSpeech(catKey){
+    const cat = DATA[catKey];
+    if(!cat) return catKey;
+    if(cat.baseCatKey) return basePartOfSpeech(cat.baseCatKey);
+    if(cat.partKey) return cat.partKey;
+    return catKey;
+  }
+
+  // ---------- word families (word formation) ----------
+  // Each group is a set of words that share the same root — shown together so learning
+  // "parler" also surfaces "la parole" and "parlant(e)" and reinforces the connection.
+  const WORD_FAMILY_GROUPS = [
+    [{w:"parler",ua:"говорити",pos:"дієслово"},{w:"la parole",ua:"слово, мовлення",pos:"ім."},{w:"parlant(e)",ua:"балакучий",pos:"прикм."}],
+    [{w:"travailler",ua:"працювати",pos:"дієслово"},{w:"le travail",ua:"робота",pos:"ім."},{w:"le travailleur / la travailleuse",ua:"працівник",pos:"ім."}],
+    [{w:"penser",ua:"думати",pos:"дієслово"},{w:"la pensée",ua:"думка",pos:"ім."},{w:"pensif / pensive",ua:"задумливий",pos:"прикм."}],
+    [{w:"chanter",ua:"співати",pos:"дієслово"},{w:"le chant",ua:"спів",pos:"ім."},{w:"le chanteur / la chanteuse",ua:"співак",pos:"ім."}],
+    [{w:"jouer",ua:"грати",pos:"дієслово"},{w:"le jeu",ua:"гра",pos:"ім."},{w:"le joueur / la joueuse",ua:"гравець",pos:"ім."}],
+    [{w:"aimer",ua:"любити",pos:"дієслово"},{w:"l'amour",ua:"любов",pos:"ім."},{w:"aimable",ua:"люб'язний",pos:"прикм."}],
+    [{w:"chercher",ua:"шукати",pos:"дієслово"},{w:"la recherche",ua:"пошук, дослідження",pos:"ім."},{w:"le chercheur / la chercheuse",ua:"дослідник",pos:"ім."}],
+    [{w:"commencer",ua:"починати",pos:"дієслово"},{w:"le commencement",ua:"початок",pos:"ім."}],
+    [{w:"finir",ua:"закінчувати",pos:"дієслово"},{w:"la fin",ua:"кінець",pos:"ім."},{w:"final(e)",ua:"фінальний",pos:"прикм."}],
+    [{w:"écrire",ua:"писати",pos:"дієслово"},{w:"l'écrivain",ua:"письменник",pos:"ім."},{w:"l'écriture",ua:"письмо",pos:"ім."}],
+    [{w:"lire",ua:"читати",pos:"дієслово"},{w:"la lecture",ua:"читання",pos:"ім."},{w:"le lecteur / la lectrice",ua:"читач",pos:"ім."}],
+    [{w:"voir",ua:"бачити",pos:"дієслово"},{w:"la vue",ua:"зір, вигляд",pos:"ім."},{w:"visible",ua:"видимий",pos:"прикм."}],
+    [{w:"connaître",ua:"знати (когось)",pos:"дієслово"},{w:"la connaissance",ua:"знання, знайомство",pos:"ім."}],
+    [{w:"comprendre",ua:"розуміти",pos:"дієслово"},{w:"la compréhension",ua:"розуміння",pos:"ім."}],
+    [{w:"demander",ua:"просити / питати",pos:"дієслово"},{w:"la demande",ua:"запит, прохання",pos:"ім."}],
+    [{w:"répondre",ua:"відповідати",pos:"дієслово"},{w:"la réponse",ua:"відповідь",pos:"ім."}],
+    [{w:"décider",ua:"вирішувати",pos:"дієслово"},{w:"la décision",ua:"рішення",pos:"ім."}],
+    [{w:"expliquer",ua:"пояснювати",pos:"дієслово"},{w:"l'explication",ua:"пояснення",pos:"ім."}],
+    [{w:"présenter",ua:"представляти",pos:"дієслово"},{w:"la présentation",ua:"презентація",pos:"ім."}],
+    [{w:"continuer",ua:"продовжувати",pos:"дієслово"},{w:"la continuation",ua:"продовження",pos:"ім."},{w:"continuel(le)",ua:"постійний",pos:"прикм."}],
+    [{w:"réussir",ua:"мати успіх",pos:"дієслово"},{w:"la réussite",ua:"успіх",pos:"ім."}],
+    [{w:"espérer",ua:"сподіватися",pos:"дієслово"},{w:"l'espoir",ua:"надія",pos:"ім."}],
+    [{w:"oublier",ua:"забувати",pos:"дієслово"},{w:"l'oubli",ua:"забуття",pos:"ім."}],
+    [{w:"changer",ua:"міняти",pos:"дієслово"},{w:"le changement",ua:"зміна",pos:"ім."}],
+    [{w:"arriver",ua:"прибувати",pos:"дієслово"},{w:"l'arrivée",ua:"прибуття",pos:"ім."}],
+    [{w:"partir",ua:"від'їжджати",pos:"дієслово"},{w:"le départ",ua:"від'їзд",pos:"ім."}],
+    [{w:"entrer",ua:"входити",pos:"дієслово"},{w:"l'entrée",ua:"вхід",pos:"ім."}],
+    [{w:"sortir",ua:"виходити",pos:"дієслово"},{w:"la sortie",ua:"вихід",pos:"ім."}],
+    [{w:"vivre",ua:"жити",pos:"дієслово"},{w:"la vie",ua:"життя",pos:"ім."},{w:"vivant(e)",ua:"живий",pos:"прикм."}],
+    [{w:"offrir",ua:"пропонувати / дарувати",pos:"дієслово"},{w:"l'offre",ua:"пропозиція",pos:"ім."}],
+    [{w:"vendre",ua:"продавати",pos:"дієслово"},{w:"la vente",ua:"продаж",pos:"ім."},{w:"le vendeur / la vendeuse",ua:"продавець",pos:"ім."}],
+    [{w:"acheter",ua:"купувати",pos:"дієслово"},{w:"l'achat",ua:"покупка",pos:"ім."},{w:"l'acheteur / l'acheteuse",ua:"покупець",pos:"ім."}],
+    [{w:"payer",ua:"платити",pos:"дієслово"},{w:"le paiement",ua:"оплата",pos:"ім."}],
+    [{w:"choisir",ua:"вибирати",pos:"дієслово"},{w:"le choix",ua:"вибір",pos:"ім."}],
+    [{w:"courir",ua:"бігти",pos:"дієслово"},{w:"la course",ua:"біг, перегони",pos:"ім."},{w:"le coureur / la coureuse",ua:"бігун",pos:"ім."}],
+    [{w:"servir",ua:"служити / подавати",pos:"дієслово"},{w:"le service",ua:"послуга, сервіс",pos:"ім."},{w:"le serveur / la serveuse",ua:"офіціант",pos:"ім."}],
+    [{w:"permettre",ua:"дозволяти",pos:"дієслово"},{w:"la permission",ua:"дозвіл",pos:"ім."}],
+    [{w:"recevoir",ua:"отримувати",pos:"дієслово"},{w:"la réception",ua:"отримання, прийом",pos:"ім."}],
+    [{w:"la santé",ua:"здоров'я",pos:"ім."},{w:"sain(e)",ua:"здоровий",pos:"прикм."}],
+    [{w:"beau / belle",ua:"гарний",pos:"прикм."},{w:"la beauté",ua:"краса",pos:"ім."}],
+    [{w:"riche",ua:"багатий",pos:"прикм."},{w:"la richesse",ua:"багатство",pos:"ім."}],
+    [{w:"pauvre",ua:"бідний",pos:"прикм."},{w:"la pauvreté",ua:"бідність",pos:"ім."}],
+    [{w:"heureux / heureuse",ua:"щасливий",pos:"прикм."},{w:"le bonheur",ua:"щастя",pos:"ім."}],
+    [{w:"triste",ua:"сумний",pos:"прикм."},{w:"la tristesse",ua:"сум",pos:"ім."}],
+    [{w:"facile",ua:"легкий",pos:"прикм."},{w:"la facilité",ua:"легкість",pos:"ім."}],
+    [{w:"difficile",ua:"складний",pos:"прикм."},{w:"la difficulté",ua:"труднощі",pos:"ім."}],
+    [{w:"possible",ua:"можливий",pos:"прикм."},{w:"la possibilité",ua:"можливість",pos:"ім."}],
+    [{w:"important(e)",ua:"важливий",pos:"прикм."},{w:"l'importance",ua:"важливість",pos:"ім."}]
+  ];
+  const WORD_FAMILY_INDEX = {};
+  WORD_FAMILY_GROUPS.forEach(group=>{
+    group.forEach(member=>{
+      WORD_FAMILY_INDEX[member.w] = group.filter(m=> m.w !== member.w);
+    });
+  });
+  function wordFamilyFor(word){ return WORD_FAMILY_INDEX[word] || null; }
 
   // ---------- priority words: a hand-picked "learn these first" core per category ----------
   // Some categories (especially nouns) have grown into long, comprehensive lists where
@@ -2787,8 +3052,17 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     safeSet("fq_progress", JSON.stringify(progressStore));
     safeSet("fq_order", JSON.stringify(orderStore));
   }
+  function loadActivityDays(){
+    try{ const v = JSON.parse(safeGet("fq_activity_days","[]")); return Array.isArray(v) ? v : []; } catch(e){ return []; }
+  }
+  function loadAccuracyLog(){
+    try{ const v = JSON.parse(safeGet("fq_accuracy_log","[]")); return Array.isArray(v) ? v : []; } catch(e){ return []; }
+  }
+  function loadWordStats(){
+    try{ const v = JSON.parse(safeGet("fq_word_stats","{}")); return (v && typeof v === "object") ? v : {}; } catch(e){ return {}; }
+  }
   // ---------- backup: export/import everything stored locally ----------
-  const BACKUP_KEYS = ["fq_history","fq_theme","fq_voice_rate","fq_voice_gender","fq_voice_name","fq_favorites","fq_mistakes","fq_theory_progress","fq_reading_progress","fq_progress","fq_order"];
+  const BACKUP_KEYS = ["fq_history","fq_theme","fq_voice_rate","fq_voice_gender","fq_voice_name","fq_favorites","fq_mistakes","fq_theory_progress","fq_reading_progress","fq_progress","fq_order","fq_activity_days","fq_accuracy_log","fq_word_stats"];
   function exportProgress(){
     const data = {};
     BACKUP_KEYS.forEach(k=>{
@@ -2825,7 +3099,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     reader.readAsText(file);
   }
   // ---------- state ----------
-  let state = { view:"picker", mode:"practice", direction:"ua_fr", catKey:null, batchStart:0, qIndex:0, score:0, missed:[], answered:false, options:[], correctIdx:-1, theme:loadTheme(), voiceRate:loadVoiceRate(), voiceGender:loadVoiceGender(), voiceName:loadVoiceName(), history:loadHistory(), taskType:"normal", drawerOpen:false, themeKey:null, theoryKey:null, practiceIndex:0, practiceAnswered:false, practiceSelected:null, practiceScore:0, theoryLevelFilter:"all", pickerLevelFilter:"all",
+  let state = { view:"picker", mode:"practice", direction:"ua_fr", catKey:null, batchStart:0, qIndex:0, score:0, missed:[], answered:false, options:[], correctIdx:-1, theme:loadTheme(), voiceRate:loadVoiceRate(), voiceGender:loadVoiceGender(), voiceName:loadVoiceName(), history:loadHistory(), taskType:"normal", drawerOpen:false, themeKey:null, theoryKey:null, practiceIndex:0, practiceAnswered:false, practiceSelected:null, practiceScore:0, theoryLevelFilter:"all", pickerLevelFilter:"all", calendarOffset:0, dictLevelFilter:"all",
     conjPool:null, conjIndex:0, conjBatchStart:0, conjScore:0, conjMissed:[], conjAnswered:false, conjSelected:null, conjOptions:[], conjCorrectText:null, conjCurrent:null,
     conjRefQuery:"", conjRefInf:null,
     sbPool:null, sbIndex:0, sbBatchStart:0, sbScore:0, sbMissed:[], sbCurrent:null, sbAvailable:[], sbPlaced:[], sbAnswered:false, sbCorrect:null,
@@ -2837,6 +3111,23 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
   let mistakes = loadMistakes();       // Set of "catKey::idx" — words recently answered wrong
   let theoryProgress = loadTheoryProgress(); // topicKey -> {best, last, attempts, total}
   let readingProgress = loadReadingProgress(); // textKey -> {best, last, attempts, total}
+  let activityDays = loadActivityDays();   // array of "YYYY-MM-DD" — any day the user completed a batch (for streak)
+  let accuracyLog = loadAccuracyLog();     // array of {date:"YYYY-MM-DD", percent} — one entry per completed batch (for the accuracy chart)
+  let wordStats = loadWordStats();         // itemKey -> {correct, wrong} — per-word record from the main practice quiz, used for the "опановано" badge
+  const MASTERY_THRESHOLD = 3; // needs this many correct answers, and zero wrong ones, to count as mastered
+  function recordWordResult(item, correct){
+    if(!isTrackable(item)) return;
+    const k = itemKey(item);
+    const s = wordStats[k] || { correct:0, wrong:0 };
+    if(correct) s.correct++; else s.wrong++;
+    wordStats[k] = s;
+    safeSet("fq_word_stats", JSON.stringify(wordStats));
+  }
+  function isMastered(item){
+    if(!isTrackable(item)) return false;
+    const s = wordStats[itemKey(item)];
+    return !!(s && s.wrong === 0 && s.correct >= MASTERY_THRESHOLD);
+  }
   function recordReadingResult(textKey, score, total){
     if(total <= 0) return;
     const percent = Math.round(score/total*100);
@@ -2848,6 +3139,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       total: total
     };
     safeSet("fq_reading_progress", JSON.stringify(readingProgress));
+    recordActivity(percent);
   }
   // pcMode categories (Passé Composé) store a grammatical construction, not a plain
   // word — mixing them into a favorites/mistakes list built from several categories
@@ -2914,6 +3206,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       total: total
     };
     safeSet("fq_theory_progress", JSON.stringify(theoryProgress));
+    recordActivity(percent);
   }
   const root = document.getElementById("fqRoot");
   // ---------- theme ----------
@@ -3191,6 +3484,243 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     const history = [entry, ...state.history].slice(0,10);
     state.history = history;
     safeSet("fq_history", JSON.stringify(history));
+    recordActivity(entry.percent);
+  }
+  // ---------- streak, accuracy-over-time log, achievements ----------
+  function isoFromDate(d){
+    const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,"0"), day = String(d.getDate()).padStart(2,"0");
+    return y + "-" + m + "-" + day;
+  }
+  function todayISO(){ return isoFromDate(new Date()); }
+  function dateFromISO(s){
+    const parts = s.split("-").map(Number);
+    return new Date(parts[0], parts[1]-1, parts[2]);
+  }
+  function daysWord(n){
+    const abs = Math.abs(n) % 100;
+    const last = abs % 10;
+    if(abs > 10 && abs < 20) return "днів";
+    if(last === 1) return "день";
+    if(last >= 2 && last <= 4) return "дні";
+    return "днів";
+  }
+  // Called every time a batch of any kind (practice quiz, speech, conjugation, sentence builder,
+  // theory mini-practice, reading comprehension) is completed. Marks today as an active day for
+  // the streak, and — when a percent score is available — appends a point to the accuracy log.
+  function recordActivity(percent){
+    const today = todayISO();
+    if(activityDays.indexOf(today) === -1){
+      activityDays.push(today);
+      activityDays.sort();
+      safeSet("fq_activity_days", JSON.stringify(activityDays));
+    }
+    if(typeof percent === "number" && !isNaN(percent)){
+      accuracyLog.push({ date: today, percent: percent });
+      if(accuracyLog.length > 300) accuracyLog = accuracyLog.slice(-300);
+      safeSet("fq_accuracy_log", JSON.stringify(accuracyLog));
+    }
+  }
+  function computeStreak(){
+    if(!activityDays.length) return { current:0, longest:0 };
+    const days = [...activityDays].sort();
+    let longest = 1, run = 1;
+    for(let i=1;i<days.length;i++){
+      const diff = Math.round((dateFromISO(days[i]) - dateFromISO(days[i-1])) / 86400000);
+      if(diff === 1) run++;
+      else if(diff > 1) run = 1;
+      longest = Math.max(longest, run);
+    }
+    const set = new Set(days);
+    const today = todayISO();
+    let cursor = new Date();
+    if(!set.has(today)){
+      cursor.setDate(cursor.getDate() - 1);
+      if(!set.has(isoFromDate(cursor))) return { current:0, longest };
+    }
+    let current = 0;
+    while(set.has(isoFromDate(cursor))){
+      current++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return { current, longest };
+  }
+  const MONTH_NAMES = ["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"];
+  const WEEKDAY_LABELS = ["Пн","Вт","Ср","Чт","Пт","Сб","Нд"];
+  function buildStreakCalendar(){
+    const now = new Date();
+    const base = new Date(now.getFullYear(), now.getMonth() + state.calendarOffset, 1);
+    const year = base.getFullYear(), month = base.getMonth();
+    const wrap = document.createElement("div");
+    const nav = document.createElement("div"); nav.className = "fq-cal-nav";
+    const prevBtn = document.createElement("button"); prevBtn.type="button"; prevBtn.className="fq-cal-navbtn"; prevBtn.textContent="‹";
+    prevBtn.onclick = ()=>{ state.calendarOffset--; render(); };
+    const label = document.createElement("div"); label.className="fq-cal-monthlabel"; label.textContent = MONTH_NAMES[month] + " " + year;
+    const nextBtn = document.createElement("button"); nextBtn.type="button"; nextBtn.className="fq-cal-navbtn"; nextBtn.textContent="›";
+    nextBtn.disabled = state.calendarOffset >= 0;
+    nextBtn.onclick = ()=>{ if(state.calendarOffset < 0){ state.calendarOffset++; render(); } };
+    nav.appendChild(prevBtn); nav.appendChild(label); nav.appendChild(nextBtn);
+    wrap.appendChild(nav);
+    const grid = document.createElement("div"); grid.className="fq-cal-grid";
+    WEEKDAY_LABELS.forEach(w=>{
+      const h = document.createElement("div"); h.className="fq-cal-weekday"; h.textContent = w;
+      grid.appendChild(h);
+    });
+    let startOffset = new Date(year, month, 1).getDay() - 1;
+    if(startOffset < 0) startOffset = 6;
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const todayIso = todayISO();
+    const activitySet = new Set(activityDays);
+    const nowTime = new Date();
+    for(let i=0;i<startOffset;i++){
+      const pad = document.createElement("div"); pad.className="fq-cal-cell fq-cal-cell-empty";
+      grid.appendChild(pad);
+    }
+    for(let d=1; d<=daysInMonth; d++){
+      const dateObj = new Date(year, month, d);
+      const iso = isoFromDate(dateObj);
+      const cell = document.createElement("div"); cell.className="fq-cal-cell";
+      if(iso === todayIso) cell.classList.add("fq-cal-today");
+      if(activitySet.has(iso)) cell.classList.add("fq-cal-active");
+      if(dateObj > nowTime) cell.classList.add("fq-cal-future");
+      const num = document.createElement("span"); num.className="fq-cal-daynum"; num.textContent = d;
+      cell.appendChild(num);
+      if(activitySet.has(iso)){
+        const fire = document.createElement("span"); fire.className="fq-cal-fire"; fire.textContent="🔥";
+        cell.appendChild(fire);
+      }
+      grid.appendChild(cell);
+    }
+    wrap.appendChild(grid);
+    return wrap;
+  }
+  function renderStreakSection(){
+    const streak = computeStreak();
+    const wrap = document.createElement("div"); wrap.className = "fq-streak-wrap";
+    const flameRow = document.createElement("div"); flameRow.className = "fq-streak-flamerow";
+    const flame = document.createElement("div"); flame.className = "fq-streak-flame" + (streak.current > 0 ? " active" : ""); flame.textContent = "🔥";
+    const countWrap = document.createElement("div"); countWrap.className = "fq-streak-count";
+    const num = document.createElement("div"); num.className = "fq-streak-num"; num.textContent = streak.current;
+    const lbl = document.createElement("div"); lbl.className = "fq-streak-label"; lbl.textContent = daysWord(streak.current) + " поспіль";
+    countWrap.appendChild(num); countWrap.appendChild(lbl);
+    flameRow.appendChild(flame); flameRow.appendChild(countWrap);
+    if(streak.longest > streak.current){
+      const best = document.createElement("div"); best.className = "fq-streak-best"; best.textContent = "Рекорд: " + streak.longest + " " + daysWord(streak.longest);
+      flameRow.appendChild(best);
+    }
+    wrap.appendChild(flameRow);
+    wrap.appendChild(buildStreakCalendar());
+    return wrap;
+  }
+  function buildAccuracyChartData(){
+    const byDay = {};
+    accuracyLog.forEach(e=>{
+      if(!byDay[e.date]) byDay[e.date] = { sum:0, count:0 };
+      byDay[e.date].sum += e.percent;
+      byDay[e.date].count++;
+    });
+    return Object.keys(byDay).sort().slice(-14).map(d=> ({ date:d, percent: Math.round(byDay[d].sum/byDay[d].count) }));
+  }
+  function renderAccuracyChart(){
+    const wrap = document.createElement("div"); wrap.className = "fq-chart-wrap";
+    const title = document.createElement("h3"); title.className = "fq-progress-subtitle"; title.textContent = "📈 Точність відповідей у часі";
+    wrap.appendChild(title);
+    const data = buildAccuracyChartData();
+    if(data.length < 2){
+      const empty = document.createElement("p"); empty.className = "fq-history-note";
+      empty.textContent = "Пройди ще кілька порцій у різні дні — тут з'явиться графік точності.";
+      wrap.appendChild(empty);
+      return wrap;
+    }
+    const W = 640, H = 180, padL = 32, padR = 10, padT = 14, padB = 22;
+    const innerW = W - padL - padR, innerH = H - padT - padB;
+    const stepX = data.length > 1 ? innerW/(data.length-1) : 0;
+    const xFor = i => padL + i*stepX;
+    const yFor = p => padT + innerH - (p/100)*innerH;
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS,"svg");
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("class","fq-chart-svg");
+    svg.setAttribute("preserveAspectRatio","none");
+    [0,50,100].forEach(gv=>{
+      const y = yFor(gv);
+      const line = document.createElementNS(svgNS,"line");
+      line.setAttribute("x1", padL); line.setAttribute("x2", W-padR);
+      line.setAttribute("y1", y); line.setAttribute("y2", y);
+      line.setAttribute("class","fq-chart-grid");
+      svg.appendChild(line);
+      const t = document.createElementNS(svgNS,"text");
+      t.setAttribute("x", 2); t.setAttribute("y", y+3);
+      t.setAttribute("class","fq-chart-axislabel");
+      t.textContent = gv + "%";
+      svg.appendChild(t);
+    });
+    const pathD = data.map((pt,i)=> (i===0?"M":"L") + xFor(i).toFixed(1) + " " + yFor(pt.percent).toFixed(1)).join(" ");
+    const area = document.createElementNS(svgNS,"path");
+    area.setAttribute("d", pathD + " L " + xFor(data.length-1).toFixed(1) + " " + yFor(0).toFixed(1) + " L " + xFor(0).toFixed(1) + " " + yFor(0).toFixed(1) + " Z");
+    area.setAttribute("class","fq-chart-area");
+    svg.appendChild(area);
+    const path = document.createElementNS(svgNS,"path");
+    path.setAttribute("d", pathD);
+    path.setAttribute("class","fq-chart-line");
+    svg.appendChild(path);
+    data.forEach((pt,i)=>{
+      const cx = xFor(i), cy = yFor(pt.percent);
+      const circle = document.createElementNS(svgNS,"circle");
+      circle.setAttribute("cx",cx); circle.setAttribute("cy",cy); circle.setAttribute("r",3.5);
+      circle.setAttribute("class","fq-chart-dot");
+      const tt = document.createElementNS(svgNS,"title");
+      tt.textContent = pt.date + " — " + pt.percent + "%";
+      circle.appendChild(tt);
+      svg.appendChild(circle);
+      if(data.length <= 8 || i === 0 || i === data.length-1 || i % 2 === 0){
+        const xl = document.createElementNS(svgNS,"text");
+        xl.setAttribute("x", cx); xl.setAttribute("y", H-6);
+        xl.setAttribute("class","fq-chart-xlabel");
+        xl.setAttribute("text-anchor","middle");
+        xl.textContent = pt.date.slice(5).replace("-",".");
+        svg.appendChild(xl);
+      }
+    });
+    wrap.appendChild(svg);
+    return wrap;
+  }
+  const SECTION_BADGE_ICONS = { nouns:"📗", verbs:"🏃", adjectives:"🎨", adverbs:"⚡", prepositions:"🔗", quantity:"🔢", numbers:"#️⃣" };
+  function buildBadgeList(){
+    const badges = CAT_ORDER.map(key=> ({
+      id: "cat_" + key,
+      icon: SECTION_BADGE_ICONS[key] || "📚",
+      title: DATA[key].label,
+      check: ()=> (progressStore[key]||0) >= DATA[key].items.length
+    }));
+    badges.push(
+      { id:"streak_3", icon:"🔥", title:"3 дні поспіль", check: ()=> computeStreak().longest >= 3 },
+      { id:"streak_7", icon:"🔥🔥", title:"Тиждень поспіль", check: ()=> computeStreak().longest >= 7 },
+      { id:"streak_30", icon:"🔥🔥🔥", title:"Місяць поспіль", check: ()=> computeStreak().longest >= 30 },
+      { id:"all_categories", icon:"🏆", title:"Всі розділи словника", check: ()=> CAT_ORDER.every(k=> (progressStore[k]||0) >= DATA[k].items.length) },
+      { id:"theory_5", icon:"📘", title:"5 тем теорії", check: ()=> Object.keys(theoryProgress).length >= 5 },
+      { id:"reading_5", icon:"📖", title:"5 прочитаних текстів", check: ()=> Object.keys(readingProgress).length >= 5 },
+      { id:"favorites_10", icon:"⭐", title:"10 слів у закладках", check: ()=> favoritesCount() >= 10 }
+    );
+    return badges;
+  }
+  function renderAchievements(){
+    const badges = buildBadgeList();
+    const wrap = document.createElement("div"); wrap.className = "fq-badges-wrap";
+    const unlocked = badges.filter(b=> b.check()).length;
+    const title = document.createElement("h3"); title.className = "fq-progress-subtitle";
+    title.textContent = "🏅 Значки (" + unlocked + " / " + badges.length + ")";
+    wrap.appendChild(title);
+    const grid = document.createElement("div"); grid.className = "fq-badges-grid";
+    badges.forEach(b=>{
+      const isUnlocked = b.check();
+      const cell = document.createElement("div"); cell.className = "fq-badge" + (isUnlocked ? " fq-badge-unlocked" : " fq-badge-locked");
+      const icon = document.createElement("div"); icon.className = "fq-badge-icon"; icon.textContent = isUnlocked ? b.icon : "🔒";
+      const label = document.createElement("div"); label.className = "fq-badge-label"; label.textContent = b.title;
+      cell.appendChild(icon); cell.appendChild(label);
+      grid.appendChild(cell);
+    });
+    wrap.appendChild(grid);
+    return wrap;
   }
   function shuffle(arr){
     const a = arr.slice();
@@ -3540,9 +4070,11 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     if(opt === state.correctText){
       state.score++;
       clearMistake(state.currentItem);
+      recordWordResult(state.currentItem, true);
     } else {
       state.missed.push(state.currentItem);
       addMistake(state.currentItem);
+      recordWordResult(state.currentItem, false);
     }
     render();
   }
@@ -3740,6 +4272,8 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Огляд і останні завершені порції";
     const title = document.createElement("h2"); title.className="fq-title"; title.textContent="Прогрес у динаміці";
     root.appendChild(kicker); root.appendChild(title);
+    // ---- streak + calendar (Duolingo-style) ----
+    root.appendChild(renderStreakSection());
     // ---- overview chips: favorites / mistakes / theory topics started ----
     const chipWrap = document.createElement("div"); chipWrap.className="fq-stat-chips";
     const topicsStarted = Object.keys(theoryProgress).length;
@@ -3757,6 +4291,10 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
       chipWrap.appendChild(chip);
     });
     root.appendChild(chipWrap);
+    // ---- badges / achievements ----
+    root.appendChild(renderAchievements());
+    // ---- accuracy over time chart ----
+    root.appendChild(renderAccuracyChart());
     // ---- weakest topics: lowest best-score across theory + reading ----
     const subTitleWeak = document.createElement("h3"); subTitleWeak.className="fq-progress-subtitle"; subTitleWeak.textContent = "🎯 Над чим варто попрацювати";
     root.appendChild(subTitleWeak);
@@ -3869,24 +4407,89 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     const search = document.createElement("input"); search.className="fq-search"; search.type="text";
     search.placeholder = "Пошук за французьким чи українським словом...";
     search.value = state.dictSearch || "";
-    search.oninput = (e)=>{ state.dictSearch = e.target.value; renderDictListBody(); };
+    search.oninput = (e)=>{ state.dictSearch = e.target.value; renderDictSuggestBody(); renderDictListBody(); };
     root.appendChild(search);
+    const suggestWrap = document.createElement("div"); suggestWrap.id="fqDictSuggestBody";
+    root.appendChild(suggestWrap);
+    // level filter — same visual pattern as the direction/level toggle elsewhere
+    const lvlWrap = document.createElement("div"); lvlWrap.className="fq-dirtoggle";
+    const lvlAll = document.createElement("button");
+    lvlAll.className = "fq-dirbtn" + (state.dictLevelFilter === "all" ? " active" : "");
+    lvlAll.textContent = "Усі рівні";
+    lvlAll.onclick = ()=>{ state.dictLevelFilter = "all"; render(); };
+    lvlWrap.appendChild(lvlAll);
+    LEVELS.forEach(lvl=>{
+      const btn = document.createElement("button");
+      btn.className = "fq-dirbtn" + (state.dictLevelFilter === lvl ? " active" : "");
+      btn.textContent = lvl;
+      btn.onclick = ()=>{ state.dictLevelFilter = lvl; render(); };
+      lvlWrap.appendChild(btn);
+    });
+    root.appendChild(lvlWrap);
     const bodyWrap = document.createElement("div"); bodyWrap.id="fqDictListBody";
     root.appendChild(bodyWrap);
+    renderDictSuggestBody();
     renderDictListBody();
+  }
+  // Small "quick jump" dropdown shown right under the search field while typing —
+  // top few matches you can click to go straight into that word's category table.
+  function dictSuggestions(query){
+    const q = (query || "").toLowerCase().trim();
+    if(q.length < 2) return [];
+    const out = [];
+    for(const key of CAT_ORDER){
+      const cat = DATA[key];
+      for(const it of cat.items){
+        if(it[0].toLowerCase().includes(q) || it[2].toLowerCase().includes(q)){
+          out.push({ item: it, catKey: key, cat: cat });
+        }
+      }
+    }
+    out.sort((a,b)=>{
+      const aStarts = a.item[0].toLowerCase().startsWith(q) ? 0 : 1;
+      const bStarts = b.item[0].toLowerCase().startsWith(q) ? 0 : 1;
+      return aStarts - bStarts;
+    });
+    return out.slice(0,6);
+  }
+  function renderDictSuggestBody(){
+    const wrap = document.getElementById("fqDictSuggestBody");
+    if(!wrap) return;
+    wrap.innerHTML = "";
+    const items = dictSuggestions(state.dictSearch);
+    if(!items.length) return;
+    const list = document.createElement("div"); list.className="fq-conj-suggest";
+    items.forEach(r=>{
+      const b = document.createElement("button"); b.type="button"; b.className="fq-conj-suggest-item";
+      const fr = document.createElement("span"); fr.className="fq-conj-suggest-fr"; fr.textContent = r.item[0];
+      const ua = document.createElement("span"); ua.className="fq-conj-suggest-ua"; ua.textContent = r.item[2] + " · " + r.cat.label;
+      b.appendChild(fr); b.appendChild(ua);
+      b.onclick = ()=>{
+        state.dictKey = r.catKey;
+        state.dictFilter = r.item[0];
+        state.dictSearch = "";
+        state.view = "dictTable";
+        render();
+      };
+      list.appendChild(b);
+    });
+    wrap.appendChild(list);
   }
   function renderDictListBody(){
     const wrap = document.getElementById("fqDictListBody");
     wrap.innerHTML = "";
     const filter = (state.dictSearch || "").toLowerCase().trim();
+    const lvl = state.dictLevelFilter;
     if(!filter){
       const grid = document.createElement("div"); grid.className="fq-grid";
       CAT_ORDER.forEach(key=>{
         const cat = DATA[key];
+        const count = lvl === "all" ? cat.items.length : cat.items.filter(it=> it[3] === lvl).length;
+        if(count === 0) return;
         const tile = document.createElement("div"); tile.className="fq-tile";
         const name = document.createElement("div"); name.className="fq-tile-name"; name.textContent = cat.label;
-        const count = document.createElement("div"); count.className="fq-tile-count"; count.textContent = cat.items.length + " слів";
-        tile.appendChild(name); tile.appendChild(count);
+        const countEl = document.createElement("div"); countEl.className="fq-tile-count"; countEl.textContent = count + " слів";
+        tile.appendChild(name); tile.appendChild(countEl);
         tile.onclick = ()=>{ state.dictKey = key; state.dictFilter=""; state.view="dictTable"; render(); };
         grid.appendChild(tile);
       });
@@ -3898,8 +4501,9 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     CAT_ORDER.forEach(key=>{
       const cat = DATA[key];
       cat.items.forEach(it=>{
+        if(lvl !== "all" && it[3] !== lvl) return;
         if(it[0].toLowerCase().includes(filter) || it[2].toLowerCase().includes(filter)){
-          results.push({ item: it, cat: cat });
+          results.push({ item: it, cat: cat, catKey: key });
         }
       });
     });
@@ -3914,6 +4518,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     } else {
       results.slice(0, RESULT_CAP).forEach((r,i)=>{
         const tr = document.createElement("tr"); if(i%2===1) tr.className="alt";
+        if(isMastered(r.item)) tr.className = (tr.className ? tr.className + " " : "") + "fq-dict-mastered-row";
         const c0 = document.createElement("td"); c0.className="fq-dict-star-col";
         if(isTrackable(r.item)){
           const fav = isFavorite(r.item);
@@ -3930,7 +4535,23 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
           const badge = document.createElement("span"); badge.className="fq-core-badge"; badge.title="Базове слово — рекомендовано вивчити першим"; badge.textContent="🔑";
           c1.appendChild(badge);
         }
+        if(isMastered(r.item)){
+          const mBadge = document.createElement("span"); mBadge.className="fq-mastered-badge"; mBadge.title="Опановано — завжди правильна відповідь у квізах"; mBadge.textContent="✓";
+          c1.appendChild(mBadge);
+        }
         c1.appendChild(document.createTextNode(r.item[0]));
+        const ex = exampleFor(r.item[0], r.catKey);
+        if(ex){
+          const exEl = document.createElement("div"); exEl.className="fq-dict-example";
+          exEl.textContent = "« " + ex.fr + " »" + (ex.ua ? " — " + ex.ua : "");
+          c1.appendChild(exEl);
+        }
+        const fam = wordFamilyFor(r.item[0]);
+        if(fam && fam.length){
+          const famEl = document.createElement("div"); famEl.className="fq-dict-family";
+          famEl.innerHTML = "🌱 " + fam.map(m=> "<b>" + m.w + "</b> (" + m.ua + ")").join(", ");
+          c1.appendChild(famEl);
+        }
         const c2 = document.createElement("td"); c2.className="fq-dict-pron"; c2.textContent = r.item[1];
         const c3 = document.createElement("td"); c3.textContent = r.item[2];
         const antonym3 = findAntonym(r.item[0]);
@@ -3967,8 +4588,22 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     search.oninput = (e)=>{ state.dictFilter = e.target.value; renderDictTableBody(cat); };
     root.appendChild(search);
     if(!cat.pcMode){
+      const lvlWrap = document.createElement("div"); lvlWrap.className="fq-dirtoggle";
+      const lvlAll = document.createElement("button");
+      lvlAll.className = "fq-dirbtn" + (state.dictLevelFilter === "all" ? " active" : "");
+      lvlAll.textContent = "Усі рівні";
+      lvlAll.onclick = ()=>{ state.dictLevelFilter = "all"; render(); };
+      lvlWrap.appendChild(lvlAll);
+      LEVELS.forEach(lvl=>{
+        const btn = document.createElement("button");
+        btn.className = "fq-dirbtn" + (state.dictLevelFilter === lvl ? " active" : "");
+        btn.textContent = lvl;
+        btn.onclick = ()=>{ state.dictLevelFilter = lvl; render(); };
+        lvlWrap.appendChild(btn);
+      });
+      root.appendChild(lvlWrap);
       const legend = document.createElement("p"); legend.className="fq-history-note";
-      legend.textContent = "🔑 — базові слова, з яких варто починати вивчення цього розділу.";
+      legend.textContent = "🔑 — базові слова, з яких варто починати вивчення цього розділу. ✓ — опановано (завжди правильна відповідь у квізах).";
       root.appendChild(legend);
     }
     const bodyWrap = document.createElement("div"); bodyWrap.id="fqDictBody";
@@ -3980,9 +4615,11 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     wrap.innerHTML = "";
     const filter = (state.dictFilter || "").toLowerCase().trim();
     const isPC = !!cat.pcMode;
+    const lvl = state.dictLevelFilter;
+    const partKey = basePartOfSpeech(state.dictKey);
     const filtered = cat.items.filter(it=>{
+      if(!isPC && lvl !== "all" && it[3] !== lvl) return false;
       if(!filter) return true;
-      if(isPC) return it[0].toLowerCase().includes(filter) || it[2].toLowerCase().includes(filter);
       return it[0].toLowerCase().includes(filter) || it[2].toLowerCase().includes(filter);
     });
     const table = document.createElement("table"); table.className="fq-dict-table";
@@ -3997,6 +4634,7 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     } else {
       filtered.forEach((it,i)=>{
         const tr = document.createElement("tr"); if(i%2===1) tr.className="alt";
+        if(!isPC && isMastered(it)) tr.className = (tr.className ? tr.className + " " : "") + "fq-dict-mastered-row";
         if(!isPC){
           const c0 = document.createElement("td"); c0.className="fq-dict-star-col";
           const fav = isFavorite(it);
@@ -4014,7 +4652,25 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
           const badge = document.createElement("span"); badge.className="fq-core-badge"; badge.title="Базове слово — рекомендовано вивчити першим"; badge.textContent="🔑";
           c1.appendChild(badge);
         }
+        if(!isPC && isMastered(it)){
+          const mBadge = document.createElement("span"); mBadge.className="fq-mastered-badge"; mBadge.title="Опановано — завжди правильна відповідь у квізах"; mBadge.textContent="✓";
+          c1.appendChild(mBadge);
+        }
         c1.appendChild(document.createTextNode(it[0]));
+        if(!isPC){
+          const ex = exampleFor(it[0], partKey);
+          if(ex){
+            const exEl = document.createElement("div"); exEl.className="fq-dict-example";
+            exEl.textContent = "« " + ex.fr + " »" + (ex.ua ? " — " + ex.ua : "");
+            c1.appendChild(exEl);
+          }
+          const fam = wordFamilyFor(it[0]);
+          if(fam && fam.length){
+            const famEl = document.createElement("div"); famEl.className="fq-dict-family";
+            famEl.innerHTML = "🌱 " + fam.map(m=> "<b>" + m.w + "</b> (" + m.ua + ")").join(", ");
+            c1.appendChild(famEl);
+          }
+        }
         const c2 = document.createElement("td"); c2.className="fq-dict-pron"; c2.textContent = isPC ? it[1] : it[1];
         const c3 = document.createElement("td"); c3.textContent = it[2];
         if(!isPC){
@@ -4336,11 +4992,44 @@ body:has(.fq-root[data-theme="dark"]){ background:#141A24; }
     root.appendChild(wrap);
   }
 
+  function wordOfTheDay(){
+    const pool = [];
+    CAT_ORDER.forEach(key=>{ DATA[key].items.forEach(it=> pool.push({ item: it, catKey: key })); });
+    if(!pool.length) return null;
+    const seed = todayISO().split("-").join("");
+    let hash = 0;
+    for(let i=0;i<seed.length;i++){ hash = (hash*31 + seed.charCodeAt(i)) >>> 0; }
+    return pool[hash % pool.length];
+  }
+  function renderWordOfDay(){
+    const w = wordOfTheDay();
+    if(!w) return document.createElement("div");
+    const wrap = document.createElement("div"); wrap.className = "fq-wotd";
+    const kicker = document.createElement("div"); kicker.className = "fq-wotd-kicker"; kicker.textContent = "📅 Слово дня";
+    const fr = document.createElement("div"); fr.className = "fq-wotd-fr"; fr.textContent = w.item[0];
+    const pron = document.createElement("div"); pron.className = "fq-wotd-pron"; pron.textContent = w.item[1];
+    const ua = document.createElement("div"); ua.className = "fq-wotd-ua"; ua.textContent = w.item[2];
+    wrap.appendChild(kicker); wrap.appendChild(fr); wrap.appendChild(pron); wrap.appendChild(ua);
+    const ex = exampleFor(w.item[0], w.catKey);
+    if(ex){
+      const exEl = document.createElement("div"); exEl.className = "fq-wotd-example";
+      exEl.textContent = "« " + ex.fr + " »" + (ex.ua ? " — " + ex.ua : "");
+      wrap.appendChild(exEl);
+    }
+    if("speechSynthesis" in window){
+      const listenBtn = document.createElement("button"); listenBtn.type = "button"; listenBtn.className = "fq-wotd-listen";
+      listenBtn.title = "Прослухати"; listenBtn.textContent = "🔊";
+      listenBtn.onclick = ()=> speakFrench(w.item[0]);
+      wrap.appendChild(listenBtn);
+    }
+    return wrap;
+  }
   function renderPicker(){
     renderTabs();
     const kicker = document.createElement("p"); kicker.className="fq-kicker"; kicker.textContent="Активне пригадування · за розділами";
     const title = document.createElement("h2"); title.className="fq-title"; title.textContent="Обери розділ для тренування";
     root.appendChild(kicker); root.appendChild(title);
+    root.appendChild(renderWordOfDay());
     // direction toggle — practice mode only
     const dirWrap = document.createElement("div"); dirWrap.className="fq-dirtoggle";
     const dirUaFr = document.createElement("button");
