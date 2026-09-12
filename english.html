@@ -571,6 +571,8 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
     back.onclick = ()=>{ state.view = "study"; render(); };
     wrap.appendChild(back);
 
+    renderDirToggle(wrap);
+
     const topbar = document.createElement("div"); topbar.className = "eq-topbar";
     const left = document.createElement("span"); left.textContent = state.topic.label + blockLabel();
     const right = document.createElement("span"); right.textContent = (state.index+1) + " / " + state.pool.length + " · рахунок: " + state.score;
