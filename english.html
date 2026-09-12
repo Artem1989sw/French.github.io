@@ -402,13 +402,13 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
   function startQuiz(topic, fromView){
     state.returnView = fromView || state.view;
     state.topic = topic;
-    state.blocks = chunk(topic.items, BLOCK_SIZE);
+    state.blocks = chunk(shuffle(topic.items), BLOCK_SIZE);
     startBlock(0);
   }
 
   function startBlock(i){
     state.blockIndex = i;
-    state.blockItems = state.blocks[i];
+    state.blockItems = shuffle(state.blocks[i]);
     state.view = "study";
     render();
   }
