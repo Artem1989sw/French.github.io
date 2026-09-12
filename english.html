@@ -71,110 +71,133 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
   const root = document.getElementById("eq-app");
 
   // ---------- vocabulary data ----------
+  // each item: [english, ukrainian, part-of-speech tag]
+  // tags: n = noun, v = verb, adj = adjective, other = adverb/pronoun/numeral/conjunction/phrase
   const TOPICS = [
     {slug:"family", label:"Сім'я", items:[
-      ["mother","мама"],["father","тато"],["parents","батьки"],["sister","сестра"],["brother","брат"],
-      ["son","син"],["daughter","дочка"],["husband","чоловік (у шлюбі)"],["wife","дружина"],["grandmother","бабуся"],
-      ["grandfather","дідусь"],["aunt","тітка"],["uncle","дядько"],["cousin","двоюрідний брат/сестра"],["baby","немовля"],
-      ["child","дитина"],["family","сім'я"],["friend","друг"],["neighbour","сусід"],["relative","родич"]
+      ["mother","мама","n"],["father","тато","n"],["parents","батьки","n"],["sister","сестра","n"],["brother","брат","n"],
+      ["son","син","n"],["daughter","дочка","n"],["husband","чоловік (у шлюбі)","n"],["wife","дружина","n"],["grandmother","бабуся","n"],
+      ["grandfather","дідусь","n"],["aunt","тітка","n"],["uncle","дядько","n"],["cousin","двоюрідний брат/сестра","n"],["baby","немовля","n"],
+      ["child","дитина","n"],["family","сім'я","n"],["friend","друг","n"],["neighbour","сусід","n"],["relative","родич","n"]
     ]},
     {slug:"numbers", label:"Числа", items:[
-      ["one","один"],["two","два"],["three","три"],["four","чотири"],["five","п'ять"],
-      ["six","шість"],["seven","сім"],["eight","вісім"],["nine","дев'ять"],["ten","десять"],
-      ["eleven","одинадцять"],["twelve","дванадцять"],["twenty","двадцять"],["thirty","тридцять"],["hundred","сто"],
-      ["thousand","тисяча"],["first","перший"],["second","другий"],["third","третій"],["last","останній"]
+      ["one","один","other"],["two","два","other"],["three","три","other"],["four","чотири","other"],["five","п'ять","other"],
+      ["six","шість","other"],["seven","сім","other"],["eight","вісім","other"],["nine","дев'ять","other"],["ten","десять","other"],
+      ["eleven","одинадцять","other"],["twelve","дванадцять","other"],["twenty","двадцять","other"],["thirty","тридцять","other"],["hundred","сто","other"],
+      ["thousand","тисяча","other"],["first","перший","adj"],["second","другий","adj"],["third","третій","adj"],["last","останній","adj"]
     ]},
     {slug:"colors", label:"Кольори", items:[
-      ["red","червоний"],["blue","синій"],["green","зелений"],["yellow","жовтий"],["black","чорний"],
-      ["white","білий"],["grey","сірий"],["brown","коричневий"],["orange","оранжевий"],["pink","рожевий"],
-      ["purple","фіолетовий"],["light","світлий"],["dark","темний"]
+      ["red","червоний","adj"],["blue","синій","adj"],["green","зелений","adj"],["yellow","жовтий","adj"],["black","чорний","adj"],
+      ["white","білий","adj"],["grey","сірий","adj"],["brown","коричневий","adj"],["orange","оранжевий","adj"],["pink","рожевий","adj"],
+      ["purple","фіолетовий","adj"],["light","світлий","adj"],["dark","темний","adj"]
     ]},
     {slug:"food", label:"Їжа та напої", items:[
-      ["bread","хліб"],["cheese","сир"],["meat","м'ясо"],["fish","риба"],["egg","яйце"],
-      ["milk","молоко"],["water","вода"],["juice","сік"],["tea","чай"],["coffee","кава"],
-      ["apple","яблуко"],["banana","банан"],["potato","картопля"],["tomato","помідор"],["rice","рис"],
-      ["soup","суп"],["salad","салат"],["sugar","цукор"],["salt","сіль"],["breakfast","сніданок"],
-      ["lunch","обід"],["dinner","вечеря"],["hungry","голодний"],["thirsty","спраглий"],["delicious","смачний"]
+      ["bread","хліб","n"],["cheese","сир","n"],["meat","м'ясо","n"],["fish","риба","n"],["egg","яйце","n"],
+      ["milk","молоко","n"],["water","вода","n"],["juice","сік","n"],["tea","чай","n"],["coffee","кава","n"],
+      ["apple","яблуко","n"],["banana","банан","n"],["potato","картопля","n"],["tomato","помідор","n"],["rice","рис","n"],
+      ["soup","суп","n"],["salad","салат","n"],["sugar","цукор","n"],["salt","сіль","n"],["breakfast","сніданок","n"],
+      ["lunch","обід","n"],["dinner","вечеря","n"],["hungry","голодний","adj"],["thirsty","спраглий","adj"],["delicious","смачний","adj"]
     ]},
     {slug:"house", label:"Дім та меблі", items:[
-      ["house","будинок"],["flat","квартира"],["room","кімната"],["kitchen","кухня"],["bedroom","спальня"],
-      ["bathroom","ванна кімната"],["living room","вітальня"],["door","двері"],["window","вікно"],["table","стіл"],
-      ["chair","стілець"],["bed","ліжко"],["sofa","диван"],["lamp","лампа"],["mirror","дзеркало"],
-      ["shelf","полиця"],["wall","стіна"],["floor","підлога"],["roof","дах"],["garden","сад"]
+      ["house","будинок","n"],["flat","квартира","n"],["room","кімната","n"],["kitchen","кухня","n"],["bedroom","спальня","n"],
+      ["bathroom","ванна кімната","n"],["living room","вітальня","n"],["door","двері","n"],["window","вікно","n"],["table","стіл","n"],
+      ["chair","стілець","n"],["bed","ліжко","n"],["sofa","диван","n"],["lamp","лампа","n"],["mirror","дзеркало","n"],
+      ["shelf","полиця","n"],["wall","стіна","n"],["floor","підлога","n"],["roof","дах","n"],["garden","сад","n"]
     ]},
     {slug:"clothes", label:"Одяг", items:[
-      ["shirt","сорочка"],["T-shirt","футболка"],["trousers","штани"],["jeans","джинси"],["dress","сукня"],
-      ["skirt","спідниця"],["jacket","куртка"],["coat","пальто"],["shoes","взуття"],["socks","шкарпетки"],
-      ["hat","капелюх/шапка"],["scarf","шарф"],["gloves","рукавички"],["belt","ремінь"],["bag","сумка"]
+      ["shirt","сорочка","n"],["T-shirt","футболка","n"],["trousers","штани","n"],["jeans","джинси","n"],["dress","сукня","n"],
+      ["skirt","спідниця","n"],["jacket","куртка","n"],["coat","пальто","n"],["shoes","взуття","n"],["socks","шкарпетки","n"],
+      ["hat","капелюх/шапка","n"],["scarf","шарф","n"],["gloves","рукавички","n"],["belt","ремінь","n"],["bag","сумка","n"]
     ]},
     {slug:"body", label:"Тіло", items:[
-      ["head","голова"],["face","обличчя"],["eye","око"],["ear","вухо"],["nose","ніс"],
-      ["mouth","рот"],["hand","рука (кисть)"],["arm","рука"],["leg","нога"],["foot","стопа"],
-      ["hair","волосся"],["back","спина"],["finger","палець"],["heart","серце"],["tooth","зуб"]
+      ["head","голова","n"],["face","обличчя","n"],["eye","око","n"],["ear","вухо","n"],["nose","ніс","n"],
+      ["mouth","рот","n"],["hand","рука (кисть)","n"],["arm","рука","n"],["leg","нога","n"],["foot","стопа","n"],
+      ["hair","волосся","n"],["back","спина","n"],["finger","палець","n"],["heart","серце","n"],["tooth","зуб","n"]
     ]},
     {slug:"animals", label:"Тварини", items:[
-      ["dog","собака"],["cat","кіт"],["bird","птах"],["horse","кінь"],["cow","корова"],
-      ["pig","свиня"],["sheep","вівця"],["fish","риба"],["mouse","миша"],["rabbit","кролик"],
-      ["lion","лев"],["tiger","тигр"],["elephant","слон"],["bear","ведмідь"],["monkey","мавпа"]
+      ["dog","собака","n"],["cat","кіт","n"],["bird","птах","n"],["horse","кінь","n"],["cow","корова","n"],
+      ["pig","свиня","n"],["sheep","вівця","n"],["fish","риба","n"],["mouse","миша","n"],["rabbit","кролик","n"],
+      ["lion","лев","n"],["tiger","тигр","n"],["elephant","слон","n"],["bear","ведмідь","n"],["monkey","мавпа","n"]
     ]},
     {slug:"weather", label:"Погода", items:[
-      ["sun","сонце"],["rain","дощ"],["snow","сніг"],["wind","вітер"],["cloud","хмара"],
-      ["storm","гроза/буря"],["hot","спекотно"],["cold","холодно"],["warm","тепло"],["cool","прохолодно"],
-      ["sunny","сонячно"],["rainy","дощовий"],["cloudy","хмарно"],["weather","погода"],["temperature","температура"]
+      ["sun","сонце","n"],["rain","дощ","n"],["snow","сніг","n"],["wind","вітер","n"],["cloud","хмара","n"],
+      ["storm","гроза/буря","n"],["hot","спекотно","adj"],["cold","холодно","adj"],["warm","тепло","adj"],["cool","прохолодно","adj"],
+      ["sunny","сонячно","adj"],["rainy","дощовий","adj"],["cloudy","хмарно","adj"],["weather","погода","n"],["temperature","температура","n"]
     ]},
     {slug:"calendar", label:"Дні, місяці, пори року", items:[
-      ["Monday","понеділок"],["Tuesday","вівторок"],["Wednesday","середа"],["Thursday","четвер"],["Friday","п'ятниця"],
-      ["Saturday","субота"],["Sunday","неділя"],["January","січень"],["February","лютий"],["March","березень"],
-      ["April","квітень"],["May","травень"],["June","червень"],["July","липень"],["August","серпень"],
-      ["September","вересень"],["October","жовтень"],["November","листопад"],["December","грудень"],
-      ["spring","весна"],["summer","літо"],["autumn","осінь"],["winter","зима"],["today","сьогодні"],["tomorrow","завтра"],["yesterday","вчора"]
+      ["Monday","понеділок","n"],["Tuesday","вівторок","n"],["Wednesday","середа","n"],["Thursday","четвер","n"],["Friday","п'ятниця","n"],
+      ["Saturday","субота","n"],["Sunday","неділя","n"],["January","січень","n"],["February","лютий","n"],["March","березень","n"],
+      ["April","квітень","n"],["May","травень","n"],["June","червень","n"],["July","липень","n"],["August","серпень","n"],
+      ["September","вересень","n"],["October","жовтень","n"],["November","листопад","n"],["December","грудень","n"],
+      ["spring","весна","n"],["summer","літо","n"],["autumn","осінь","n"],["winter","зима","n"],["today","сьогодні","other"],["tomorrow","завтра","other"],["yesterday","вчора","other"]
     ]},
     {slug:"jobs", label:"Професії", items:[
-      ["teacher","вчитель"],["doctor","лікар"],["nurse","медсестра"],["engineer","інженер"],["driver","водій"],
-      ["waiter","офіціант"],["cook","кухар"],["police officer","поліцейський"],["farmer","фермер"],["shop assistant","продавець"],
-      ["student","студент"],["worker","робітник"],["manager","менеджер"],["builder","будівельник"],["writer","письменник"]
+      ["teacher","вчитель","n"],["doctor","лікар","n"],["nurse","медсестра","n"],["engineer","інженер","n"],["driver","водій","n"],
+      ["waiter","офіціант","n"],["cook","кухар","n"],["police officer","поліцейський","n"],["farmer","фермер","n"],["shop assistant","продавець","n"],
+      ["student","студент","n"],["worker","робітник","n"],["manager","менеджер","n"],["builder","будівельник","n"],["writer","письменник","n"]
     ]},
     {slug:"school", label:"Школа", items:[
-      ["school","школа"],["teacher","вчитель"],["student","учень/студент"],["lesson","урок"],["book","книга"],
-      ["pen","ручка"],["pencil","олівець"],["notebook","зошит"],["desk","парта"],["homework","домашнє завдання"],
-      ["exam","іспит"],["question","питання"],["answer","відповідь"],["class","клас"],["subject","предмет"]
+      ["school","школа","n"],["teacher","вчитель","n"],["student","учень/студент","n"],["lesson","урок","n"],["book","книга","n"],
+      ["pen","ручка","n"],["pencil","олівець","n"],["notebook","зошит","n"],["desk","парта","n"],["homework","домашнє завдання","n"],
+      ["exam","іспит","n"],["question","питання","n"],["answer","відповідь","n"],["class","клас","n"],["subject","предмет","n"]
     ]},
     {slug:"city", label:"Місто та подорожі", items:[
-      ["city","місто"],["street","вулиця"],["shop","магазин"],["market","ринок"],["park","парк"],
-      ["station","станція/вокзал"],["airport","аеропорт"],["hotel","готель"],["bank","банк"],["hospital","лікарня"],
-      ["car","автомобіль"],["bus","автобус"],["train","потяг"],["plane","літак"],["ticket","квиток"],
-      ["map","карта"],["journey","подорож"],["luggage","багаж"],["passport","паспорт"],["road","дорога"]
+      ["city","місто","n"],["street","вулиця","n"],["shop","магазин","n"],["market","ринок","n"],["park","парк","n"],
+      ["station","станція/вокзал","n"],["airport","аеропорт","n"],["hotel","готель","n"],["bank","банк","n"],["hospital","лікарня","n"],
+      ["car","автомобіль","n"],["bus","автобус","n"],["train","потяг","n"],["plane","літак","n"],["ticket","квиток","n"],
+      ["map","карта","n"],["journey","подорож","n"],["luggage","багаж","n"],["passport","паспорт","n"],["road","дорога","n"]
     ]},
     {slug:"verbs", label:"Дієслова", items:[
-      ["to be","бути"],["to have","мати"],["to do","робити"],["to go","йти/їхати"],["to come","приходити"],
-      ["to see","бачити"],["to know","знати"],["to think","думати"],["to want","хотіти"],["to like","подобатися"],
-      ["to make","робити/створювати"],["to say","казати"],["to speak","говорити"],["to read","читати"],["to write","писати"],
-      ["to eat","їсти"],["to drink","пити"],["to sleep","спати"],["to work","працювати"],["to play","грати"],
-      ["to buy","купувати"],["to live","жити"],["to give","давати"],["to take","брати"],["to help","допомагати"]
+      ["to be","бути","v"],["to have","мати","v"],["to do","робити","v"],["to go","йти/їхати","v"],["to come","приходити","v"],
+      ["to see","бачити","v"],["to know","знати","v"],["to think","думати","v"],["to want","хотіти","v"],["to like","подобатися","v"],
+      ["to make","робити/створювати","v"],["to say","казати","v"],["to speak","говорити","v"],["to read","читати","v"],["to write","писати","v"],
+      ["to eat","їсти","v"],["to drink","пити","v"],["to sleep","спати","v"],["to work","працювати","v"],["to play","грати","v"],
+      ["to buy","купувати","v"],["to live","жити","v"],["to give","давати","v"],["to take","брати","v"],["to help","допомагати","v"]
     ]},
     {slug:"adjectives", label:"Прикметники", items:[
-      ["big","великий"],["small","маленький"],["good","хороший"],["bad","поганий"],["new","новий"],
-      ["old","старий"],["happy","щасливий"],["sad","сумний"],["easy","легкий"],["difficult","складний"],
-      ["fast","швидкий"],["slow","повільний"],["beautiful","гарний"],["strong","сильний"],["cheap","дешевий"],
-      ["expensive","дорогий"],["clean","чистий"],["dirty","брудний"],["tall","високий"],["short","низький/короткий"]
+      ["big","великий","adj"],["small","маленький","adj"],["good","хороший","adj"],["bad","поганий","adj"],["new","новий","adj"],
+      ["old","старий","adj"],["happy","щасливий","adj"],["sad","сумний","adj"],["easy","легкий","adj"],["difficult","складний","adj"],
+      ["fast","швидкий","adj"],["slow","повільний","adj"],["beautiful","гарний","adj"],["strong","сильний","adj"],["cheap","дешевий","adj"],
+      ["expensive","дорогий","adj"],["clean","чистий","adj"],["dirty","брудний","adj"],["tall","високий","adj"],["short","низький/короткий","adj"]
     ]},
     {slug:"misc", label:"Різне", items:[
-      ["hello","привіт"],["goodbye","до побачення"],["please","будь ласка"],["thank you","дякую"],["sorry","вибачте"],
-      ["yes","так"],["no","ні"],["maybe","можливо"],["today","сьогодні"],["now","зараз"],
-      ["later","пізніше"],["always","завжди"],["sometimes","іноді"],["never","ніколи"],["often","часто"],
-      ["here","тут"],["there","там"],["everywhere","всюди"],["something","щось"],["nothing","нічого"],
-      ["someone","хтось"],["everyone","кожен"],["name","ім'я"],["age","вік"],["address","адреса"],
-      ["phone","телефон"],["computer","комп'ютер"],["internet","інтернет"],["letter","лист"],["message","повідомлення"],
-      ["picture","малюнок/фото"],["music","музика"],["sport","спорт"],["game","гра"],["holiday","свято/відпустка"],
-      ["birthday","день народження"],["party","вечірка"],["gift","подарунок"],["money","гроші"],["price","ціна"],
-      ["problem","проблема"],["idea","ідея"],["reason","причина"],["chance","шанс"],["choice","вибір"],
-      ["together","разом"],["alone","сам/наодинці"],["free","вільний"],["busy","зайнятий"],["ready","готовий"],
-      ["important","важливий"],["interesting","цікавий"],["boring","нудний"],["different","різний"],["same","такий самий"],
-      ["true","правдивий"],["wrong","неправильний"],["early","рано"],["late","пізно"],["still","все ще"],
-      ["already","вже"],["again","знову"],["together with","разом з"],["because","тому що"],["but","але"],
-      ["and","і"],["or","або"],["also","також"],["very","дуже"],["really","справді"]
+      ["hello","привіт","other"],["goodbye","до побачення","other"],["please","будь ласка","other"],["thank you","дякую","other"],["sorry","вибачте","other"],
+      ["yes","так","other"],["no","ні","other"],["maybe","можливо","other"],["today","сьогодні","other"],["now","зараз","other"],
+      ["later","пізніше","other"],["always","завжди","other"],["sometimes","іноді","other"],["never","ніколи","other"],["often","часто","other"],
+      ["here","тут","other"],["there","там","other"],["everywhere","всюди","other"],["something","щось","other"],["nothing","нічого","other"],
+      ["someone","хтось","other"],["everyone","кожен","other"],["name","ім'я","n"],["age","вік","n"],["address","адреса","n"],
+      ["phone","телефон","n"],["computer","комп'ютер","n"],["internet","інтернет","n"],["letter","лист","n"],["message","повідомлення","n"],
+      ["picture","малюнок/фото","n"],["music","музика","n"],["sport","спорт","n"],["game","гра","n"],["holiday","свято/відпустка","n"],
+      ["birthday","день народження","n"],["party","вечірка","n"],["gift","подарунок","n"],["money","гроші","n"],["price","ціна","n"],
+      ["problem","проблема","n"],["idea","ідея","n"],["reason","причина","n"],["chance","шанс","n"],["choice","вибір","n"],
+      ["together","разом","other"],["alone","сам/наодинці","other"],["free","вільний","adj"],["busy","зайнятий","adj"],["ready","готовий","adj"],
+      ["important","важливий","adj"],["interesting","цікавий","adj"],["boring","нудний","adj"],["different","різний","adj"],["same","такий самий","adj"],
+      ["true","правдивий","adj"],["wrong","неправильний","adj"],["early","рано","other"],["late","пізно","other"],["still","все ще","other"],
+      ["already","вже","other"],["again","знову","other"],["because","тому що","other"],["but","але","other"],
+      ["and","і","other"],["or","або","other"],["also","також","other"],["very","дуже","other"],["really","справді","other"]
     ]}
   ];
+
+  const POS_GROUPS = [
+    {tag:"n", label:"Іменники"},
+    {tag:"v", label:"Дієслова"},
+    {tag:"adj", label:"Прикметники"},
+    {tag:"other", label:"Прислівники, числівники та інше"}
+  ];
+  const POS_TOPICS = POS_GROUPS.map(g=>{
+    const seen = new Set();
+    const items = [];
+    TOPICS.forEach(topic=>{
+      topic.items.forEach(it=>{
+        if(it[2] !== g.tag) return;
+        const key = it[0].toLowerCase();
+        if(seen.has(key)) return;
+        seen.add(key);
+        items.push(it);
+      });
+    });
+    return {slug:"pos-"+g.tag, label:g.label, items};
+  }).filter(t=>t.items.length);
 
   // ---------- theory data ----------
   const THEORY = [
@@ -326,7 +349,8 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
   // ---------- state ----------
   const state = {
     theme: localStorage.getItem("eq-theme") || "light",
-    view: "picker", // picker | quiz | summary | theoryList | theoryArticle
+    view: "picker", // picker | posPicker | quiz | summary | theoryList | theoryArticle
+    returnView: "picker",
     topic: null,
     direction: "en-ua", // en-ua | ua-en
     pool: [],
@@ -357,7 +381,8 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
     window.speechSynthesis.speak(u);
   }
 
-  function startQuiz(topic){
+  function startQuiz(topic, fromView){
+    state.returnView = fromView || state.view;
     state.topic = topic;
     state.pool = shuffle(topic.items);
     state.index = 0;
@@ -411,6 +436,7 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
     wrap.appendChild(top);
 
     if(state.view === "picker") renderPicker(wrap);
+    else if(state.view === "posPicker") renderPosPicker(wrap);
     else if(state.view === "quiz") renderQuiz(wrap);
     else if(state.view === "summary") renderSummary(wrap);
     else if(state.view === "theoryList") renderTheoryList(wrap);
@@ -420,23 +446,22 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
   function renderModeTabs(wrap){
     const tabs = document.createElement("div"); tabs.className = "eq-tabs";
     const t1 = document.createElement("button");
-    t1.className = "eq-tab" + (state.view.indexOf("theory")===-1 ? " active" : "");
-    t1.textContent = "Словник за темами";
+    t1.className = "eq-tab" + (state.view === "picker" ? " active" : "");
+    t1.textContent = "За темами";
     t1.onclick = ()=>{ state.view = "picker"; render(); };
     const t2 = document.createElement("button");
-    t2.className = "eq-tab" + (state.view.indexOf("theory")!==-1 ? " active" : "");
-    t2.textContent = "Теорія";
-    t2.onclick = ()=>{ state.view = "theoryList"; render(); };
-    tabs.appendChild(t1); tabs.appendChild(t2);
+    t2.className = "eq-tab" + (state.view === "posPicker" ? " active" : "");
+    t2.textContent = "За частинами мови";
+    t2.onclick = ()=>{ state.view = "posPicker"; render(); };
+    const t3 = document.createElement("button");
+    t3.className = "eq-tab" + (state.view.indexOf("theory")!==-1 ? " active" : "");
+    t3.textContent = "Теорія";
+    t3.onclick = ()=>{ state.view = "theoryList"; render(); };
+    tabs.appendChild(t1); tabs.appendChild(t2); tabs.appendChild(t3);
     wrap.appendChild(tabs);
   }
 
-  function renderPicker(wrap){
-    renderModeTabs(wrap);
-    const kicker = document.createElement("p"); kicker.className = "eq-kicker"; kicker.textContent = "Англійська · рівень A2";
-    const title = document.createElement("h1"); title.className = "eq-title"; title.textContent = "Лексика за темами";
-    wrap.appendChild(kicker); wrap.appendChild(title);
-
+  function renderDirToggle(wrap){
     const dirRow = document.createElement("div"); dirRow.className = "eq-dirtoggle";
     const b1 = document.createElement("button"); b1.className = "eq-dirbtn" + (state.direction==="en-ua"?" active":""); b1.textContent = "EN → UA";
     b1.onclick = ()=>{ state.direction = "en-ua"; render(); };
@@ -444,22 +469,42 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
     b2.onclick = ()=>{ state.direction = "ua-en"; render(); };
     dirRow.appendChild(b1); dirRow.appendChild(b2);
     wrap.appendChild(dirRow);
+  }
 
+  function renderTopicGrid(wrap, topics, fromView){
     const grid = document.createElement("div"); grid.className = "eq-grid";
-    TOPICS.forEach(topic=>{
+    topics.forEach(topic=>{
       const tile = document.createElement("button"); tile.className = "eq-tile";
       const name = document.createElement("div"); name.className = "eq-tile-name"; name.textContent = topic.label;
       const count = document.createElement("div"); count.className = "eq-tile-count"; count.textContent = topic.items.length + " слів";
       tile.appendChild(name); tile.appendChild(count);
-      tile.onclick = ()=> startQuiz(topic);
+      tile.onclick = ()=> startQuiz(topic, fromView);
       grid.appendChild(tile);
     });
     wrap.appendChild(grid);
   }
 
+  function renderPicker(wrap){
+    renderModeTabs(wrap);
+    const kicker = document.createElement("p"); kicker.className = "eq-kicker"; kicker.textContent = "Англійська · рівень A2";
+    const title = document.createElement("h1"); title.className = "eq-title"; title.textContent = "Лексика за темами";
+    wrap.appendChild(kicker); wrap.appendChild(title);
+    renderDirToggle(wrap);
+    renderTopicGrid(wrap, TOPICS, "picker");
+  }
+
+  function renderPosPicker(wrap){
+    renderModeTabs(wrap);
+    const kicker = document.createElement("p"); kicker.className = "eq-kicker"; kicker.textContent = "Англійська · рівень A2";
+    const title = document.createElement("h1"); title.className = "eq-title"; title.textContent = "Лексика за частинами мови";
+    wrap.appendChild(kicker); wrap.appendChild(title);
+    renderDirToggle(wrap);
+    renderTopicGrid(wrap, POS_TOPICS, "posPicker");
+  }
+
   function renderQuiz(wrap){
     const back = document.createElement("button"); back.className = "eq-back"; back.textContent = "← Назад до тем";
-    back.onclick = ()=>{ state.view = "picker"; render(); };
+    back.onclick = ()=>{ state.view = state.returnView; render(); };
     wrap.appendChild(back);
 
     const topbar = document.createElement("div"); topbar.className = "eq-topbar";
@@ -535,9 +580,9 @@ body:has(.eq-root[data-theme="dark"]){ background:#141A24; }
 
     const btnrow = document.createElement("div"); btnrow.className = "eq-btnrow";
     const again = document.createElement("button"); again.className = "eq-btn-primary"; again.textContent = "Ще одна спроба";
-    again.onclick = ()=> startQuiz(state.topic);
+    again.onclick = ()=> startQuiz(state.topic, state.returnView);
     const toPicker = document.createElement("button"); toPicker.className = "eq-btn-secondary"; toPicker.textContent = "Назад до тем";
-    toPicker.onclick = ()=>{ state.view = "picker"; render(); };
+    toPicker.onclick = ()=>{ state.view = state.returnView; render(); };
     btnrow.appendChild(again); btnrow.appendChild(toPicker);
     wrap.appendChild(btnrow);
   }
